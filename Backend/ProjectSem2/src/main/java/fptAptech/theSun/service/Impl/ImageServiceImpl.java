@@ -1,26 +1,26 @@
 package fptAptech.theSun.service.Impl;
 
-import fptAptech.theSun.entity.Product_image;
+import fptAptech.theSun.entity.Image;
 import fptAptech.theSun.respository.ImageRepository;
-import fptAptech.theSun.service.imageService;
+import fptAptech.theSun.service.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class ImageServiceImpl implements imageService {
+public class ImageServiceImpl implements ImageService {
 
     @Autowired
     private ImageRepository imageRepository;
 
     @Override
-    public List<Product_image> getListImage() {
+    public List<Image> getListImage() {
         return imageRepository.findAll();
     }
 
     @Override
-    public Product_image save(Product_image image) {
+    public Image save(Image image) {
         return imageRepository.save(image);
     }
 }

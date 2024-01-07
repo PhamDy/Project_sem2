@@ -25,8 +25,17 @@ public class Product extends BaseEntity{
     @Column(name = "product_name")
     private String name;
 
-    @Column(name = "image_product")
+    @Column(name = "avartar_image_product")
     private String img;
+
+    @Column(name = "image1_product")
+    private String img1;
+
+    @Column(name = "image2_product")
+    private String img2;
+
+    @Column(name = "image3_product")
+    private String img3;
 
     @Column(name = "quantity")
     private int quantity;
@@ -34,7 +43,8 @@ public class Product extends BaseEntity{
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "gender")
+    @Column(name = "gender", nullable = false)
+    @Enumerated(EnumType.STRING)
     private ProductGender gender;
 
     @Column(name = "size")
@@ -52,7 +62,8 @@ public class Product extends BaseEntity{
     @Column(name = "sport")
     private String sport;
 
-    @Column(name = "status")
+    @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
     private ProductStatus status;
 
     @Column(name = "discount")
@@ -62,7 +73,5 @@ public class Product extends BaseEntity{
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, targetEntity = Product_image.class)
-    private Set<Product_image> images = new HashSet<>();
 
 }

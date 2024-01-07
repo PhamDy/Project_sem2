@@ -1,5 +1,6 @@
 package fptAptech.theSun.dto;
 
+import fptAptech.theSun.entity.Category;
 import fptAptech.theSun.entity.Enum.ProductGender;
 import fptAptech.theSun.entity.Enum.ProductStatus;
 import lombok.Builder;
@@ -15,6 +16,12 @@ public class ProductDto implements Serializable {
     private String name;
 
     private String img;
+
+    private String img1;
+
+    private String img2;
+
+    private String img3;
 
     private int quantity;
 

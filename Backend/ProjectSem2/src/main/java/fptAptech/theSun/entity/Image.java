@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Product_image extends BaseEntity{
+public class Image extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,10 +29,6 @@ public class Product_image extends BaseEntity{
     @Column
     @Enumerated(EnumType.STRING)
     private ImageExtension extension;
-
-    @ManyToOne()
-    @JoinColumn(name = "product_id")
-    private Product product;
 
     @Lob
     @Column(columnDefinition = "LONGBLOB")
