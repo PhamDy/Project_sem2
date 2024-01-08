@@ -20,7 +20,7 @@ public class Product extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_id", nullable = false)
-    private int id;
+    private Long id;
 
     @Column(name = "product_name")
     private String name;
@@ -57,7 +57,7 @@ public class Product extends BaseEntity{
     private String color;
 
     @Column(name = "price")
-    private double price;
+    private Double price;
 
     @Column(name = "sport")
     private String sport;
@@ -67,7 +67,7 @@ public class Product extends BaseEntity{
     private ProductStatus status;
 
     @Column(name = "discount")
-    private float discount;
+    private Float discount;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
