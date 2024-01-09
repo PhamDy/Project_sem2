@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS `category` (
     `created_by` VARCHAR(50) NOT NULL,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_by` VARCHAR(50) DEFAULT NULL
-    );
+);
 
 CREATE TABLE IF NOT EXISTS `product` (
     `product_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
@@ -31,4 +31,4 @@ CREATE TABLE IF NOT EXISTS `product` (
     `created_by` VARCHAR(50) NOT NULL,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_by` VARCHAR(50) DEFAULT NULL
-    );
+);

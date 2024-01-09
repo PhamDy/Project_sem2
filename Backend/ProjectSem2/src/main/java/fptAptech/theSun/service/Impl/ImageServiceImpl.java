@@ -1,7 +1,5 @@
 package fptAptech.theSun.service.Impl;
 
-import fptAptech.theSun.entity.Image;
-import fptAptech.theSun.respository.ImageRepository;
 import fptAptech.theSun.service.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

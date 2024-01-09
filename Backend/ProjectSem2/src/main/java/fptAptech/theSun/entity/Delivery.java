@@ -22,7 +22,7 @@ public class Delivery extends BaseEntity{
     @Column(name = "delivery_status")
     private DeliveryStatus status;
 
-    @OneToOne
+    @ManyToOne
     @Column(name = "address_id")
     private Address address;
 

@@ -19,8 +19,8 @@ public class CartItem extends BaseEntity{
     @Column(name = "quantity")
     private Integer quantity;
 
-    @Column(name = "total_price")
-    private Double totalPrice;
+    @Column(name = "sub_total")
+    private Double subTotal;
 
     @ManyToOne
     @JoinColumn(name = "product_id")
