@@ -23,7 +23,7 @@ public class Delivery extends BaseEntity{
     private DeliveryStatus status;
 
     @ManyToOne
-    @Column(name = "address_id")
+    @JoinColumn(name = "address_id")
     private Address address;
 
 }

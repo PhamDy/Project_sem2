@@ -27,6 +27,4 @@ public class Payment extends BaseEntity{
     @Column(name = "status")
     private PaymentStatus paymentStatus;
 
-
-
 }
