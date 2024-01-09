@@ -139,15 +139,6 @@ CREATE TABLE IF NOT EXISTS `carts` (
     `updated_by` VARCHAR(50) DEFAULT NULL
 );
 
-CREATE TABLE IF NOT EXISTS `carts` (
-    `cart_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
-    `user_id` BIGINT NOT NULL,
-    FOREIGN KEY (`user_id`) REFERENCES user(user_id),
-    `updated_at` TIMESTAMP NOT NULL,
-    `created_by` VARCHAR(50) NOT NULL,
-    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `updated_by` VARCHAR(50) DEFAULT NULL
-    );
 
 CREATE TABLE IF NOT EXISTS `cart_item` (
    `cart_item_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
@@ -168,7 +159,7 @@ CREATE TABLE IF NOT EXISTS `product_review` (
     `product_id` BIGINT NOT NULL,
     `user_id` BIGINT NOT NULL,
     `comment` TEXT NOT NULL,
-    `start` INT NOT NULL,
+    `star` INT NOT NULL,
     `status` INT NOT NULL,
     FOREIGN KEY (`product_id`) REFERENCES product(product_id),
     FOREIGN KEY (`user_id`) REFERENCES user(user_id),

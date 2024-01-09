@@ -20,8 +20,8 @@ public class ProductReview extends BaseEntity{
     @Column(name = "comment")
     private String comment;
 
-    @Column(name = "start")
-    private Integer start;
+    @Column(name = "star")
+    private Integer star;
 
     @Column(name = "status")
     private Integer status;
