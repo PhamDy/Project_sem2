@@ -37,9 +37,6 @@ public class Product extends BaseEntity{
     @Column(name = "image3_product")
     private String img3;
 
-    @Column(name = "quantity")
-    private int quantity;
-
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
@@ -47,14 +44,8 @@ public class Product extends BaseEntity{
     @Enumerated(EnumType.STRING)
     private ProductGender gender;
 
-    @Column(name = "size")
-    private String size;
-
     @Column(name = "brand")
     private String brand;
-
-    @Column(name = "color")
-    private String color;
 
     @Column(name = "price")
     private Double price;
