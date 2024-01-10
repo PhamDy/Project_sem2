@@ -7,4 +7,4 @@ Group: The Sun
     + Nguyễn Duy Hoàng
 
 
-FPT Aptech
+FPT Aptech T2302M
