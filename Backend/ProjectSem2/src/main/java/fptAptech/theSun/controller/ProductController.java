@@ -1,6 +1,7 @@
 package fptAptech.theSun.controller;
 
 import fptAptech.theSun.dto.ProductDto;
+import fptAptech.theSun.entity.Enum.ProductColor;
 import fptAptech.theSun.entity.Enum.ProductGender;
 import fptAptech.theSun.entity.Product;
 import fptAptech.theSun.service.ProductService;
@@ -65,10 +66,14 @@ public class ProductController {
     @Operation(summary = "Lấy ra danh sách sản phẩm theo các tiêu chí lọc")
     public ResponseEntity<List<Product>> getProductFilterAndSort(
             @RequestParam(name = "gender", required = false) ProductGender gender,
-            @RequestParam(name = "brand", required = false) String brand
+            @RequestParam(name = "brand", required = false) String brand,
+            @RequestParam(name = "category", required = false) String category,
+            @RequestParam(name = "color", required = false) ProductColor color,
+            @RequestParam(name = "sport", required = false) String sport,
+            @RequestParam(name = "price", required = false) Double price
         ) {
 
-        List<Product> products = productService.getProductsByFilters(gender, brand);
+        List<Product> products = productService.getProductsByFilters(gender, brand, category, color, sport, price);
         return ResponseEntity.ok(products);
     }
 

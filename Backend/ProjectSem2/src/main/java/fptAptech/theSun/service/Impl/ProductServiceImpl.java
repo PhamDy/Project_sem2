@@ -2,6 +2,7 @@ package fptAptech.theSun.service.Impl;
 
 import fptAptech.theSun.dto.ProductDto;
 import fptAptech.theSun.entity.Category;
+import fptAptech.theSun.entity.Enum.ProductColor;
 import fptAptech.theSun.entity.Enum.ProductGender;
 import fptAptech.theSun.entity.Product;
 import fptAptech.theSun.respository.CategoryRepository;
@@ -77,7 +78,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getProductsByFilters(ProductGender gender, String brand) {
-        return productRepository.productsByGenderAndColor(gender, brand);
+    public List<Product> getProductsByFilters(ProductGender gender, String brand, String category, ProductColor color, String sport, Double price) {
+        return productRepository.productsByGenderAndColor(gender, brand, category, color, sport, price);
     }
 }
