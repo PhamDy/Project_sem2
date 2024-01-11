@@ -1,2 +1,10 @@
 # Project_sem2
-FPT Aptech
+Group: The Sun
+  - Leader: Phạm Đắc Dy
+  - Member:
+    + Nguyễn Văn Tùng
+    + Phạm Hoàng Gia Hưng
+    + Nguyễn Duy Hoàng
+
+
+FPT Aptech T2302M
