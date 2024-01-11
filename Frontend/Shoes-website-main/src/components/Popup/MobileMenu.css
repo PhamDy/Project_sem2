@@ -1,0 +1,174 @@
+.backMenu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #000000a8;
+    z-index: 10000;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+} 
+
+.backMenu.show-back {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.side-menu-container {
+    position: relative;
+}
+
+.sidemenu {
+    position: fixed;
+    top: 0;
+    left: 1px;
+    height: 100%;
+    width: 320px;
+    background-color: #fff;
+    z-index: 100000;
+    transform: translateX(-110%);
+    transition: transform 0.3s ease;
+}
+
+.sidemenu.open-menu {
+    transform: translateX(-0.3%);
+}
+
+.menu-actions {
+    width: 100%;
+}
+
+.button-menu {
+    width: 50%;
+    display: block;
+    float: left;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    text-align: center;
+    letter-spacing: .2em;
+    height: 55px;
+    line-height: 61px;
+    color: #fff;
+    background-color: #000;
+    transition: all ease 0.3s;
+    border-bottom: 1px solid #ccc;
+
+}
+
+.button-menu:hover {
+    text-decoration: none;
+    color: #fff;
+}
+
+.button-menu span:hover {
+    color: #fff;
+}
+
+.button-menu span {
+    vertical-align: top;
+    line-height: 60px;
+    display: inline-block;
+    margin-left: 15px;
+}
+
+.icon-menu {
+    display: inline-block;
+    padding-top: 20px;
+}
+
+.icon-menu span {
+    text-align: left;
+    display: block;
+    width: 23px;
+    height: 2px;
+    background: #fff;
+    margin-bottom: 6px;
+}
+
+.icon-menu:hover {
+    color: #fff;
+}
+
+.icon-menu span:nth-child(2) {
+    width: 12px;
+}
+.icon-menu span:nth-child(3) {
+    width: 17px;
+}
+
+.button-login {
+    width: 50%;
+    display: block;
+    float: left;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    text-align: center;
+    letter-spacing: .2em;
+    height: 55px;
+    line-height: 61px;
+    color: #000;
+    background-color: #fff;
+    transition: all ease 0.5s;
+    border-bottom: 1px solid #ccc;
+    text-decoration: none;
+
+}
+
+.button-login span:hover, .button-login a:hover {
+    color: #000;
+    text-decoration: none;
+}
+
+.button-login:hover {
+    text-decoration: none;
+}
+
+.sidemenu-content {
+    width: 100%;
+    position: relative;
+    height: calc(100% - 100px);
+    overflow: auto;
+    overflow-x: hidden;
+}
+
+.menu-section {
+    width: 100%;
+}
+
+.menu-list {
+    border-bottom: 1px solid #ededed;
+}
+
+.menu-list a {
+    font-size: 16px;
+    width: calc(100% - 50px);
+    height: 54px;
+    font-weight: 500;
+    padding: 15px;
+    color: #000;
+    display: inline-block;
+    transition: .5s;
+    text-decoration: none;
+}
+
+.close-menu {
+    background-color: #51adcd;
+    color: #fff;
+    z-index: 20;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-size: 12px;
+}
+
+@media screen and (max-width: 364px) {
+    .sidemenu {
+        width: 250px;
+    }
+}

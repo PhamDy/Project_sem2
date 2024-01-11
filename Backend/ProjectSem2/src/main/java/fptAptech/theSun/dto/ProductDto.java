@@ -35,16 +35,11 @@ public class ProductDto implements Serializable {
 
     private String sport;
 
-    private String size;
-
-    private String color;
 
     private float discount;
 
     private ProductStatus status;
 
-    private int category_id;
-
-    private CatagoryDto catagory;
+    private String catagoryName;
 
 }

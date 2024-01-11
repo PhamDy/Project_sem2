@@ -1,0 +1,28 @@
+.progress-container .line-process {
+    content: "";
+    width: 50%;
+    height: 100%;
+    background: deepskyblue;
+    background: linear-gradient(to right, deepskyblue 0%, #2ea3b7 100%);
+}
+
+.billing-btn {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.billing-btn input {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    accent-color: #000;
+}
+
+.billing-btn label {
+    vertical-align: middle;
+    line-height: 20px;
+}
+
+#deliveryForm .form-group {
+    display: none;
+}

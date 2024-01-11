@@ -1,13 +1,16 @@
 package fptAptech.theSun.controller;
 
 import fptAptech.theSun.dto.ProductDto;
+import fptAptech.theSun.entity.Enum.ProductGender;
 import fptAptech.theSun.entity.Product;
 import fptAptech.theSun.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -56,6 +59,17 @@ public class ProductController {
     @Operation(summary = "Lấy ra danh sách sản phẩm theo giá cao đến thấp")
     public ResponseEntity<List<Product>> getProductPriceDesc() {
         return ResponseEntity.ok(productService.getProductPriceDesc());
+    }
+
+    @GetMapping("/filter")
+    @Operation(summary = "Lấy ra danh sách sản phẩm theo các tiêu chí lọc")
+    public ResponseEntity<List<Product>> getProductFilterAndSort(
+            @RequestParam(name = "gender", required = false) ProductGender gender,
+            @RequestParam(name = "brand", required = false) String brand
+        ) {
+
+        List<Product> products = productService.getProductsByFilters(gender, brand);
+        return ResponseEntity.ok(products);
     }
 
 

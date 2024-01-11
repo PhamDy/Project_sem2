@@ -2,6 +2,7 @@ package fptAptech.theSun.service.Impl;
 
 import fptAptech.theSun.dto.ProductDto;
 import fptAptech.theSun.entity.Category;
+import fptAptech.theSun.entity.Enum.ProductGender;
 import fptAptech.theSun.entity.Product;
 import fptAptech.theSun.respository.CategoryRepository;
 import fptAptech.theSun.respository.ProductRepository;
@@ -15,6 +16,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
+import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,12 +26,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ProductRepository productRepository;
-
-    @Autowired
-    private CategoryRepository categoryRepository;
-
-    @Autowired
-    private ModelMapper modelMapper;
 
     @Override
     public List<Product> getList() {
@@ -77,5 +74,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> getProductPriceDesc() {
         return productRepository.getListByPriceDesc();
+    }
+
+    @Override
+    public List<Product> getProductsByFilters(ProductGender gender, String brand) {
+        return productRepository.productsByGenderAndColor(gender, brand);
     }
 }
