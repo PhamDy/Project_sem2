@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS `category` (
 CREATE TABLE IF NOT EXISTS `product` (
      `product_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
      `category_id` BIGINT NOT NULL,
-     product_name` VARCHAR(100) NOT NULL,
+     `product_name` VARCHAR(100) NOT NULL,
     `avartar_image_product` VARCHAR(100) NOT NULL,
     `image1_product` VARCHAR(100) NULL,
     `image2_product` VARCHAR(100) NULL,
