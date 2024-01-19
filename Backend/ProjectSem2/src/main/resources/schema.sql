@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS `product` (
     `created_by` VARCHAR(50) NOT NULL,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_by` VARCHAR(50) DEFAULT NULL
-    );
+);
 
 CREATE TABLE IF NOT EXISTS size (
     `size_id` BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS size (
     `created_by` VARCHAR(50) NOT NULL,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_by` VARCHAR(50) DEFAULT NULL
-    );
+);
 
 CREATE TABLE IF NOT EXISTS color (
     `color_id` BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS color (
     `created_by` VARCHAR(50) NOT NULL,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_by` VARCHAR(50) DEFAULT NULL
-    );
+);
 
 CREATE TABLE IF NOT EXISTS quantity_product (
     `quantity_product_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
@@ -168,7 +168,6 @@ CREATE TABLE IF NOT EXISTS `carts` (
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_by` VARCHAR(50) DEFAULT NULL
 );
-
 
 CREATE TABLE IF NOT EXISTS `cart_item` (
    `cart_item_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
