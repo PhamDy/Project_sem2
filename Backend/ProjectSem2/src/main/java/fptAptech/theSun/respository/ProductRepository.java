@@ -22,14 +22,14 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     @Query(value = "SELECT * FROM Product ORDER BY price DESC ", nativeQuery = true)
     List<Product> getListByPriceDesc();
 
-    @Query(value = "SELECT p.gender, p.brand, p.category.name, p.sport, wh.color, p.discount, p.price FROM Product p " +
+    @Query(value = "SELECT p FROM Product p " +
             "INNER JOIN Category c ON c.id = p.category.id " +
-            "INNER JOIN Warehouse wh ON wh.product.id = p.id where " +
-            "(:gender is null OR p.gender = :gender) AND " +
-            "(:brand is null OR p.brand IN :brand) AND " +
-            "(:category is null OR c.name IN :category) AND " +
-            "(:sport is null OR p.sport IN :sport) AND " +
-            "(:color is null OR wh.color IN :color) AND " +
+            "INNER JOIN Warehouse wh ON wh.product.id = p.id WHERE " +
+            "(:gender is null OR p.gender IN (:gender)) AND " +
+            "(:brand is null OR p.brand IN (:brand)) AND " +
+            "(:category is null OR c.name IN (:category)) AND " +
+            "(:color is null OR wh.color IN (:color)) AND " +
+            "(:sport is null OR p.sport IN (:sport)) AND " +
             "(:discount = false OR p.discount > 0) AND " +
             "((:under50 = true AND p.price < 50) OR " +
             "(:between50And100 = true AND p.price >= 50 AND p.price <= 100) OR " +

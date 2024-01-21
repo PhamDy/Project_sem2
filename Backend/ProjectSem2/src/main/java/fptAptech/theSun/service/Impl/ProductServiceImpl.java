@@ -68,7 +68,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getProductsByFilters(FillterRequestDto fillterRequestDto, Boolean discount, Boolean under50, Boolean between50And100, Boolean between100And250, Boolean over250, String sortDirection, String sortBy) {
+    public List<Product> getProductsByFillters(FillterRequestDto fillterRequestDto, Boolean discount, Boolean under50, Boolean between50And100, Boolean between100And250, Boolean over250, String sortDirection, String sortBy) {
         Sort sort;
         if ("discount".equals(sortBy)) {
             sort = Sort.by(sortDirection.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, "discount");
@@ -77,6 +77,19 @@ public class ProductServiceImpl implements ProductService {
         } else {
             sort = Sort.by(sortDirection.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, "price");
         }
+
+        if (fillterRequestDto == null) {
+            return productRepository.productsByFillterAll(null,null,null,null,null,
+                    discount, under50, between50And100, between100And250, over250, sort);
+        }
+
+        System.out.println("Formatted Gender: " + fillterRequestDto.getFormattedGender());
+        System.out.println("Formatted Brand: " + fillterRequestDto.getFormattedBrand());
+        System.out.println("Formatted Category: " + fillterRequestDto.getFormattedCategory());
+        System.out.println("Formatted Color: " + fillterRequestDto.getFormattedColor());
+        System.out.println("Formatted Sport: " + fillterRequestDto.getFormattedSport());
+        System.out.println("discount: " + discount);
+
 
         return productRepository.productsByFillterAll(
                 fillterRequestDto.getFormattedGender(),

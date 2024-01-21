@@ -62,7 +62,7 @@ public class ProductController {
     @GetMapping("/filter")
     @Operation(summary = "Lấy ra danh sách sản phẩm theo các tiêu chí lọc")
     public ResponseEntity<?> getProductsByFilters(
-            @RequestBody FillterRequestDto fillterRequestDto,
+            @RequestBody(required = false) FillterRequestDto fillterRequestDto,
             @RequestParam(name = "discount", required = false, defaultValue = "false") Boolean discount,
             @RequestParam(name = "under50", required = false, defaultValue = "false") Boolean under50,
             @RequestParam(name = "50-100", required = false, defaultValue = "false") Boolean between50And100,
@@ -73,7 +73,7 @@ public class ProductController {
 
     {
 
-        List<Product> products = productService.getProductsByFilters(
+        List<Product> products = productService.getProductsByFillters(
                 fillterRequestDto,
                 discount, under50, between50And100, between100And250, over250, sortDirection ,sortBy);
         return new ResponseEntity<>(products, HttpStatus.OK);

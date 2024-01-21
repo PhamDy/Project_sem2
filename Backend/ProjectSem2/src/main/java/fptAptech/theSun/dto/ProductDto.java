@@ -32,7 +32,6 @@ public class ProductDto implements Serializable {
 
     private String sport;
 
-
     private float discount;
 
     private ProductStatus status;

@@ -3,7 +3,6 @@ package fptAptech.theSun.dto;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -43,7 +42,7 @@ public class FillterRequestDto implements Serializable {
 
     private String setToString(Set<String> set) {
         if (set == null || set.isEmpty()) {
-            return "";
+            return null;
         }
 
         return set.stream().map(Objects::toString).collect(Collectors.joining(","));
