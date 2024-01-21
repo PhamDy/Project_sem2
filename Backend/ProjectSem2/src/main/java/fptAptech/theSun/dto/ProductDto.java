@@ -1,9 +1,6 @@
 package fptAptech.theSun.dto;
 
-import fptAptech.theSun.entity.Category;
-import fptAptech.theSun.entity.Enum.ProductGender;
 import fptAptech.theSun.entity.Enum.ProductStatus;
-import lombok.Builder;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -27,7 +24,7 @@ public class ProductDto implements Serializable {
 
     private String description;
 
-    private ProductGender gender;
+    private String gender;
 
     private double price;
 

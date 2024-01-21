@@ -1,8 +1,6 @@
 package fptAptech.theSun.controller;
 
-import fptAptech.theSun.dto.ProductDto;
-import fptAptech.theSun.entity.Enum.ProductColor;
-import fptAptech.theSun.entity.Enum.ProductGender;
+import fptAptech.theSun.dto.FillterRequestDto;
 import fptAptech.theSun.entity.Product;
 import fptAptech.theSun.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,9 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api/product")
@@ -66,21 +62,20 @@ public class ProductController {
     @GetMapping("/filter")
     @Operation(summary = "Lấy ra danh sách sản phẩm theo các tiêu chí lọc")
     public ResponseEntity<?> getProductsByFilters(
-            @RequestParam(required = false) ProductGender gender,
-            @RequestParam(required = false) String brand,
-            @RequestParam(required = false) String category,
-            @RequestParam(required = false) ProductColor color,
-            @RequestParam(required = false) String sport,
+            @RequestBody FillterRequestDto fillterRequestDto,
             @RequestParam(name = "discount", required = false, defaultValue = "false") Boolean discount,
             @RequestParam(name = "under50", required = false, defaultValue = "false") Boolean under50,
             @RequestParam(name = "50-100", required = false, defaultValue = "false") Boolean between50And100,
             @RequestParam(name = "100-250", required = false, defaultValue = "false") Boolean between100And250,
             @RequestParam(name = "over250", required = false, defaultValue = "false") Boolean over250,
-            @RequestParam(required = false) String sortBy)
+            @RequestParam(defaultValue = "desc") String sortDirection,
+            @RequestParam(defaultValue = "price") String sortBy)
 
     {
 
-        List<Product> products = productService.getProductsByFilters(gender, brand, category, color, sport, discount, under50, between50And100, between100And250, over250, sortBy);
+        List<Product> products = productService.getProductsByFilters(
+                fillterRequestDto,
+                discount, under50, between50And100, between100And250, over250, sortDirection ,sortBy);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 

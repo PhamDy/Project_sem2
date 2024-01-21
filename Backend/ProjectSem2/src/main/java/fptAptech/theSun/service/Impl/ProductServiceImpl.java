@@ -1,27 +1,16 @@
 package fptAptech.theSun.service.Impl;
 
-import fptAptech.theSun.dto.ProductDto;
-import fptAptech.theSun.entity.Category;
-import fptAptech.theSun.entity.Enum.ProductColor;
-import fptAptech.theSun.entity.Enum.ProductGender;
+import fptAptech.theSun.dto.FillterRequestDto;
 import fptAptech.theSun.entity.Product;
-import fptAptech.theSun.respository.CategoryRepository;
 import fptAptech.theSun.respository.ProductRepository;
 import fptAptech.theSun.service.ProductService;
-import org.modelmapper.Converter;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeMap;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
-import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -79,7 +68,30 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getProductsByFilters(ProductGender gender, String brand, String category, ProductColor color, String sport, Boolean discount, Boolean under50, Boolean between50And100, Boolean between100And250, Boolean over250, String sortBy) {
-        return productRepository.productsByFillterAll(gender, brand, category, color, sport, discount, under50, between50And100, between100And250, over250, sortBy);
+    public List<Product> getProductsByFilters(FillterRequestDto fillterRequestDto, Boolean discount, Boolean under50, Boolean between50And100, Boolean between100And250, Boolean over250, String sortDirection, String sortBy) {
+        Sort sort;
+        if ("discount".equals(sortBy)) {
+            sort = Sort.by(sortDirection.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, "discount");
+        } else if ("createdAt".equals(sortBy)) {
+            sort = Sort.by(sortDirection.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, "createdAt");
+        } else {
+            sort = Sort.by(sortDirection.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, "price");
+        }
+
+        return productRepository.productsByFillterAll(
+                fillterRequestDto.getFormattedGender(),
+                fillterRequestDto.getFormattedBrand(),
+                fillterRequestDto.getFormattedCategory(),
+                fillterRequestDto.getFormattedColor(),
+                fillterRequestDto.getFormattedSport(),
+                discount,
+                under50,
+                between50And100,
+                between100And250,
+                over250,
+                sort
+        );
+
     }
+
 }

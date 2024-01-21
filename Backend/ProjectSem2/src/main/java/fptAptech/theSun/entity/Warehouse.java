@@ -9,13 +9,19 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "quantity_product")
-public class QuantityProduct extends BaseEntity{
+@Table(name = "warehouse")
+public class Warehouse extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "quantity_product_id")
+    @Column(name = "warehouse_id")
     private Long id;
+
+    @Column(name = "size")
+    private String size;
+
+    @Column(name = "color")
+    private String color;
 
     @Column(name = "quantity")
     private Integer quantity;
@@ -23,13 +29,5 @@ public class QuantityProduct extends BaseEntity{
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
-
-    @ManyToOne
-    @JoinColumn(name = "size_id")
-    private Size size;
-
-    @ManyToOne
-    @JoinColumn(name = "color_id")
-    private Color color;
 
 }

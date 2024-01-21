@@ -1,14 +1,10 @@
 package fptAptech.theSun.entity;
 
-import fptAptech.theSun.entity.Enum.ProductGender;
 import fptAptech.theSun.entity.Enum.ProductStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -41,8 +37,7 @@ public class Product extends BaseEntity{
     private String description;
 
     @Column(name = "gender", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private ProductGender gender;
+    private String gender;
 
     @Column(name = "brand")
     private String brand;
