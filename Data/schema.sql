@@ -59,6 +59,7 @@ CREATE TABLE IF NOT EXISTS `users` (
         `email` VARCHAR(100) NOT NULL UNIQUE,
     `avatar` VARCHAR(100) NULL,
     `otp` VARCHAR(5) NULL;
+    `otp_generated_time` DATETIME ;
      `enabled` TINYINT(1) DEFAULT 0;
     `updated_at` TIMESTAMP NOT NULL,
     `created_by` VARCHAR(50) NOT NULL,
@@ -193,6 +194,10 @@ ADD COLUMN enabled TINYINT(1) DEFAULT 0;
 
 ALTER TABLE users
 ADD COLUMN otp VARCHAR(5) NULL;
+
+ALTER TABLE users
+ADD COLUMN otp_generated_time DATETIME ;
+
 
 
 

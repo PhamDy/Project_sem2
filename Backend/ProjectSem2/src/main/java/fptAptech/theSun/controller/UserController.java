@@ -1,5 +1,6 @@
 package fptAptech.theSun.controller;
 
+import fptAptech.theSun.dto.ChangePasswordDto;
 import fptAptech.theSun.dto.LoginDto;
 import fptAptech.theSun.dto.RegisterUserDto;
 import fptAptech.theSun.exception.DuplicatedTupleException;
@@ -37,15 +38,29 @@ public class UserController {
     @Operation(summary = "Khách hàng nhập mã otp", description = "Kiểm tra thông tin OTP chuẩn không, nếu chuẩn thì enable cho khách hàng có thể đăng nhập")
     public ResponseEntity<?>authtotp(@PathVariable Long id,
                                      @RequestParam(name = "otp") String otp) {
+        userService.verifyAccount(id, otp);
+        return ResponseEntity.ok().build();
+    }
 
-        return new  ResponseEntity<>(userService.verifyAccount(id, otp), HttpStatus.OK);
+    @PostMapping("verify/{id}/regenerateOtp")
+    @Operation(summary = "Khách hàng nhập lấy otp khi đã hết thời hạn", description = "Gửi lại mã otp cho khách hàng qua mail để khách hàng xác thực")
+    private ResponseEntity<?> regenerateOtp(@PathVariable Long id) {
+        userService.regenerateOtp(id);
+        return ResponseEntity.ok().build();
+    }
 
+    @PatchMapping("/{id}/changePassword")
+    @Operation(summary = "Khách hàng thay đổi mật khẩu")
+    public ResponseEntity<?>changePassword(@PathVariable Long id,
+                                           @Valid @RequestBody ChangePasswordDto changePasswordDto) {
+        userService.changePassword(id, changePasswordDto);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/login")
     @Operation(summary = "Khách hàng đăng nhập tài khoản cá nhân", description = "Kiểm tra thông tin có chuẩn không, nếu chuẩn thì cung cấp cho khách hàng 1 token")
     public ResponseEntity<?>authticate(@Valid @RequestBody LoginDto loginDto) {
-        var token = userService.authenticate(loginDto.getUsername(), loginDto.getPassword());
+        var token = userService.authenticate(loginDto.getUsernameOrEmail(), loginDto.getPassword());
         if (token==null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }

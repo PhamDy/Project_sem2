@@ -10,7 +10,7 @@ import java.io.Serializable;
 @Builder
 public class LoginDto implements Serializable {
     @NotNull
-    private String username;
+    private String usernameOrEmail;
 
     @NotNull
     private String password;

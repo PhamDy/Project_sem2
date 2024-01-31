@@ -1,5 +1,6 @@
 package fptAptech.theSun.service.Impl;
 
+import fptAptech.theSun.dto.ChangePasswordDto;
 import fptAptech.theSun.dto.RegisterUserDto;
 import fptAptech.theSun.email.EmailService;
 import fptAptech.theSun.entity.Enum.RoleName;
@@ -11,20 +12,23 @@ import fptAptech.theSun.respository.UserRepository;
 import fptAptech.theSun.security.jwt.AccessToken;
 import fptAptech.theSun.security.jwt.JwtService;
 import fptAptech.theSun.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.webjars.NotFoundException;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
+
+    private static Logger LOGGER = LoggerFactory
+            .getLogger(UserServiceImpl.class);
 
     @Autowired
     private UserRepository userRepository;
@@ -114,25 +118,85 @@ public class UserServiceImpl implements UserService {
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             Duration duration = Duration.between(user.getOtpGeneratedTime(), LocalDateTime.now());
-            if (user.getOtp().equals(otp) && duration.getSeconds() < (1 * 60)) {
+            if (user.getOtp().equals(otp) && duration.getSeconds() < (10*60)) {
                 user.setEnabled(true);
                 userRepository.save(user);
+                LOGGER.info("User with id {} successfully verified and enabled.", id);
+            } else {
+                throw new IllegalArgumentException("Invalid OTP or expired");
             }
         } else {
+            LOGGER.error("User not found with id: {}", id);
             throw new RuntimeException("User not found");
         }
     }
 
     @Override
-    public AccessToken authenticate(String username, String password) {
-       var user = getByUsername(username);
-       if (user == null || !user.getEnabled()) {
-           return null;
+    public void regenerateOtp(Long id) {
+        try {
+            User user = userRepository.findById(id).orElseThrow();
+            String otp = generateOtp();
+            user.setOtp(otp);
+            user.setOtpGeneratedTime(LocalDateTime.now());
+            userRepository.save(user);
+            emailService.sendMail(user.getEmail(), "This is your authentication code: " + otp);
+            LOGGER.info("OTP regenerated for user with id: {}", id);
+        } catch (NoSuchElementException e) {
+            LOGGER.error("User not found with id: {}", id);
+            throw new NotFoundException("User not found");
+        }
+    }
+
+    @Override
+    @Transactional
+    public void changePassword(Long id, ChangePasswordDto dto) {
+        try {
+            User user = userRepository.findById(id).orElseThrow(()->new NotFoundException("User not found"));
+            boolean matches = passwordEncoder.matches(dto.getPasswordOld(), user.getPassword());
+
+            if (matches && Objects.equals(dto.getPasswordNew1(), dto.getPasswordNew2())) {
+                user.setPassword(passwordEncoder.encode(dto.getPasswordNew1()));
+                userRepository.save(user);
+                LOGGER.info("Change password for user with id: {}", id);
+            } else {
+                throw new RuntimeException("Invalid password or mismatched new passwords");
+            }
+        } catch (Exception e) {
+            LOGGER.error("Error changing password for user with id: {}", id, e);
+            throw new RuntimeException("Error changing password");
+        }
+    }
+
+    @Override
+    @Transactional
+    public void forgotPassword(String email) {
+            var user = getByEmail(email);
+            if (user == null) {
+                throw new NotFoundException("User not found");
+            }
+            String otp = generateOtp();
+            user.setOtp(otp);
+            user.setOtpGeneratedTime(LocalDateTime.now());
+            userRepository.save(user);
+            emailService.sendMail(user.getEmail(), "This is your authentication code: " + otp);
+    }
+
+    @Override
+    public AccessToken authenticate(String usernameOrEmail, String password) {
+        var user1 = getByUsername(usernameOrEmail);
+       if (user1 == null || !user1.getEnabled()) {
+
+           var user2 = getByEmail(usernameOrEmail);
+
+           if (user2 == null || !user2.getEnabled()) {
+               return null;
+           }
+           user1 = user2;
        }
 
-       boolean matches = passwordEncoder.matches(password, user.getPassword());
+       boolean matches = passwordEncoder.matches(password, user1.getPassword());
        if (matches) {
-           return jwtService.generateToken(user);
+           return jwtService.generateToken(user1);
        }
        return null;
     }

@@ -1,5 +1,6 @@
 package fptAptech.theSun.service;
 
+import fptAptech.theSun.dto.ChangePasswordDto;
 import fptAptech.theSun.dto.RegisterUserDto;
 import fptAptech.theSun.entity.User;
 import fptAptech.theSun.security.jwt.AccessToken;
@@ -18,6 +19,12 @@ public interface UserService {
 
     void verifyAccount(Long id, String otp);
 
+    void regenerateOtp(Long id);
+
     AccessToken authenticate(String username, String password);
+
+    void changePassword(Long id, ChangePasswordDto changePasswordDto);
+
+    void forgotPassword(String email);
 
 }
