@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS `category` (
     `updated_by` VARCHAR(50) DEFAULT NULL
 );
 
-CREATE TABLE IF NOT EXISTS `product` (
+CREATE TABLE IF NOT EXISTS `products` (
      `product_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
      `category_id` BIGINT NOT NULL,
      `product_name` VARCHAR(100) NOT NULL,
@@ -20,7 +20,6 @@ CREATE TABLE IF NOT EXISTS `product` (
     `gender` VARCHAR(50) NOT NULL,
     `brand` VARCHAR(50) NOT NULL,
     `price` DOUBLE NOT NULL,
-    `sport` VARCHAR(50) NOT NULL,
     `status` ENUM('InStock', 'OutOfStock'),
     `discount` FLOAT NULL,
     FOREIGN KEY (`category_id`) REFERENCES category(category_id),
@@ -59,6 +58,9 @@ CREATE TABLE IF NOT EXISTS `user` (
      `username` VARCHAR(100) NOT NULL UNIQUE,
     `password` VARCHAR(100) NOT NULL,
     `avatar` VARCHAR(100) NOT NULL,
+    `otp` VARCHAR(5) NULL;
+    `otp_generated_time` DATETIME;
+    `enabled` TINYINT(1) DEFAULT 0;
     `updated_at` TIMESTAMP NOT NULL,
     `created_by` VARCHAR(50) NOT NULL,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

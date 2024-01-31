@@ -28,6 +28,6 @@ public class Warehouse extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "product_id")
-    private Product product;
+    private Products products;
 
 }

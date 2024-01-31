@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS `category` (
     `updated_by` VARCHAR(50) DEFAULT NULL
 );
 
-CREATE TABLE IF NOT EXISTS `product` (
+CREATE TABLE IF NOT EXISTS `products` (
     `product_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
     `category_id` BIGINT NOT NULL,
     `product_name` VARCHAR(100) NOT NULL,
@@ -17,10 +17,9 @@ CREATE TABLE IF NOT EXISTS `product` (
     `image2_product` VARCHAR(100) NULL,
     `image3_product` VARCHAR(100) NULL,
     `description` TEXT NOT NULL,
-    `gender` ENUM('Men', 'Women', 'Unisex'),
+    `gender` VARCHAR(50) NOT NULL,
     `brand` VARCHAR(50) NOT NULL,
     `price` DOUBLE NOT NULL,
-    `sport` VARCHAR(50) NOT NULL,
     `status` ENUM('InStock', 'OutOfStock'),
     `discount` FLOAT NULL,
     FOREIGN KEY (`category_id`) REFERENCES category(category_id),
@@ -30,34 +29,13 @@ CREATE TABLE IF NOT EXISTS `product` (
     `updated_by` VARCHAR(50) DEFAULT NULL
 );
 
-CREATE TABLE IF NOT EXISTS size (
-    `size_id` BIGINT AUTO_INCREMENT PRIMARY KEY,
-    `size` ENUM('M', 'L', 'X', 'XL', 'XXL') UNIQUE,
-    `updated_at` TIMESTAMP NOT NULL,
-    `created_by` VARCHAR(50) NOT NULL,
-    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `updated_by` VARCHAR(50) DEFAULT NULL
-    
-);
-
-CREATE TABLE IF NOT EXISTS color (
-    `color_id` BIGINT AUTO_INCREMENT PRIMARY KEY,
-    `color` ENUM('Black', 'White', 'Red', 'Blue', 'Green', 'Gray', 'Yellow') UNIQUE,
-    `updated_at` TIMESTAMP NOT NULL,
-    `created_by` VARCHAR(50) NOT NULL,
-    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `updated_by` VARCHAR(50) DEFAULT NULL
-);
-
-CREATE TABLE IF NOT EXISTS quantity_product (
-    `quantity_product_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS warehouse (
+    `warehouse_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
     `product_id` BIGINT NOT NULL, 
-    `size_id` BIGINT NOT NULL,
-    `color_id` BIGINT NOT NULL,
+    `size` VARCHAR(50) NOT NULL,
+    `color` VARCHAR(50) NOT NULL,
     `quantity` INT NOT NULL,
     FOREIGN KEY (product_id) REFERENCES product(product_id),
-    FOREIGN KEY (size_id) REFERENCES size(size_id),
-    FOREIGN KEY (color_id) REFERENCES color(color_id),
     `updated_at` TIMESTAMP NOT NULL,
     `created_by` VARCHAR(50) NOT NULL,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -67,18 +45,21 @@ CREATE TABLE IF NOT EXISTS quantity_product (
 
 CREATE TABLE IF NOT EXISTS `role` (
     `role_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
-    `name` ENUM('ROLE_ADMIN', 'ROLE_EMPLOYEE', 'ROLE_ANONYMOUS'),
+    `name` ENUM('ROLE_ADMIN', 'ROLE_EMPLOYEE', 'ROLE_ANONYMOUS', 'ROLE_CUSTOMER'),
     `updated_at` TIMESTAMP NOT NULL,
     `created_by` VARCHAR(50) NOT NULL,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_by` VARCHAR(50) DEFAULT NULL
 );
 
-CREATE TABLE IF NOT EXISTS `user` (
+CREATE TABLE IF NOT EXISTS `users` (
     `user_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
     `username` VARCHAR(100) NOT NULL UNIQUE,
     `password` VARCHAR(100) NOT NULL,
-    `avatar` VARCHAR(100) NOT NULL,
+        `email` VARCHAR(100) NOT NULL UNIQUE,
+    `avatar` VARCHAR(100) NULL,
+    `otp` VARCHAR(5) NULL;
+     `enabled` TINYINT(1) DEFAULT 0;
     `updated_at` TIMESTAMP NOT NULL,
     `created_by` VARCHAR(50) NOT NULL,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -108,15 +89,14 @@ CREATE TABLE IF NOT EXISTS `reset_password` (
 CREATE TABLE IF NOT EXISTS `address` (
     `address_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
     `user_id` BIGINT NULL,
-    `first_name` VARCHAR(100) NOT NULL,
-    `last_name` VARCHAR(100) NOT NULL,
-    `country` VARCHAR(100) NOT NULL,
-    `city` VARCHAR(100) NOT NULL,
-    `address` VARCHAR(500) NOT NULL,
+    `first_name` VARCHAR(100)  NULL,
+    `last_name` VARCHAR(100)  NULL,
+    `country` VARCHAR(100)  NULL,
+    `city` VARCHAR(100)  NULL,
+    `address` VARCHAR(500)  NULL,
     `optional` VARCHAR(200)  NULL,
-    `zipCode` VARCHAR(100) NOT NULL,
-    `email` VARCHAR(100) NOT NULL,
-    `phone` VARCHAR(100) NOT NULL,
+    `zipCode` VARCHAR(100)  NULL,
+    `phone` VARCHAR(100)  NULL,
     FOREIGN KEY (`user_id`) REFERENCES user(user_id),
     `updated_at` TIMESTAMP NOT NULL,
     `created_by` VARCHAR(50) NOT NULL,
@@ -200,6 +180,20 @@ CREATE TABLE IF NOT EXISTS `product_review` (
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_by` VARCHAR(50) DEFAULT NULL
 );
+
+ALTER TABLE product
+DROP COLUMN sport;
+
+
+ALTER TABLE cart_item
+DROP COLUMN sub_total;
+
+ALTER TABLE users
+ADD COLUMN enabled TINYINT(1) DEFAULT 0;
+
+ALTER TABLE users
+ADD COLUMN otp VARCHAR(5) NULL;
+
 
 
 

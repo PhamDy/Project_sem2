@@ -3,22 +3,35 @@ package fptAptech.theSun.dto;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Data
 public class FillterRequestDto implements Serializable {
 
-    private Set<String> category;
+    private List<String> category;
 
-    private Set<String> brand;
+    private List<String> brand;
 
-    private Set<String> color;
+    private List<String> color;
 
-    private Set<String> sport;
+    private String gender1;
 
-    private Set<String> gender;
+    private String gender2;
+
+    private String gender3;
+
+    public String getFormattedGender1() {
+        return "Men";
+    }
+
+    public String getFormattedGender2() {
+        return "Woman";
+    }
+
+    public String getFormattedGender3() {
+        return "Unisex";
+    }
 
     public String getFormattedCategory() {
         return setToString(category);
@@ -28,24 +41,16 @@ public class FillterRequestDto implements Serializable {
         return setToString(brand);
     }
 
-    public String getFormattedColor() {
-        return setToString(color);
-    }
 
-    public String getFormattedSport() {
-        return setToString(sport);
-    }
 
-    public String getFormattedGender() {
-        return setToString(gender);
-    }
 
-    private String setToString(Set<String> set) {
-        if (set == null || set.isEmpty()) {
+
+    private String setToString(List<String> list) {
+        if (list == null || list.isEmpty()) {
             return null;
         }
 
-        return set.stream().map(Objects::toString).collect(Collectors.joining(","));
+        return list.stream().map(Objects::toString).collect(Collectors.joining(","));
     }
 
 

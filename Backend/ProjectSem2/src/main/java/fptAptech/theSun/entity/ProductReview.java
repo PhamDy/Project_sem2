@@ -28,10 +28,10 @@ public class ProductReview extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private Users users;
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "product_id")
-    private Product product;
+    private Products products;
 
 }
