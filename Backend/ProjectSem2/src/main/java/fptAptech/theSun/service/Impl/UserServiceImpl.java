@@ -3,6 +3,7 @@ package fptAptech.theSun.service.Impl;
 import fptAptech.theSun.dto.ChangePasswordDto;
 import fptAptech.theSun.dto.RegisterUserDto;
 import fptAptech.theSun.email.EmailService;
+import fptAptech.theSun.email.OtpUtil;
 import fptAptech.theSun.entity.Enum.RoleName;
 import fptAptech.theSun.entity.Role;
 import fptAptech.theSun.entity.User;
@@ -44,6 +45,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private OtpUtil otpUtil;
 
 
     @Override
@@ -104,7 +108,7 @@ public class UserServiceImpl implements UserService {
         }
         user.setRoles(roles);
 
-        String otp = generateOtp();
+        String otp = otpUtil.generateOtp();
         user.setOtp(otp);
         user.setOtpGeneratedTime(LocalDateTime.now());
         userRepository.save(user);
@@ -135,7 +139,7 @@ public class UserServiceImpl implements UserService {
     public void regenerateOtp(Long id) {
         try {
             User user = userRepository.findById(id).orElseThrow();
-            String otp = generateOtp();
+            String otp = otpUtil.generateOtp();
             user.setOtp(otp);
             user.setOtpGeneratedTime(LocalDateTime.now());
             userRepository.save(user);
@@ -156,6 +160,7 @@ public class UserServiceImpl implements UserService {
 
             if (matches && Objects.equals(dto.getPasswordNew1(), dto.getPasswordNew2())) {
                 user.setPassword(passwordEncoder.encode(dto.getPasswordNew1()));
+                user.setUpdatedBy("User");
                 userRepository.save(user);
                 LOGGER.info("Change password for user with id: {}", id);
             } else {
@@ -169,16 +174,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void forgotPassword(String email) {
-            var user = getByEmail(email);
-            if (user == null) {
-                throw new NotFoundException("User not found");
-            }
-            String otp = generateOtp();
-            user.setOtp(otp);
-            user.setOtpGeneratedTime(LocalDateTime.now());
-            userRepository.save(user);
-            emailService.sendMail(user.getEmail(), "This is your authentication code: " + otp);
+    public void updatePassword(String email, String newPassword) {
+        String password = passwordEncoder.encode(newPassword);
+        var user = getByEmail(email);
+        user.setPassword(password);
+        userRepository.save(user);
     }
 
     @Override
@@ -201,10 +201,5 @@ public class UserServiceImpl implements UserService {
        return null;
     }
 
-    private String generateOtp() {
-        Random random = new Random();
-        int otpNumber = 10000 + random.nextInt(90000);
-        return String.valueOf(otpNumber);
-    }
 
 }

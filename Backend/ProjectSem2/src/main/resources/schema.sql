@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS `role` (
     `updated_by` VARCHAR(50) DEFAULT NULL
 );
 
-CREATE TABLE IF NOT EXISTS `user` (
+CREATE TABLE IF NOT EXISTS `users` (
      `user_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
      `username` VARCHAR(100) NOT NULL UNIQUE,
     `password` VARCHAR(100) NOT NULL,
@@ -78,8 +78,8 @@ CREATE TABLE IF NOT EXISTS `user_role` (
 CREATE TABLE IF NOT EXISTS `reset_password` (
      `reset_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
      `user_id` BIGINT NOT NULL,
-     `ResetPasswordToken` VARCHAR(200) NOT NULL,
-    `ResetPasswordTokenExpiry` DATETIME NOT NULL,
+     `otp_reset` VARCHAR(200) NOT NULL,
+    `reset_password_otp_expiry` DATETIME NOT NULL,
     FOREIGN KEY (`user_id`) REFERENCES user(user_id),
     `updated_at` TIMESTAMP NOT NULL,
     `created_by` VARCHAR(50) NOT NULL,

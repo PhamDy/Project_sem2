@@ -3,7 +3,9 @@ package fptAptech.theSun.controller;
 import fptAptech.theSun.dto.ChangePasswordDto;
 import fptAptech.theSun.dto.LoginDto;
 import fptAptech.theSun.dto.RegisterUserDto;
+import fptAptech.theSun.dto.ResetPassworDto;
 import fptAptech.theSun.exception.DuplicatedTupleException;
+import fptAptech.theSun.service.ResetPasswordService;
 import fptAptech.theSun.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -21,6 +23,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ResetPasswordService resetPasswordService;
 
     @PostMapping("/register")
     @Operation(summary = "Khách hàng đăng ký tài khoản cá nhân", description = "Lưu thông tin tài khoản vào database")
@@ -68,4 +73,18 @@ public class UserController {
         return ResponseEntity.ok(token);
     }
 
+    @PostMapping("/create-otpReset")
+    @Operation(summary = "Cung cấp mã otp để khách hàng đặt lại mật khẩu")
+    public ResponseEntity<?>createOtpReset(@RequestParam String email) {
+        return new ResponseEntity<>(resetPasswordService.createOtpReset(email), HttpStatus.OK);
+    }
+
+    @PatchMapping("/check-otpReset")
+    @Operation(summary = "Kiểm tra mã otp trước khi cho khách hàng cập nhập lại mật khẩu")
+    public ResponseEntity<?>checkOtpReset(@Valid @RequestBody ResetPassworDto dto) {
+        return new ResponseEntity<>(resetPasswordService.checkOtpReset(dto), HttpStatus.OK);
+    }
+
+
 }
+
