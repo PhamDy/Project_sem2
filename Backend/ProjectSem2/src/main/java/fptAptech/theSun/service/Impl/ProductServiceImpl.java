@@ -110,4 +110,11 @@ public class ProductServiceImpl implements ProductService {
 //                discount, under50, between50And100, between100And250, over250,
 //                sort);
 //    }
+
+
+    @Override
+    public List<Products> searchProduct(String keyword) {
+        List<Products> result = productRepository.searchProduct(keyword);
+        return result;
+    }
 }

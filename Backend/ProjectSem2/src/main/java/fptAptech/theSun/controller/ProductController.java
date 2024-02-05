@@ -113,5 +113,13 @@ public class ProductController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
+    @GetMapping("/search")
+    @Operation(summary = "Tìm kiếm sản phẩm không phân biệt chữ hoa chữ thường")
+    public ResponseEntity<?> searchProduct(@RequestParam(name = "keyword") String keyword) {
+        List<Products> products = productService.searchProduct(keyword);
+        List<ProductViewDto> productViewDtos = objectMapper.mapListProductsToDto(products);
+        return new ResponseEntity<>(productViewDtos, HttpStatus.OK);
+    }
+
 
 }

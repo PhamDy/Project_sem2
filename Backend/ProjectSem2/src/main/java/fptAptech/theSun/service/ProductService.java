@@ -35,4 +35,6 @@ public interface ProductService {
 
     Products getProduct(Long id);
 
+    List<Products> searchProduct(String keyword);
+
 }
