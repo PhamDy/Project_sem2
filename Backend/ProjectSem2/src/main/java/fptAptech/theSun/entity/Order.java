@@ -25,7 +25,7 @@ public class Order extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private Users users;
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "payment_id")

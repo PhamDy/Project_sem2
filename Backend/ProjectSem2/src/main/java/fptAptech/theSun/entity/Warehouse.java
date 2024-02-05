@@ -9,26 +9,22 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "product_review")
-public class ProductReview extends BaseEntity{
+@Table(name = "warehouse")
+public class Warehouse extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "product_review_id")
+    @Column(name = "warehouse_id")
     private Long id;
 
-    @Column(name = "comment")
-    private String comment;
+    @Column(name = "size")
+    private String size;
 
-    @Column(name = "star")
-    private Integer star;
+    @Column(name = "color")
+    private String color;
 
-    @Column(name = "status")
-    private Integer status;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Column(name = "quantity")
+    private Integer quantity;
 
     @ManyToOne
     @JoinColumn(name = "product_id")

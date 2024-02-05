@@ -38,14 +38,11 @@ public class Address extends BaseEntity{
     @Column(name = "zipCode")
     private String zipCode;
 
-    @Column(name = "email")
-    private String email;
-
     @Column(name = "phone")
     private String phone;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private Users users;
+    private User user;
 
 }

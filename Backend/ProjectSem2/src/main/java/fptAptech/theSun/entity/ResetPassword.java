@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "reset_password")
 public class ResetPassword extends BaseEntity{
@@ -19,14 +18,19 @@ public class ResetPassword extends BaseEntity{
     @Column(name = "reset_id")
     private Long id;
 
-    @Column(name = "ResetPasswordToken")
-    private String ResetPasswordToken;
+    @Column(name = "otpReset")
+    private String otpReset;
 
-    @Column(name = "ResetPasswordTokenExpiry")
-    private LocalDateTime ResetPasswordTokenExpiry;
+    @Column(name = "reset_password_otp_expiry")
+    private LocalDateTime ResetPasswordOtpExpiry;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id")
-    private Users users;
+    private User user;
 
+    public ResetPassword(String otpReset, LocalDateTime resetPasswordOtpExpiry, User user) {
+        this.otpReset = otpReset;
+        this.ResetPasswordOtpExpiry = resetPasswordOtpExpiry;
+        this.user = user;
+    }
 }
