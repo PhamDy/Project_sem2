@@ -32,7 +32,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
             "INNER JOIN Color co ON co.id = qp.color.id WHERE " +
             "(:gender is null OR p.gender = :gender) AND " +
             "(:brand is null OR p.brand = :brand) AND " +
-            "(:category is null OR c.name = :category) AND " +
+            "(:category is null OR c.name IN (:category)) AND " +
             "(:sport is null OR p.sport = :sport) AND " +
             "(:color is null OR co.color = :color) AND " +
             "(:discount = false OR p.discount > 0) AND " +
@@ -40,15 +40,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
             "(:between50And100 = true AND p.price >= 50 AND p.price <= 100) OR " +
             "(:between100And250 = true AND p.price > 100 AND p.price <= 250) OR " +
             "(:over250 = true AND p.price > 250) OR " +
-            "(:under50 = false AND :between50And100 = false AND :between100And250 = false AND :over250 = false))" +
-            "ORDER BY " +
-            "CASE " +
-            "WHEN :sortBy = 'Price: High-Low' THEN p.price " +
-            "WHEN :sortBy = 'Price: Low-High' THEN p.price " +
-            "WHEN :sortBy = 'Featured' THEN p.discount " +
-            "WHEN :sortBy = 'Newest' THEN p.createdAt " +
-            "ELSE p.id " +
-            "END DESC"
+            "(:under50 = false AND :between50And100 = false AND :between100And250 = false AND :over250 = false))"
     )
     List<Product> productsByFillterAll(
             @Param("gender") ProductGender gender,
@@ -60,8 +52,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
             @Param("under50") Boolean under50,
             @Param("between50And100") Boolean between50And100,
             @Param("between100And250") Boolean between100And250,
-            @Param("over250") Boolean over250,
-            @Param("sortBy") String sortBy
+            @Param("over250") Boolean over250
     );
 
 

@@ -11,9 +11,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.Buffer;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/product")
@@ -68,19 +71,19 @@ public class ProductController {
     public ResponseEntity<?> getProductsByFilters(
             @RequestParam(required = false) ProductGender gender,
             @RequestParam(required = false) String brand,
-            @RequestParam(required = false) String category,
+            @RequestBody List<Integer> category,
             @RequestParam(required = false) ProductColor color,
             @RequestParam(required = false) String sport,
             @RequestParam(name = "discount", required = false, defaultValue = "false") Boolean discount,
             @RequestParam(name = "under50", required = false, defaultValue = "false") Boolean under50,
             @RequestParam(name = "50-100", required = false, defaultValue = "false") Boolean between50And100,
             @RequestParam(name = "100-250", required = false, defaultValue = "false") Boolean between100And250,
-            @RequestParam(name = "over250", required = false, defaultValue = "false") Boolean over250,
-            @RequestParam(required = false) String sortBy)
+            @RequestParam(name = "over250", required = false, defaultValue = "false") Boolean over250
+    )
 
     {
 
-        List<Product> products = productService.getProductsByFilters(gender, brand, category, color, sport, discount, under50, between50And100, between100And250, over250, sortBy);
+        List<Product> products = productService.getProductsByFilters(gender, brand,category.stream().map(Objects::toString).collect(Collectors.joining(",")), color, sport, discount, under50, between50And100, between100And250, over250);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 

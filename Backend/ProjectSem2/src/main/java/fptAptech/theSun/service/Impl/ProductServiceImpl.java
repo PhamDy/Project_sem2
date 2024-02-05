@@ -79,7 +79,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getProductsByFilters(ProductGender gender, String brand, String category, ProductColor color, String sport, Boolean discount, Boolean under50, Boolean between50And100, Boolean between100And250, Boolean over250, String sortBy) {
-        return productRepository.productsByFillterAll(gender, brand, category, color, sport, discount, under50, between50And100, between100And250, over250, sortBy);
+    public List<Product> getProductsByFilters(ProductGender gender, String brand, String category, ProductColor color, String sport, Boolean discount, Boolean under50, Boolean between50And100, Boolean between100And250, Boolean over250) {
+        return productRepository.productsByFillterAll(gender, brand, category, color, sport, discount, under50, between50And100, between100And250, over250);
     }
 }

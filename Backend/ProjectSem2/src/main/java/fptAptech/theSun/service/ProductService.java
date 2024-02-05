@@ -21,7 +21,7 @@ public interface ProductService {
 
     List<Product> getProductPriceDesc();
 
-    List<Product> getProductsByFilters(ProductGender gender, String brand, String category, ProductColor color, String sport, Boolean discount , Boolean under50, Boolean between50And100, Boolean between100And250, Boolean over250, String sortBy);
+    List<Product> getProductsByFilters(ProductGender gender, String brand, String category, ProductColor color, String sport, Boolean discount , Boolean under50, Boolean between50And100, Boolean between100And250, Boolean over250);
 
     Product getProduct(int id);
 
