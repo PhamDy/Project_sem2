@@ -68,7 +68,7 @@ public interface ProductRepository extends JpaRepository<Products, Long> {
     @Query("SELECT p FROM Products p WHERE LOWER(p.name) LIKE %:keyword%")
     List<Products> searchProduct(String keyword);
 
-    //ok ban oi
+
 
 
 
