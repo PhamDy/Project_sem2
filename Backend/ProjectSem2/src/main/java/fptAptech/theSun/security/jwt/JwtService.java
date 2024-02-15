@@ -42,23 +42,23 @@ public class JwtService {
 
     private Map<String, Object> generateTokenClaims(User user) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("name", user.getUserName());
+        claims.put("email", user.getEmail());
         return claims;
     }
 
-//    public String getEmailFromToken(String tokenJwt) {
-//        try {
-//            JwtParser build = Jwts.parser()
-//                    .verifyWith(keyGenerator.getKey())
-//                    .build();
-//
-//            Jws<Claims> jwsClaims = build.parseSignedClaims(tokenJwt);
-//            Claims claims = jwsClaims.getPayload();
-//            return claims.getSubject();
-//        } catch (JwtException exception) {
-//            throw new InvalidTokenException(exception.getMessage());
-//        }
-//    }
+    public String getEmailFromToken(String tokenJwt) {
+        try {
+            JwtParser build = Jwts.parser()
+                    .verifyWith(keyGenerator.getKey())
+                    .build();
+
+            Jws<Claims> jwsClaims = build.parseSignedClaims(tokenJwt);
+            Claims claims = jwsClaims.getPayload();
+            return (String) claims.get("email");
+        } catch (JwtException exception) {
+            throw new InvalidTokenException(exception.getMessage());
+        }
+    }
 
     public String getUsernameFromToken(String tokenJwt) {
         try {

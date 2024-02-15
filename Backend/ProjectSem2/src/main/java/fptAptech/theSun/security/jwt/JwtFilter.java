@@ -37,8 +37,16 @@ public class JwtFilter extends OncePerRequestFilter {
         if (token!=null) {
             try {
                 String username = jwtService.getUsernameFromToken(token);
-                User user = userService.getByUsername(username);
-                setUserAsAuthenticated(user);
+                String email = jwtService.getEmailFromToken(token);
+                User user;
+                if (username != null) {
+                    user = userService.getByUsername(username);
+                    setUserAsAuthenticated(user);
+                } else {
+                    user = userService.getByEmail(email);
+                    setUserAsAuthenticated(user);
+                }
+
             } catch (InvalidTokenException exception){
                 log.error("Token invalid: {}", exception.getMessage());
             } catch (Exception exception) {
@@ -68,10 +76,10 @@ public class JwtFilter extends OncePerRequestFilter {
 
     }
 
-    private String getToken(HttpServletRequest request) {
+    public String getToken(HttpServletRequest request) {
         String authHeader =request.getHeader("Authorization");
         if (authHeader != null) {
-            String[] authHeaderParts = authHeader.split("");
+            String[] authHeaderParts = authHeader.split(" ");
             if (authHeaderParts.length == 2) {
                 return authHeaderParts[1];
             }

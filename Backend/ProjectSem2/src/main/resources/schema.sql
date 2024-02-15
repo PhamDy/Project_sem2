@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS `users` (
      `user_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
      `username` VARCHAR(100) NOT NULL UNIQUE,
     `password` VARCHAR(100) NOT NULL,
-    `avatar` VARCHAR(100) NOT NULL,
+    `avatar` VARCHAR(100) NULL,
     `otp` VARCHAR(5) NULL,
     `otp_generated_time` DATETIME,
     `enabled` TINYINT(1) DEFAULT 0,

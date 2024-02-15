@@ -7,12 +7,15 @@ import fptAptech.theSun.email.OtpUtil;
 import fptAptech.theSun.entity.Enum.RoleName;
 import fptAptech.theSun.entity.Role;
 import fptAptech.theSun.entity.User;
+import fptAptech.theSun.exception.CustomException;
 import fptAptech.theSun.exception.DuplicatedTupleException;
 import fptAptech.theSun.respository.RoleRepository;
 import fptAptech.theSun.respository.UserRepository;
 import fptAptech.theSun.security.jwt.AccessToken;
+import fptAptech.theSun.security.jwt.JwtFilter;
 import fptAptech.theSun.security.jwt.JwtService;
 import fptAptech.theSun.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,10 +52,19 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private OtpUtil otpUtil;
 
+    @Override
+    public User save(User user) {
+        return userRepository.save(user);
+    }
 
     @Override
     public User getByEmail(String email) {
-        return userRepository.findByEmail(email);
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            return user;
+        }
+        return null;
     }
 
     @Override
@@ -117,60 +129,66 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void verifyAccount(Long id, String otp) {
-        Optional<User> optionalUser  = userRepository.findById(id);
+    public void verifyAccount(String email, String otp) {
+        Optional<User> optionalUser  = userRepository.findByEmail(email);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             Duration duration = Duration.between(user.getOtpGeneratedTime(), LocalDateTime.now());
             if (user.getOtp().equals(otp) && duration.getSeconds() < (10*60)) {
                 user.setEnabled(true);
                 userRepository.save(user);
-                LOGGER.info("User with id {} successfully verified and enabled.", id);
+                LOGGER.info("User with email {} successfully verified and enabled.", email);
             } else {
                 throw new IllegalArgumentException("Invalid OTP or expired");
             }
         } else {
-            LOGGER.error("User not found with id: {}", id);
+            LOGGER.error("User not found with email: {}", email);
             throw new RuntimeException("User not found");
         }
     }
 
     @Override
-    public void regenerateOtp(Long id) {
+    public void regenerateOtp(String email) {
         try {
-            User user = userRepository.findById(id).orElseThrow();
+            User user = userRepository.findByEmail(email).orElseThrow();
             String otp = otpUtil.generateOtp();
             user.setOtp(otp);
             user.setOtpGeneratedTime(LocalDateTime.now());
             userRepository.save(user);
             emailService.sendMail(user.getEmail(), "This is your authentication code: " + otp);
-            LOGGER.info("OTP regenerated for user with id: {}", id);
+            LOGGER.info("OTP regenerated for user with email: {}", email);
         } catch (NoSuchElementException e) {
-            LOGGER.error("User not found with id: {}", id);
+            LOGGER.error("User not found with email: {}", e);
             throw new NotFoundException("User not found");
         }
     }
 
-    @Override
-    @Transactional
-    public void changePassword(Long id, ChangePasswordDto dto) {
-        try {
-            User user = userRepository.findById(id).orElseThrow(()->new NotFoundException("User not found"));
-            boolean matches = passwordEncoder.matches(dto.getPasswordOld(), user.getPassword());
-
-            if (matches && Objects.equals(dto.getPasswordNew1(), dto.getPasswordNew2())) {
-                user.setPassword(passwordEncoder.encode(dto.getPasswordNew1()));
-                user.setUpdatedBy("User");
-                userRepository.save(user);
-                LOGGER.info("Change password for user with id: {}", id);
-            } else {
-                throw new RuntimeException("Invalid password or mismatched new passwords");
-            }
-        } catch (Exception e) {
-            LOGGER.error("Error changing password for user with id: {}", id, e);
-            throw new RuntimeException("Error changing password");
-        }
-    }
+//    @Override
+//    @Transactional
+//    public void changePassword(HttpServletRequest request, ChangePasswordDto dto) {
+//
+//        String jwt = jwtFilter.getToken(request);
+//        String username = jwtService.getUsernameFromToken(jwt);
+//        User user;
+//        try {
+//            user = getByUsername(username);
+//            if (user == null) {
+//                throw new CustomException("User not found");
+//            }
+//            boolean matches = passwordEncoder.matches(dto.getPasswordOld(), user.getPassword());
+//            if (matches && Objects.equals(dto.getPasswordNew1(), dto.getPasswordNew2())) {
+//                user.setPassword(passwordEncoder.encode(dto.getPasswordNew1()));
+//                user.setUpdatedBy("User");
+//                userRepository.save(user);
+//                LOGGER.info("Change password for user with user name: {}", username);
+//            } else {
+//                throw new RuntimeException("Invalid password or mismatched new passwords");
+//            }
+//        } catch (Exception e) {
+//            LOGGER.error("Error changing password for user with username: {}", username, e);
+//            throw new RuntimeException("Error changing password");
+//        }
+//    }
 
     @Override
     @Transactional
