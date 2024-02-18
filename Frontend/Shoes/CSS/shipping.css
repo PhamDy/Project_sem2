@@ -1,0 +1,115 @@
+.choose-shipper {
+    color: #000;
+    font-family: Inter;
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+    margin-bottom: 20px;
+}
+
+.choose-content {
+    display: inline-flex;
+    margin-bottom: 60px;
+}
+
+.choose-box button{
+    max-width: 200px;
+    height: 200px;
+    border-radius: 5px;
+    border: 2px solid #D9D9D9;
+    margin-right: 39px;
+    background: #FFF;
+    transition: all ease 0.3s;
+    cursor: pointer;
+    opacity: 0.5;
+}
+
+.ship-method button {
+    width: 100%;
+    height: 100px;
+    border-radius: 5px;
+    border: 2px solid #D9D9D9;
+    background: #FFF;
+    margin-bottom: 30px;
+}
+
+.ship-box {
+    text-align: left;
+}
+
+.ship-img {
+    width: 25%;
+    height: 25%;
+    margin-left: 15px;
+}
+
+.ship-name {
+    line-height: 70px;
+    color: #000;
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 600;
+    width: 22%;
+    font-size: 17px;
+}
+
+.ship-day {
+    line-height: 70px;
+    color: #000;
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 17px;
+}
+.ship-price {
+    margin-left: auto;
+    line-height: 70px;
+    color: #000;
+    font-family: Inter;
+    font-style: normal;
+    font-size: 22px;
+    font-weight: 700;
+    margin-right: 10px;
+}
+
+.progress-container .line-process {
+    content: "";
+    width: 25%;
+    height: 100%;
+    background: deepskyblue;
+    background: linear-gradient(to right, deepskyblue 0%, #2ea3b7 100%);
+}
+
+.ship-method {
+    display: none;
+}
+
+
+.showMethod {
+    display: flex;
+}
+
+.choose-container button.selected {
+    border: 2px solid #000;
+    opacity: 1;
+}
+
+.choose-container button:focus {
+    outline: none;
+}
+
+.ship-method button:focus {
+    outline: none;
+    border: 2px solid #000;
+}
+
+
+.choose-container button.selected {
+    border: 2px solid #000;
+}
+
+.ship-method button.disabled {
+    border: 2px solid #000;
+    
+}

@@ -1,0 +1,59 @@
+.content-404 {
+    padding: 205px 0;
+    text-align: center;
+}
+
+.content-404 .title-404 {
+    font-size: 100px;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.content-404 .page-title {
+    font-size: 30px;
+    font-weight: 600;
+}
+
+.content-404 .sub-title {
+    color: #a8a8a8;
+    font-size: 16px;
+}
+
+.content-404 .sub-link {
+    color: #a8a8a8;
+    font-size: 14px;
+}
+
+.content-404 .sub-link a {
+    color: #51adcd;
+}
+
+.content-404 .search {
+    position: relative;
+    max-width: 560px;
+    margin: 25px auto 0;
+}
+
+.content-404 .search input[type=text] {
+    padding: 17px 25px;
+    max-width: 100%;
+    background-color: transparent;
+    border: 1px solid #d6d6d6;
+    font-size: 14px;
+    color: #999;
+    line-height: 24px;
+    width: 100%;
+}
+
+.content-404 .search button[type=submit] {
+    color: #fff;
+    font-size: 25px;
+    background: #000;
+    padding: 11px 20px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: .3s;
+    height: 60px;
+    border: none;
+}
