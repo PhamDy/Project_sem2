@@ -145,7 +145,8 @@ CREATE TABLE IF NOT EXISTS `order` (
 
 CREATE TABLE IF NOT EXISTS `carts` (
      `cart_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
-    `user_id` BIGINT NOT NULL,
+    `user_id` BIGINT NULL,
+     `status` ENUM('Open', 'Close') DEFAULT('Open'),
     FOREIGN KEY (`user_id`) REFERENCES users(user_id),
     `updated_at` TIMESTAMP NOT NULL,
     `created_by` VARCHAR(50) NOT NULL,
@@ -158,6 +159,8 @@ CREATE TABLE IF NOT EXISTS `cart_item` (
    `cart_item_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
    `product_id` BIGINT NOT NULL,
    `cart_id` BIGINT NOT NULL,
+   `size` VARCHAR(50) NOT NULL,
+    `color` VARCHAR(50) NOT NULL,
    `sub_total` DOUBLE NOT NULL,
    `quantity` INT NOT NULL,
    FOREIGN KEY (`product_id`) REFERENCES products(product_id),

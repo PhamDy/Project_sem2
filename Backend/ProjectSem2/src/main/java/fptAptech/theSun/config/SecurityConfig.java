@@ -37,8 +37,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configure(http))
                 .authorizeHttpRequests(auth -> { auth
-                    .requestMatchers("/api/users/**").permitAll()
-                    .requestMatchers( "/api/products/**").permitAll()
+                    .requestMatchers("/api/**").permitAll()
                     .anyRequest().authenticated();
                 })
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)

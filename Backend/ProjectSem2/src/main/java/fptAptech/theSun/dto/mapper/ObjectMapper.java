@@ -1,11 +1,11 @@
 package fptAptech.theSun.dto.mapper;
 
+import fptAptech.theSun.dto.CartDto;
+import fptAptech.theSun.dto.CartItemDto;
 import fptAptech.theSun.dto.ProductViewDto;
 import fptAptech.theSun.dto.RegisterUserDto;
+import fptAptech.theSun.entity.*;
 import fptAptech.theSun.entity.Enum.RoleName;
-import fptAptech.theSun.entity.Products;
-import fptAptech.theSun.entity.Role;
-import fptAptech.theSun.entity.User;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
@@ -48,6 +48,26 @@ public class ObjectMapper {
         return productsList.stream()
                 .map(this::mapProductsToDto)
                 .collect(Collectors.toList());
+    }
+
+    // Carts mapper
+    public CartDto mapCartsToDto(Carts carts) {
+        return CartDto.builder()
+                .id(carts.getId())
+                .userId(carts.getUser().getId())
+                .totalPrice(carts.getTotalPrice())
+                .build();
+    }
+
+    public CartItemDto mapCartItemsToDto(CartItem cartItem) {
+        return CartItemDto.builder()
+                .id(cartItem.getId())
+                .productName(cartItem.getProducts().getName())
+                .color(cartItem.getColor())
+                .size(cartItem.getSize())
+                .quantity(cartItem.getQuantity())
+                .price(cartItem.getPrice())
+                .build();
     }
 
 }

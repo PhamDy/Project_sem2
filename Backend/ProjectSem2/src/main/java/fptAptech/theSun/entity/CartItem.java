@@ -17,8 +17,17 @@ public class CartItem extends BaseEntity{
     @Column(name = "cart_item_id")
     private Long id;
 
+    @Column(name = "size")
+    private String size;
+
+    @Column(name = "color")
+    private String color;
+
     @Column(name = "quantity")
     private Integer quantity;
+
+    @Column(name = "price")
+    private Double price;
 
     @ManyToOne
     @JoinColumn(name = "product_id")
@@ -30,7 +39,7 @@ public class CartItem extends BaseEntity{
 
     @Transient
     public double getSubtotal() {
-        if (this.products.getDiscount() !=0) {
+        if (this.products.getDiscount() != 0) {
             return Math.round((this.products.getPrice() * ((100 - this.products.getDiscount())/100)) * this.quantity);
         } else {
             return this.products.getPrice() * this.quantity;

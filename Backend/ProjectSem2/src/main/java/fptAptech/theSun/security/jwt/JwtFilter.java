@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class JwtFilter extends OncePerRequestFilter {
 
+    public static String CURRENT_USER = "";
     private final JwtService jwtService;
     private final UserService userService;
 
@@ -36,17 +37,11 @@ public class JwtFilter extends OncePerRequestFilter {
 
         if (token!=null) {
             try {
-                String username = jwtService.getUsernameFromToken(token);
                 String email = jwtService.getEmailFromToken(token);
-                User user;
-                if (username != null) {
-                    user = userService.getByUsername(username);
+                CURRENT_USER = email;
+                var user = userService.getByEmail(email);
                     setUserAsAuthenticated(user);
-                } else {
-                    user = userService.getByEmail(email);
-                    setUserAsAuthenticated(user);
-                }
-
+                System.out.println(email + " " + CURRENT_USER);
             } catch (InvalidTokenException exception){
                 log.error("Token invalid: {}", exception.getMessage());
             } catch (Exception exception) {
@@ -64,7 +59,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 .collect(Collectors.toList());
 
         UserDetails userDetails = org.springframework.security.core.userdetails.User
-                .withUsername(user.getUserName())
+                .withUsername(user.getEmail())
                 .password(user.getPassword())
                 .authorities(authorities)
                 .build();

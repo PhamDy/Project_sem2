@@ -1,5 +1,6 @@
 package fptAptech.theSun.entity;
 
+import fptAptech.theSun.entity.Enum.ProductStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,6 +26,10 @@ public class Warehouse extends BaseEntity{
 
     @Column(name = "quantity")
     private Integer quantity;
+
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private ProductStatus status;
 
     @ManyToOne
     @JoinColumn(name = "product_id")

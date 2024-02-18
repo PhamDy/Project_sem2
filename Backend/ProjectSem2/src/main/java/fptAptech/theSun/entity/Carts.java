@@ -1,6 +1,8 @@
 package fptAptech.theSun.entity;
 
+import fptAptech.theSun.entity.Enum.CartsStatus;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Null;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,7 +20,17 @@ public class Carts extends BaseEntity{
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = true)
+    @Null
     private User user;
+
+    @Column(name = "total_price")
+    private Double totalPrice;
+
+    @Column(name = "status")
+    private CartsStatus status;
+
+    @Column(name = "guest")
+    private Long guestId;
 
 }
