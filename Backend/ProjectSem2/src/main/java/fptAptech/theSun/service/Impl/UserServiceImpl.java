@@ -2,6 +2,8 @@ package fptAptech.theSun.service.Impl;
 
 import fptAptech.theSun.dto.ChangePasswordDto;
 import fptAptech.theSun.dto.RegisterUserDto;
+import fptAptech.theSun.dto.UserDto;
+import fptAptech.theSun.dto.mapper.ObjectMapper;
 import fptAptech.theSun.email.EmailService;
 import fptAptech.theSun.email.OtpUtil;
 import fptAptech.theSun.entity.Enum.RoleName;
@@ -52,6 +54,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private OtpUtil otpUtil;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @Override
     public User save(User user) {
         return userRepository.save(user);
@@ -65,6 +70,12 @@ public class UserServiceImpl implements UserService {
             return user;
         }
         return null;
+    }
+
+    @Override
+    public UserDto getByEmailDto(String email) {
+        var user = userRepository.findByEmail(email);
+        return objectMapper.mapUserToDto(user.get());
     }
 
     @Override
@@ -162,33 +173,6 @@ public class UserServiceImpl implements UserService {
             throw new NotFoundException("User not found");
         }
     }
-
-//    @Override
-//    @Transactional
-//    public void changePassword(HttpServletRequest request, ChangePasswordDto dto) {
-//
-//        String jwt = jwtFilter.getToken(request);
-//        String username = jwtService.getUsernameFromToken(jwt);
-//        User user;
-//        try {
-//            user = getByUsername(username);
-//            if (user == null) {
-//                throw new CustomException("User not found");
-//            }
-//            boolean matches = passwordEncoder.matches(dto.getPasswordOld(), user.getPassword());
-//            if (matches && Objects.equals(dto.getPasswordNew1(), dto.getPasswordNew2())) {
-//                user.setPassword(passwordEncoder.encode(dto.getPasswordNew1()));
-//                user.setUpdatedBy("User");
-//                userRepository.save(user);
-//                LOGGER.info("Change password for user with user name: {}", username);
-//            } else {
-//                throw new RuntimeException("Invalid password or mismatched new passwords");
-//            }
-//        } catch (Exception e) {
-//            LOGGER.error("Error changing password for user with username: {}", username, e);
-//            throw new RuntimeException("Error changing password");
-//        }
-//    }
 
     @Override
     @Transactional

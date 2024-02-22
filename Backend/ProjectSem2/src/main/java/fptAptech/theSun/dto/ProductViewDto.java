@@ -13,6 +13,8 @@ public class ProductViewDto implements Serializable {
 
     private String name;
 
+    private String categoryName;
+
     private String img;
 
     private Double price;

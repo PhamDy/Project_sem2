@@ -21,16 +21,13 @@ public class Carts extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = true)
-    @Null
     private User user;
 
     @Column(name = "total_price")
     private Double totalPrice;
 
     @Column(name = "status")
+    @Enumerated(EnumType.STRING)
     private CartsStatus status;
-
-    @Column(name = "guest")
-    private Long guestId;
 
 }

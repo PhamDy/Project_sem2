@@ -31,8 +31,8 @@ public class CartServiceImpl implements CartService {
     @Autowired
     private ProductRepository productRepository;
 
-    @Autowired
-    private WarehouseRepository warehouseRepository;
+//    @Autowired
+//    private WarehouseRepository warehouseRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -48,66 +48,19 @@ public class CartServiceImpl implements CartService {
 
         String email = JwtFilter.CURRENT_USER;
         Optional<User> user;
-        user = userRepository.findByEmail(email);
-//        if (user.isEmpty()){
-//            Long id = -(UUID.randomUUID().getMostSignificantBits() & Long.MIN_VALUE);
-//            System.out.println(id);
-//            User newUser = new User();
-//            newUser.setId(id);
-//            user = Optional.of(newUser);
-//        }
-//        System.out.println(user.toString());
-
-//        var cart = cartRepository.findByUserAndStatus(user.get(), CartsStatus.Open);
-//        if (cart == null) {
-//            cart = new Carts();
-//            cart.setTotalPrice(0.00);
-//            cart.setUser(user.get());
-//            if (cart.getUser().getId()<0) {
-//                cart.setCreatedBy("ANONYMOUS");
-//            } else {
-//                cart.setCreatedBy("CUSTOMER");
-//            }
-//            cartRepository.save(cart);
-//        }
-//        System.out.println(cart.toString());
-//
-//        if (cart == null) {
-//            cart = new Carts();
-//            cart.setTotalPrice(0.00);
-//            if (cart.getUser().getId()<0) {
-//                cart.setCreatedBy("ANONYMOUS");
-//            } else {
-//                cart.setCreatedBy("CUSTOMER");
-//            }
-//            cartRepository.save(cart);
-//        }
-//        System.out.println(cart.toString());
+         user = Optional.ofNullable(userRepository.findByEmail(email).orElseThrow(() ->
+                new CustomException("You must login before!")));
 
         Carts cart;
-        if (user.isPresent()) {
-            cart = cartRepository.findByUserAndStatus(user.get(), CartsStatus.Open);
+            cart = cartRepository.findByUser_IdAndStatus(user.get().getId(), CartsStatus.Open);
             if (cart == null) {
                 cart = new Carts();
                 cart.setTotalPrice(0.00);
                 cart.setUser(user.get());
                 cart.setStatus(CartsStatus.Open);
                 cart.setCreatedBy("CUSTOMER");
-                cart.setGuestId(null);
                 cart = cartRepository.save(cart);
             }
-        } else {
-            Long guestId = (UUID.randomUUID().getMostSignificantBits() & Long.MIN_VALUE);
-            cart = cartRepository.findByGuestIdAndAndStatus(guestId, CartsStatus.Open);
-            if ()
-        }
-
-//        var warehouse = warehouseRepository.findByProducts_IdAndColorAndSize(productId, size, color);
-        var warehouse1 = warehouseRepository.findById(1L);
-        Warehouse warehouse = warehouse1.get();
-        if (warehouse == null) {
-            throw new CustomException("Warehouse not found");
-        }
 
         CartItem cartItem = cartItemRepository.findByCartsAndProductsAndColorAndSize(cart.getId(), productId, color, size);
         if (cartItem == null) {
@@ -122,26 +75,12 @@ public class CartServiceImpl implements CartService {
                 cartItem.setPrice(product.getPrice());
             }
             cartItem.setQuantity(quantity);
-            if (user.get().getId() > 0) {
-                cartItem.setCreatedBy("CUSTOMER");
-            } else {
-                cartItem.setCreatedBy("ANONYMOUS");
-            }
+            cartItem.setCreatedBy("CUSTOMER");
             cartItemRepository.save(cartItem);
-            warehouse.setQuantity(warehouse.getQuantity() - cartItem.getQuantity());
         } else {
             cartItem.setQuantity(cartItem.getQuantity() + quantity);
             cartItemRepository.save(cartItem);
-            warehouse.setQuantity(warehouse.getQuantity() - cartItem.getQuantity());
         }
-
-        if (warehouse.getQuantity() == 0 ){
-            warehouse.setStatus(ProductStatus.OutOfStock);
-        }
-        if (warehouse.getQuantity() < cartItem.getQuantity()) {
-            throw new CustomException("Not enough quantity available for product: ", product.getName());
-        }
-        warehouseRepository.save(warehouse);
 
         cart.setTotalPrice(cart.getTotalPrice() + cartItem.getSubtotal());
         cartRepository.save(cart);

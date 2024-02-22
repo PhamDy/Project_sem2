@@ -1,9 +1,6 @@
 package fptAptech.theSun.dto.mapper;
 
-import fptAptech.theSun.dto.CartDto;
-import fptAptech.theSun.dto.CartItemDto;
-import fptAptech.theSun.dto.ProductViewDto;
-import fptAptech.theSun.dto.RegisterUserDto;
+import fptAptech.theSun.dto.*;
 import fptAptech.theSun.entity.*;
 import fptAptech.theSun.entity.Enum.RoleName;
 import org.springframework.stereotype.Component;
@@ -30,6 +27,15 @@ public class ObjectMapper {
                 .build();
     }
 
+    public UserDto mapUserToDto(User user) {
+        return UserDto.builder()
+                .id(user.getId())
+                .userName(user.getUserName())
+                .email(user.getEmail())
+                .role(user.getRoles().toString())
+                .build();
+    }
+
 
 
     // Products mapper
@@ -38,6 +44,7 @@ public class ObjectMapper {
         return ProductViewDto.builder()
                 .id(products.getId())
                 .name(products.getName())
+                .categoryName(products.getCategory().getName())
                 .img(products.getImg())
                 .price(products.getPrice())
                 .discount(products.getDiscount())

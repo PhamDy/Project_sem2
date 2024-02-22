@@ -7,8 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CartRepository extends JpaRepository<Carts, Long> {
 
-    Carts findByUserAndStatus(User user, CartsStatus status);
-
-    Carts findByGuestIdAndAndStatus(Long id, CartsStatus status);
+    Carts findByUser_IdAndStatus(Long id, CartsStatus status);
 
 }
