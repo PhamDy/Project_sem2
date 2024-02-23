@@ -18,7 +18,7 @@ public class ResetPassword extends BaseEntity{
     @Column(name = "reset_id")
     private Long id;
 
-    @Column(name = "otpReset")
+    @Column(name = "otp_reset")
     private String otpReset;
 
     @Column(name = "reset_password_otp_expiry")
@@ -28,9 +28,4 @@ public class ResetPassword extends BaseEntity{
     @JoinColumn(name = "user_id")
     private User user;
 
-    public ResetPassword(String otpReset, LocalDateTime resetPasswordOtpExpiry, User user) {
-        this.otpReset = otpReset;
-        this.ResetPasswordOtpExpiry = resetPasswordOtpExpiry;
-        this.user = user;
-    }
 }

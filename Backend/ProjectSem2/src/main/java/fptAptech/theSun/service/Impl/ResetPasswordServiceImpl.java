@@ -9,6 +9,7 @@ import fptAptech.theSun.respository.ResetPasswordRepository;
 import fptAptech.theSun.service.ResetPasswordService;
 import fptAptech.theSun.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.webjars.NotFoundException;
@@ -26,6 +27,9 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
     private UserService userService;
 
     @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
     private EmailService emailService;
 
     @Autowired
@@ -39,7 +43,10 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
         }
         String otp = otpUtil.generateOtp();
 
-        ResetPassword resetPassword = new ResetPassword(otp, LocalDateTime.now(), user);
+        ResetPassword resetPassword = new ResetPassword();
+        resetPassword.setOtpReset(otp);
+        resetPassword.setResetPasswordOtpExpiry(LocalDateTime.now());
+        resetPassword.setUser(user);
         resetPassword.setCreatedBy("User");
         resetPasswordRepository.save(resetPassword);
         emailService.sendMail(email, otp);
@@ -49,17 +56,17 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
     @Override
     @Transactional
     public String checkOtpReset(ResetPassworDto dto) {
-        ResetPassword resetPassword = resetPasswordRepository.findByUser_EmailAndOtpReset(dto.getEmail(), dto.getOtpReset());
+        ResetPassword resetPassword = resetPasswordRepository.findByOtpReset(dto.getOtpReset());
         if (resetPassword == null) {
-            throw new CustomException("Email and Otp Reset not found");
+            throw new CustomException("Otp not found");
         }
-
         Duration duration = Duration.between(resetPassword.getResetPasswordOtpExpiry(), LocalDateTime.now());
         if (duration.toMinutes() > (10)) {
             throw new CustomException(("otp has expired"));
         }
-
-        userService.updatePassword(dto.getEmail(), dto.getPasswordNew());
+        var user = resetPassword.getUser();
+        user.setPassword(passwordEncoder.encode(dto.getPasswordNew()));
+        userService.save(user);
         return "Update password successfully";
     }
 }

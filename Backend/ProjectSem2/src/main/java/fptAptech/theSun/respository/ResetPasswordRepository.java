@@ -14,6 +14,6 @@ public interface ResetPasswordRepository extends JpaRepository<ResetPassword, Lo
 //    @Query(value = "SELECT rp FROM ResetPassword rp INNER JOIN User u ON rp.user.id = u.id WHERE u.email = :email AND rp.otpReset = :otpReset")
 //    ResetPassword findByUser_EmailAndOtpReset(@Param("email") String email, @Param("otpReset") String otpReset);
 
-      ResetPassword findByUser_EmailAndOtpReset(String email, String otpReset);
+      ResetPassword findByOtpReset(String otpReset);
 
 }

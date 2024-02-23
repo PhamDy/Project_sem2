@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS `user_role` (
 CREATE TABLE IF NOT EXISTS `reset_password` (
                                                 `reset_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
                                                 `user_id` BIGINT NOT NULL,
-                                                `otpReset` VARCHAR(10) NOT NULL,
+                                                `otp_reset` VARCHAR(10) NOT NULL,
     `reset_password_otp_expiry` DATETIME NOT NULL,
     FOREIGN KEY (`user_id`) REFERENCES users(user_id),
     `updated_at` TIMESTAMP NOT NULL,

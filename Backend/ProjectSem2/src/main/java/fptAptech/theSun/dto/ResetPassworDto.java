@@ -9,9 +9,6 @@ import java.io.Serializable;
 
 @Data
 public class ResetPassworDto implements Serializable {
-    @NotNull
-    @Email
-    private String email;
 
     @NotNull
     private String otpReset;
