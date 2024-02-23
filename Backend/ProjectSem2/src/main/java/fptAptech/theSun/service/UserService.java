@@ -21,7 +21,7 @@ public interface UserService {
 
     void save(RegisterUserDto RegisterUserDto);
 
-    void verifyAccount(String email, String otp);
+    void verifyAccount(String otp);
 
     void regenerateOtp(String email);
 

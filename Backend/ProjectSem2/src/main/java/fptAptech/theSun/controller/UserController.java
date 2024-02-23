@@ -57,9 +57,8 @@ public class UserController {
 
     @PatchMapping("/verify")
     @Operation(summary = "Khách hàng nhập mã otp", description = "Kiểm tra thông tin OTP chuẩn không, nếu chuẩn thì enable cho khách hàng có thể đăng nhập")
-    public ResponseEntity<?>authtotp(@RequestParam(name = "email") String email,
-                                     @RequestParam(name = "otp") String otp) {
-        userService.verifyAccount(email, otp);
+    public ResponseEntity<?>authtotp(@RequestParam(name = "otp") String otp) {
+        userService.verifyAccount(otp);
         return ResponseEntity.ok().build();
     }
 

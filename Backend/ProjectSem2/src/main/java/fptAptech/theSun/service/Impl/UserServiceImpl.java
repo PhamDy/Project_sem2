@@ -140,20 +140,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void verifyAccount(String email, String otp) {
-        Optional<User> optionalUser  = userRepository.findByEmail(email);
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
+    public void verifyAccount(String otp) {
+        var user = userRepository.findByOtp(otp);
+        if (user!=null) {
             Duration duration = Duration.between(user.getOtpGeneratedTime(), LocalDateTime.now());
             if (user.getOtp().equals(otp) && duration.getSeconds() < (10*60)) {
                 user.setEnabled(true);
                 userRepository.save(user);
-                LOGGER.info("User with email {} successfully verified and enabled.", email);
+                LOGGER.info("User with email {} successfully verified and enabled.", user.getEmail());
             } else {
                 throw new IllegalArgumentException("Invalid OTP or expired");
             }
         } else {
-            LOGGER.error("User not found with email: {}", email);
+            LOGGER.error("User not found with email: {}", user.getEmail());
             throw new RuntimeException("User not found");
         }
     }
