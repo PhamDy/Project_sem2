@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="Shoes/CSS/delivery.css">
+    <link rel="stylesheet" href="Shoes/CSS/shipping.css">
+    <link rel="stylesheet" href="Shoes/CSS/homepage.css">
+    <link rel="stylesheet" href="Shoes/CSS/navbar.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Hello, world!</title>
+  </head>
+  <body>
+
+    <header id="header" style="padding: 20px 0 0;">
+        <div class="container" style="max-width: 1920px;">
+            <div class="row" style="justify-content: space-between;">
+                <div class="col-md-2 headers-1" style="text-align: left;">
+                    <a class="header-logos" href="index.html">WALKZ</a>
+                </div>
+                <div class="col-md-1 header-remove" style="justify-content: center;">
+                </div>
+                <div class="col-md-9 headers-2" >
+                    <ul class="icon-box" style="justify-content: right;">
+                        <li class="nav-icon"><a href="login.html"> <i class="fa-regular fa-user"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container" style="max-width: 1440px;">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="progress-container">
+                    <ul>
+                        <li>
+                            <div class="text-inner">DELIVERY</div>
+                        </li>
+                        <li>
+                            <div class="text-inner">SHIPPING</div>
+                        </li>
+                        <li>
+                            <div class="text-inner">BILLING</div>
+                        </li>
+                        <li>
+                            <div class="text-inner">TOTAL</div>
+                        </li>
+                        <li>
+                            <div class="text-inner">PAYMENT</div>
+                        </li>
+                    </ul>
+                    <div class="line">
+                        <div class="line-process"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container" style="max-width: 1080px; margin-bottom: 100px;">
+        <div class="row">
+            <div class="col-md-8" style="border-right: 2px solid #000;">
+                <div class="choose-shipper">
+                    <span>SELECT SHIPPING CARRIER</span>
+                </div>
+                <div class="choose-container">
+                    <div class="choose-content">
+                        <div class="choose-box">
+                            <button id="method-1" onclick="selectMethod('method-1')">
+                                <img src="Shoes/IMAGES/Payment_Picture/fedex.png" alt="" width="100%">
+                            </button>
+                        </div>
+                    </div>
+                    <div class="choose-content">
+                        <div class="choose-box">
+                            <button id="method-2" onclick="selectMethod('method-2')">
+                                <img src="Shoes/IMAGES/Payment_Picture/dhl.png" alt="" width="70%">
+                            </button>
+                        </div>
+                    </div>
+                    <div class="choose-content">
+                        <div class="choose-box">
+                            <button style="margin-right: 0;" id="method-3" onclick="selectMethod('method-3')">
+                                <img src="Shoes/IMAGES/Payment_Picture/ups.png" alt="" width="50%">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="ship-method-container">
+                    <div class="ship-method-content">
+                        <div class="ship-method standard" id="standard">
+                            <button onclick="handleShippingMethodSelection('Standard', '2.01', this)">
+                                <div class="ship-box" style="display: inline-flex;">
+                                    <div class="ship-img">
+                                        <img src="Shoes/IMAGES/Payment_Picture/truck.png" alt="" style="width: 40%;">
+                                    </div>
+                                    <div class="ship-name">
+                                        <span>Standard</span>
+                                    </div>
+                                    <div class="ship-day">
+                                        <span>5 - 10 Days</span>
+                                    </div>
+                                    <div class="ship-price">
+                                        <span>$ 2.01</span>
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                        <div class="ship-method priority" id="priority">
+                            <button onclick="handleShippingMethodSelection('Priority', '4.03', this)">
+                                <div class="ship-box" style="display: inline-flex;">
+                                    <div class="ship-img">
+                                        <img src="Shoes/IMAGES/Payment_Picture/delivery-truck.png" alt="" style="width: 40%;">
+                                    </div>
+                                    <div class="ship-name">
+                                        <span>Priority</span>
+                                    </div>
+                                    <div class="ship-day">
+                                        <span>3 - 4 Days</span>
+                                    </div>
+                                    <div class="ship-price">
+                                        <span>$ 4.03</span>
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                        <div class="ship-method overnight"  id="overnight">
+                            <button onclick="handleShippingMethodSelection('Overnight', '6.05', this)">
+                                <div class="ship-box" style="display: inline-flex;">
+                                    <div class="ship-img">
+                                        <img src="Shoes/IMAGES/Payment_Picture/fast-delivery.png" alt="" style="width: 40%;">
+                                    </div>
+                                    <div class="ship-name">
+                                        <span>Overnight</span>
+                                    </div>
+                                    <div class="ship-day">
+                                        <span>1 - 2 Days</span>
+                                    </div>
+                                    <div class="ship-price">
+                                        <span>$ 6.05</span>
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="continue">
+                        <a href="billing.html">
+                        <input type="submit" id="submitButton" value="Continue" >
+                    </a>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="col-md-4">
+                <div class="order-summary">
+                    <div class="top-order">
+                    <span>Order Summary</span>
+                </div>
+                    <div class="summary-content">
+                        <div class="content-order">
+                            <span class="detail">Subtotal</span>
+                            <span class="price-order">$ 50</span>
+                        </div>
+                        <div class="content-order">
+                            <span class="detail">Tax</span>
+                            <span class="price-order">$ 3</span>
+                        </div>
+                        <div class="content-order">
+                            <span class="detail">Shipping</span>
+                            <span class="price-order" id="selectedShippingMethod">Choose Shipping Method</span>
+                        </div>
+                    </div>
+
+                    <div class="total">
+                        <span>Total</span>
+                        <span>$ 53</span>
+                    </div>
+                </div>
+
+                <div class="product-container">
+                    <div class="product-content">
+                        <div class="product-order">
+                            <ol style="list-style: none; padding: 0;">
+                                <li class="d-flex">
+                                    <div class="img-product-order">
+                                        <a href="">
+                                            <img src="Shoes/IMAGES/Home_Page_Picture/cap 1.webp" alt="" style="max-width: 100%;">
+                                        </a>
+                                    </div>
+                                    <div class="product-detail-order">
+                                        <h3 class="mini-name">
+                                            <a href="">
+                                            Ciele Athletics -
+                                            M / White</a>
+                                        </h3>
+
+                                        <div class="quantity-container">
+                                            <div class="price-update">
+                                                <span>$ 25</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="remove-product-order">
+                                        <a href="">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </li>
+                            </ol>
+                        </div>
+                        <div class="product-order">
+                            <ol style="list-style: none; padding: 0;">
+                                <li class="d-flex">
+                                    <div class="img-product-order">
+                                        <a href="">
+                                            <img src="Shoes/IMAGES/Home_Page_Picture/cap 1.webp" alt="" style="max-width: 100%;">
+                                        </a>
+                                    </div>
+                                    <div class="product-detail-order">
+                                        <h3 class="mini-name">
+                                            <a href="">
+                                            Ciele Athletics -
+                                            M / White</a>
+                                        </h3>
+
+                                        <div class="quantity-container">
+                                            <div class="price-update">
+                                                <span>$ 25</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="remove-product-order">
+                                        <a href="">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </li>
+                            </ol>
+                        </div>
+                        <div class="product-order">
+                            <ol style="list-style: none; padding: 0;">
+                                <li class="d-flex">
+                                    <div class="img-product-order">
+                                        <a href="">
+                                            <img src="Shoes/IMAGES/Home_Page_Picture/cap 1.webp" alt="" style="max-width: 100%;">
+                                        </a>
+                                    </div>
+                                    <div class="product-detail-order">
+                                        <h3 class="mini-name">
+                                            <a href="">
+                                            Ciele Athletics -
+                                            M / White</a>
+                                        </h3>
+
+                                        <div class="quantity-container">
+                                            <div class="price-update">
+                                                <span>$ 25</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="remove-product-order">
+                                        <a href="">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </li>
+                            </ol>
+                        </div>
+                        <div class="product-order">
+                            <ol style="list-style: none; padding: 0;">
+                                <li class="d-flex">
+                                    <div class="img-product-order">
+                                        <a href="">
+                                            <img src="Shoes/IMAGES/Home_Page_Picture/cap 1.webp" alt="" style="max-width: 100%;">
+                                        </a>
+                                    </div>
+                                    <div class="product-detail-order">
+                                        <h3 class="mini-name">
+                                            <a href="">
+                                            Ciele Athletics -
+                                            M / White</a>
+                                        </h3>
+
+                                        <div class="quantity-container">
+                                            <div class="price-update">
+                                                <span>$ 25</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="remove-product-order">
+                                        <a href="">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </li>
+                            </ol>
+                        </div>
+                        <div class="product-order">
+                            <ol style="list-style: none; padding: 0;">
+                                <li class="d-flex">
+                                    <div class="img-product-order">
+                                        <a href="">
+                                            <img src="Shoes/IMAGES/Home_Page_Picture/cap 1.webp" alt="" style="max-width: 100%;">
+                                        </a>
+                                    </div>
+                                    <div class="product-detail-order">
+                                        <h3 class="mini-name">
+                                            <a href="">
+                                            Ciele Athletics -
+                                            M / White</a>
+                                        </h3>
+
+                                        <div class="quantity-container">
+                                            <div class="price-update">
+                                                <span>$ 25</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="remove-product-order">
+                                        <a href="">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <footer>
+
+        <div class="copyright">
+            <div class="containe">
+                <div class="row align-items-center">
+                    <div class="col-md-6 text-md-left">
+                        <div class="copyright-text">
+                            <p style="margin-bottom: 0;">© Copyright | 2023 All Rights Reserved</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 text-md-right">
+                        <img src="Shoes/IMAGES/Home_Page_Picture/pay_copyright.webp" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="Shoes/JS/delivery.js"></script>
+    <script src="Shoes/JS/shipping.js"></script>
+    <script src="Shoes/JS/homepage.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  </body>
+</html>
