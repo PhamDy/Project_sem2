@@ -25,7 +25,7 @@ searchForm.addEventListener('submit', function(event) {
 
 async function searchProducts(query) {
   try {
-    const response = await axios.get(`https://659a6480652b843dea538305.mockapi.io/Product`);
+    const response = await axios.get(`http://localhost:8080/api/products/`);
     const products = response.data;
     const filteredProducts = products.filter(product =>
       (product.name && product.name.toLowerCase().includes(query.toLowerCase())) ||

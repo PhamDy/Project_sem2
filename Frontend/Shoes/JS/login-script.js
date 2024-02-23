@@ -11,6 +11,7 @@ loginBtn.addEventListener('click', () => {
 });
 // Get form elements
 var signUpForm = document.getElementById('signup-form');
+console.log(signUpForm)
 var signInForm = document.querySelector('.sign-in form');
 // Add event listeners for form submissions
 signUpForm.addEventListener('submit', function(event) {
@@ -42,11 +43,11 @@ signUpForm.addEventListener('submit', function(event) {
   }
 
   // All inputs are valid, proceed with form submission
-  signUpForm.submit();
+
 
 });
 
-signInForm.addEventListener('submits', function(event) {
+signInForm.addEventListener('submit', function(event) {
   event.preventDefault(); // Prevent form submission
 
   var emailInput = document.getElementById('email');
@@ -130,47 +131,31 @@ document.getElementById("signup-form").addEventListener("submit", function(event
     return;
   }
 
-  fetch("https://659a6480652b843dea538305.mockapi.io/users")
-  .then(response => {
-      if (!response.ok) {
-          throw new Error("Failed to fetch user data");
-      }
-      return response.json();
-  })
-  .then(users => {
-      const userExists = users.some(user => user.username === username || user.email === email);
-      if (userExists) {
-          showError(document.getElementById("email"), "Username or email already exists.");
-          return; 
-      }
-
-      const userData = {
-          username: username,
-          email: email,
-          password: formData.get("password")
-      };
-
-      return fetch("https://659a6480652b843dea538305.mockapi.io/users", {
-          method: "POST",
-          headers: {
-              "Content-Type": "application/json"
-          },
-          body: JSON.stringify(userData)
-      });
+  axios.post("http://localhost:8080/api/users/register", {
+    username: username,
+    email: email,
+    password: password
+  }, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': '*/*',
+    }
   })
   .then(response => {
-      if (!response.ok) {
-          throw new Error("Network response was not ok");
-      }
-      return response.json();
-  })
-  .then(data => {
+    // Handle response
+    if (response.status === 201) {
       showSuccess(document.getElementById("email"), "Account created successfully!");
+    } else {
+      throw new Error("Network response was not ok");
+    }
   })
   .catch(error => {
-      console.error("There was a problem creating the user:", error);
+    // Handle error
+    console.error("There was a problem creating the user:", error);
   });
 });
+
+
 
 
 function showError(inputElement, errorMessage) {
@@ -211,7 +196,7 @@ document.querySelector('.sign-in form').addEventListener('submit', function(even
   const password = document.getElementById('passwords').value.trim();
 
 
-  fetch("https://659a6480652b843dea538305.mockapi.io/users")
+  fetch("http://localhost:8080/api/users/register")
   .then(response => {
       if (!response.ok) {
           throw new Error("Failed to fetch user data");
