@@ -162,83 +162,61 @@ function closeFilters () {
     closeFilter.classList.remove('filterclose-button')
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    let cartItems = [];
-    const cartCountElement = document.querySelector('.cart-count span');
-    const cartTotalElement = document.querySelector('.total-price');
-    const cartItemsContainer = document.querySelector('.cart-items');
-
-    updateCartUI();
-
-    window.addItemToCart = function(product) {
-        try {
-            const existingItem = cartItems.find(item => item.id === product.id);
-
-            if (existingItem) {
-                existingItem.quantity += 1;
-            } else {
-                cartItems.push({
-                    id: product.id,
-                    productName: product.productName,
-                    quantity: 1,
-                    price: parseFloat(product.price),
-                    imgSrc: product.img
-                });
-            }
-
-            updateCartUI();
-        } catch (error) {
-            console.error('Error adding item to cart:', error);
-        }
-    };
 
 
-    function updateCartUI() {
-        const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
-        cartCountElement.textContent = cartCount;
 
-        cartItemsContainer.innerHTML = "";
-        cartItems.forEach(item => {
-            const productElement = createProductElement(item);
-            cartItemsContainer.appendChild(productElement);
-        });
+const apiUrl = "http://localhost:8080/api/products/";
 
-        const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
-        cartTotalElement.textContent = `$${totalPrice.toFixed(2)}`;
-    }
+axios.get(apiUrl)
+    .then(response => {
+        const products = response.data;
+        renderProducts(products);
+    })
+    .catch(error => {
+        console.error('Error fetching products:', error);
+    });
 
-    window.removeItemFromCart = function(itemId) {
-        cartItems = cartItems.filter(item => item.id !== itemId);
-        updateCartUI();
-    };
-
-    function createProductElement(item) {
-        const productElement = document.createElement('div');
-        productElement.classList.add('product-cart');
-        productElement.innerHTML = `
-            <ol style="list-style: none;">
-                <li class="d-flex">
-                    <div class="img-product-cart">
-                        <img src="${item.imgSrc}" alt="" style="max-width: 100%;">
+function renderProducts(products) {
+    const productRow = document.querySelector(".product-row");
+    products.forEach(product => {
+        const { name, img, price, discount, description } = product;
+        productRow.innerHTML += `
+            <div class="product-box">
+                <div class="product">
+                    <div class="img-product">
+                        <a href="">
+                            <img style="width: 100%;" src="${img}" alt="${name}">
+                        </a>
+                        ${discount > 0 ? `<figure style="background: #e12c43; color: #ffffff;" class="label-sale">
+                            <span>-${discount}%</span>
+                        </figure>` : ''}
+                        <ul class="product-icon">
+                            <li class="add-cart mr-0">
+                                <a href="">
+                                    <i class="fa-solid fa-bag-shopping icon-1"></i>
+                                </a>
+                            </li>
+                            <li class="view-product mr-0">
+                                <button onclick="togglePopup()" href="">
+                                    <i class="fa-solid fa-magnifying-glass icon-2"></i>
+                                </button>
+                            </li>
+                            <li class="add-favorite mr-0">
+                                <a href="">
+                                    <i class="fa-regular fa-heart icon-3"></i>
+                                </a>
+                            </li>
+                        </ul>
                     </div>
-                    <div class="product-detail-cart">
-                        <h3 class="product-name-mini">
-                            <a href="#">${item.productName}</a>
-                        </h3>
-                        <div class="product-info-cart">
-                            <div class="product-quantity-mini">QTY : ${item.quantity}</div>
-                            <div class="product-price-mini">
-                                <span>$${(item.price * item.quantity).toFixed(2)}</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="product-remove">
-                        <a href="#" onclick="removeItemFromCart(${item.id})"><i class="fa-solid fa-trash"></i></a>
-                    </div>
-                </li>
-            </ol>
+                    <h4 class="product-title">
+                        <a href="">${name}</a>
+                    </h4>
+                    <p class="product-price">
+                        ${discount > 0 ? `<s class="">$${price.toFixed(2)}</s>` : ''}
+                        <span class="">$${(price - (price * discount / 100)).toFixed(2)}</span>
+                    </p>
+                </div>  
+            </div>
         `;
-        return productElement;
-    }
-
-});
+    });
+}

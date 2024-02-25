@@ -11,7 +11,6 @@ loginBtn.addEventListener('click', () => {
 });
 // Get form elements
 var signUpForm = document.getElementById('signup-form');
-console.log(signUpForm)
 var signInForm = document.querySelector('.sign-in form');
 // Add event listeners for form submissions
 signUpForm.addEventListener('submit', function(event) {
@@ -111,6 +110,8 @@ inputElements.forEach(function(inputElement) {
 });
 
 
+let userEmail;
+
 document.getElementById("signup-form").addEventListener("submit", function(event) {
   event.preventDefault();
 
@@ -131,6 +132,8 @@ document.getElementById("signup-form").addEventListener("submit", function(event
     return;
   }
 
+  localStorage.setItem("userEmail", email);
+
   axios.post("http://localhost:8080/api/users/register", {
     username: username,
     email: email,
@@ -142,15 +145,16 @@ document.getElementById("signup-form").addEventListener("submit", function(event
     }
   })
   .then(response => {
-    // Handle response
     if (response.status === 201) {
       showSuccess(document.getElementById("email"), "Account created successfully!");
+      setTimeout(() => {
+        window.location.href = `verifyaccount.html`;
+    }, 3000);
     } else {
       throw new Error("Network response was not ok");
     }
   })
   .catch(error => {
-    // Handle error
     console.error("There was a problem creating the user:", error);
   });
 });
@@ -189,38 +193,56 @@ function clearMessages() {
   });
 }
 
-document.querySelector('.sign-in form').addEventListener('submit', function(event) {
-  event.preventDefault();
+function setCookie(name, value, days) {
+  const expires = new Date();
+  expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+  document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+}
 
-  const email = document.getElementById('emails').value.trim();
-  const password = document.getElementById('passwords').value.trim();
-
-
-  fetch("http://localhost:8080/api/users/register")
-  .then(response => {
-      if (!response.ok) {
-          throw new Error("Failed to fetch user data");
+function getCookie(name) {
+  const cookieName = `${name}=`;
+  const decodedCookie = decodeURIComponent(document.cookie);
+  const cookieArray = decodedCookie.split(';');
+  for(let i = 0; i < cookieArray.length; i++) {
+      let cookie = cookieArray[i];
+      while (cookie.charAt(0) === ' ') {
+          cookie = cookie.substring(1);
       }
-      return response.json();
+      if (cookie.indexOf(cookieName) === 0) {
+          return cookie.substring(cookieName.length, cookie.length);
+      }
+  }
+  return null;
+}
+
+function deleteCookie(name) {
+  document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+}
+
+document.getElementById("sign-in-button").addEventListener("click", function(event) {
+  event.preventDefault();
+  
+  const email = document.getElementById("emails").value;
+  const password = document.getElementById("passwords").value;
+
+  axios.post("http://localhost:8080/api/users/login", {
+      usernameOrEmail: email,
+      password: password
   })
-  .then(users => {
-    const user = users.find(user => user.email === email);
-    if (user && user.password === password) {
-      window.location.href = "../navbarloginsucess.html";
-    } else {
-        showError(document.querySelector('.sign-in button'), "Wrong email or password.");
-    }
+  .then(response => {
+      const token = response.data;
+      setCookie('authToken', token, 7);
+      window.location.href = "navbarloginsucess.html";
+
+      const authToken = getCookie('authToken');
+      if (authToken) {
+          axios.defaults.headers.common['Authorization'] = `Bearer ${authToken}`;
+      } else {
+          console.error("Authentication token not found.");
+      }
   })
   .catch(error => {
-      console.error("There was a problem signing in:", error);
+    document.getElementById("wrongpassword").innerText = "Wrong email or password.";
   });
 });
-
-
-function clearMessages() {
-  var existingMessages = document.querySelectorAll('.error-message, .success-message');
-  existingMessages.forEach(function(message) {
-      message.remove();
-  });
-}
 
