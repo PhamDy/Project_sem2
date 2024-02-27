@@ -70,7 +70,7 @@ public class UserController {
     }
 
     @PatchMapping("/changePassword")
-    @Operation(summary = "Khách hàng thay đổi mật khẩu")
+    @Operation(summary = "Khách hàng thay đổi mật khẩu khi đã đăng nhập")
     public ResponseEntity<?>changePassword(HttpServletRequest request,
             @Valid @RequestBody ChangePasswordDto changePasswordDto) {
         String jwt = jwtFilter.getToken(request);

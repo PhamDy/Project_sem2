@@ -37,9 +37,6 @@ public class CartServiceImpl implements CartService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
     @Override
     @Transactional
     public CartDto addToCart(Long productId, String color, String size, Integer quantity) {
@@ -52,17 +49,17 @@ public class CartServiceImpl implements CartService {
                 new CustomException("You must login before!")));
 
         Carts cart;
+        CartDto cartDto = new CartDto();
             cart = cartRepository.findByUser_IdAndStatus(user.get().getId(), CartsStatus.Open);
             if (cart == null) {
                 cart = new Carts();
-                cart.setTotalPrice(0.00);
                 cart.setUser(user.get());
                 cart.setStatus(CartsStatus.Open);
                 cart.setCreatedBy("CUSTOMER");
                 cart = cartRepository.save(cart);
             }
 
-        CartItem cartItem = cartItemRepository.findByCartsAndProductsAndColorAndSize(cart.getId(), productId, color, size);
+        CartItem cartItem = cartItemRepository.findByCarts_IdAndProducts_IdAndColorAndSize(cart.getId(), product.getId(), color, size);
         if (cartItem == null) {
             cartItem = new CartItem();
             cartItem.setCarts(cart);
@@ -81,12 +78,12 @@ public class CartServiceImpl implements CartService {
             cartItem.setQuantity(cartItem.getQuantity() + quantity);
             cartItemRepository.save(cartItem);
         }
-
-        cart.setTotalPrice(cart.getTotalPrice() + cartItem.getSubtotal());
         cartRepository.save(cart);
-
-        CartDto cartDto = objectMapper.mapCartsToDto(cart);
-
+        Integer count = cartRepository.countItem(cart.getId(), CartsStatus.Open);
+        cartDto.setId(cart.getId());
+        cartDto.setUserId(user.get().getId());
+        cartDto.setTotalPrice(cartDto.getTotalPrice() + cartItem.getSubtotal());
+        cartDto.setQuantityItem(count);
         return cartDto;
     }
 }

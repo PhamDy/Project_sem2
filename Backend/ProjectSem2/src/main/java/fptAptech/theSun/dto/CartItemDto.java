@@ -10,8 +10,10 @@ import java.io.Serializable;
 public class CartItemDto implements Serializable {
     private Long id;
     private String productName;
+    private String img;
     private String color;
     private String size;
     private Integer quantity;
     private Double price;
+    private Double subTotal;
 }

@@ -58,13 +58,6 @@ public class ObjectMapper {
     }
 
     // Carts mapper
-    public CartDto mapCartsToDto(Carts carts) {
-        return CartDto.builder()
-                .id(carts.getId())
-                .userId(carts.getUser().getId())
-                .totalPrice(carts.getTotalPrice())
-                .build();
-    }
 
     public CartItemDto mapCartItemsToDto(CartItem cartItem) {
         return CartItemDto.builder()

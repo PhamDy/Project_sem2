@@ -26,25 +26,6 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findById(id).orElseThrow( () -> new NotFoundException("Not Found Product With Id: " + id));
     }
 
-    //    public List<ProductDto> getList() {
-//        return productRepository
-//                .findAll(Sort.by("id").ascending())
-//                .stream()
-//                .map(this::convertEntityToDo)
-//                .collect(Collectors.toList());
-//    }
-
-//    public ProductDto convertEntityToDo(Product product) {
-//        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
-//
-//        Converter<Category, Integer> categoryConverter = context -> context.getSource() == null ? null : context.getSource().getId();
-//        modelMapper.typeMap(Product.class, ProductDto.class)
-//                .addMappings(mapper -> mapper.using(categoryConverter).map(Product::getCategory, ProductDto::setCategory_id));
-//
-//
-//        return modelMapper.map(product, ProductDto.class);
-//    }
-
     @Override
     public List<Products> getProductFeatured() {
         return productRepository.getListByFeatured();
