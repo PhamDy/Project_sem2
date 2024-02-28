@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface CartService {
 
+    CartDto showCart(Long cartId);
+
     CartDto addToCart(Long productId, String color, String size, Integer quantity);
 
 

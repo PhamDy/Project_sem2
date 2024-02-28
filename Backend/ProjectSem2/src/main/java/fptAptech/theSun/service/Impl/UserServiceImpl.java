@@ -1,23 +1,23 @@
 package fptAptech.theSun.service.Impl;
 
-import fptAptech.theSun.dto.ChangePasswordDto;
 import fptAptech.theSun.dto.RegisterUserDto;
 import fptAptech.theSun.dto.UserDto;
 import fptAptech.theSun.dto.mapper.ObjectMapper;
 import fptAptech.theSun.email.EmailService;
 import fptAptech.theSun.email.OtpUtil;
+import fptAptech.theSun.entity.Carts;
+import fptAptech.theSun.entity.Enum.CartsStatus;
 import fptAptech.theSun.entity.Enum.RoleName;
 import fptAptech.theSun.entity.Role;
 import fptAptech.theSun.entity.User;
-import fptAptech.theSun.exception.CustomException;
 import fptAptech.theSun.exception.DuplicatedTupleException;
+import fptAptech.theSun.respository.CartItemRepository;
+import fptAptech.theSun.respository.CartRepository;
 import fptAptech.theSun.respository.RoleRepository;
 import fptAptech.theSun.respository.UserRepository;
 import fptAptech.theSun.security.jwt.AccessToken;
-import fptAptech.theSun.security.jwt.JwtFilter;
 import fptAptech.theSun.security.jwt.JwtService;
 import fptAptech.theSun.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +41,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private CartRepository cartRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -147,6 +150,11 @@ public class UserServiceImpl implements UserService {
             if (user.getOtp().equals(otp) && duration.getSeconds() < (10*60)) {
                 user.setEnabled(true);
                 userRepository.save(user);
+                Carts carts = new Carts();
+                carts.setUser(user);
+                carts.setCreatedBy("User");
+                carts.setStatus(CartsStatus.Open);
+                cartRepository.save(carts);
                 LOGGER.info("User with email {} successfully verified and enabled.", user.getEmail());
             } else {
                 throw new IllegalArgumentException("Invalid OTP or expired");

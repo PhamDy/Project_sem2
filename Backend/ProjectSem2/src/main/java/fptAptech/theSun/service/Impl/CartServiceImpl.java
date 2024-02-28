@@ -38,6 +38,15 @@ public class CartServiceImpl implements CartService {
     private UserRepository userRepository;
 
     @Override
+    public CartDto showCart(Long cartId) {
+        var cart = cartRepository.findById(cartId);
+        var cartDto = new CartDto();
+        cartDto.setId(cart.get().getId());
+        cartDto.setUserId(cart.get().getUser().getId());
+        return cartDto;
+    }
+
+    @Override
     @Transactional
     public CartDto addToCart(Long productId, String color, String size, Integer quantity) {
         var product = productRepository.findById(productId).orElseThrow(() ->
@@ -79,7 +88,7 @@ public class CartServiceImpl implements CartService {
             cartItemRepository.save(cartItem);
         }
         cartRepository.save(cart);
-        Integer count = cartRepository.countItem(cart.getId(), CartsStatus.Open);
+        Integer count = cartItemRepository.countItem(cart.getId(), CartsStatus.Open);
         cartDto.setId(cart.getId());
         cartDto.setUserId(user.get().getId());
         cartDto.setTotalPrice(cartDto.getTotalPrice() + cartItem.getSubtotal());
