@@ -15,13 +15,25 @@ public class WarehouseController {
     @Autowired
     private WarehouseService warehouseService;
 
-    @GetMapping("/quantityProduct/{id}")
+    @GetMapping("/quantityProduct/{productId}")
     @Operation(summary = "Lấy ra số lượng product thông qua productId, color và size")
     public ResponseEntity<?> getQuantityProduct(@PathVariable Long productId,
                                                 @RequestParam(name = "color") String color,
                                                 @RequestParam(name = "size") String size) {
         Integer quantity = warehouseService.getQuantityProduct(productId, color, size);
         return new ResponseEntity<>(quantity, HttpStatus.OK);
+    }
+
+    @GetMapping("/color/{productId}")
+    @Operation(summary = "Lấy ra danh sách color mà productId có")
+    public ResponseEntity<?> getColorProduct(@PathVariable Long productId) {
+        return new ResponseEntity<>(warehouseService.getByColor(productId), HttpStatus.OK);
+    }
+
+    @GetMapping("/size/{productId}")
+    @Operation(summary = "Lấy ra danh sách size mà productId có")
+    public ResponseEntity<?> getSizeProduct(@PathVariable Long productId) {
+        return new ResponseEntity<>(warehouseService.getBySize(productId), HttpStatus.OK);
     }
 
 
