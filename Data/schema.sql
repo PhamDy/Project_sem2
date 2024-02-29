@@ -1,3 +1,5 @@
+
+-- Tạo bảng
 CREATE TABLE IF NOT EXISTS `category` (
     `category_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
     `name` VARCHAR(100) NOT NULL UNIQUE,
@@ -35,17 +37,17 @@ CREATE TABLE IF NOT EXISTS warehouse (
     `size` VARCHAR(50) NOT NULL,
     `color` VARCHAR(50) NOT NULL,
     `quantity` INT NOT NULL,
-    FOREIGN KEY (product_id) REFERENCES product(product_id),
+    `status` ENUM('InStock', 'OutOfStock'),
+    FOREIGN KEY (product_id) REFERENCES products(product_id),
     `updated_at` TIMESTAMP NOT NULL,
     `created_by` VARCHAR(50) NOT NULL,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_by` VARCHAR(50) DEFAULT NULL
 );
 
-
 CREATE TABLE IF NOT EXISTS `role` (
     `role_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
-    `name` ENUM('ROLE_ADMIN', 'ROLE_EMPLOYEE', 'ROLE_ANONYMOUS', 'ROLE_CUSTOMER'),
+    `name` ENUM('ROLE_ADMIN', 'ROLE_EMPLOYEE', 'ROLE_CUSTOMER', 'ROLE_ANONYMOUS'),
     `updated_at` TIMESTAMP NOT NULL,
     `created_by` VARCHAR(50) NOT NULL,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -56,11 +58,11 @@ CREATE TABLE IF NOT EXISTS `users` (
     `user_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
     `username` VARCHAR(100) NOT NULL UNIQUE,
     `password` VARCHAR(100) NOT NULL,
-        `email` VARCHAR(100) NOT NULL UNIQUE,
+   `email` VARCHAR(100) NOT NULL UNIQUE,
     `avatar` VARCHAR(100) NULL,
-    `otp` VARCHAR(5) NULL;
-    `otp_generated_time` DATETIME ;
-     `enabled` TINYINT(1) DEFAULT 0;
+    `otp` VARCHAR(5) NULL,
+    `otp_generated_time` DATETIME,
+     `enabled` TINYINT(1) DEFAULT 0,
     `updated_at` TIMESTAMP NOT NULL,
     `created_by` VARCHAR(50) NOT NULL,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -70,7 +72,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 CREATE TABLE IF NOT EXISTS `user_role` (
     `user_id` BIGINT NOT NULL,
     `role_id` BIGINT NOT NULL,
-    FOREIGN KEY (`user_id`) REFERENCES user(user_id),
+    FOREIGN KEY (`user_id`) REFERENCES users(user_id),
     FOREIGN KEY (`role_id`) REFERENCES role(role_id),
     PRIMARY KEY(`user_id`, `role_id`)
 );
@@ -98,7 +100,7 @@ CREATE TABLE IF NOT EXISTS `address` (
     `optional` VARCHAR(200)  NULL,
     `zipCode` VARCHAR(100)  NULL,
     `phone` VARCHAR(100)  NULL,
-    FOREIGN KEY (`user_id`) REFERENCES user(user_id),
+    FOREIGN KEY (`user_id`) REFERENCES users(user_id),
     `updated_at` TIMESTAMP NOT NULL,
     `created_by` VARCHAR(50) NOT NULL,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -133,7 +135,7 @@ CREATE TABLE IF NOT EXISTS `order` (
     `delivery_id` BIGINT NOT NULL,
     `total_price` DOUBLE NOT NULL,
     `order_status` VARCHAR(100) NOT NULL,
-    FOREIGN KEY (`user_id`) REFERENCES user(user_id),
+    FOREIGN KEY (`user_id`) REFERENCES users(user_id),
     FOREIGN KEY (`payment_id`) REFERENCES payment(payment_id),
     FOREIGN KEY (`delivery_id`) REFERENCES delivery(delivery_id),
     `updated_at` TIMESTAMP NOT NULL,
@@ -145,7 +147,8 @@ CREATE TABLE IF NOT EXISTS `order` (
 CREATE TABLE IF NOT EXISTS `carts` (
     `cart_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
    `user_id` BIGINT NOT NULL,
-    FOREIGN KEY (`user_id`) REFERENCES user(user_id),
+   `status` ENUM('Open', 'Close') DEFAULT 'Open',
+    FOREIGN KEY (`user_id`) REFERENCES users(user_id),
     `updated_at` TIMESTAMP NOT NULL,
     `created_by` VARCHAR(50) NOT NULL,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -156,16 +159,17 @@ CREATE TABLE IF NOT EXISTS `cart_item` (
     `cart_item_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
    `product_id` BIGINT NOT NULL,
    `cart_id` BIGINT NOT NULL,
-   `sub_total` DOUBLE NOT NULL,
+   `size` VARCHAR(50) NOT NULL,
+    `color` VARCHAR(50) NOT NULL,
+   `price` DOUBLE NOT NULL,
    `quantity` INT NOT NULL,
-    FOREIGN KEY (`product_id`) REFERENCES product(product_id),
+    FOREIGN KEY (`product_id`) REFERENCES products(product_id),
    FOREIGN KEY (`cart_id`) REFERENCES carts(cart_id),
     `updated_at` TIMESTAMP NOT NULL,
     `created_by` VARCHAR(50) NOT NULL,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_by` VARCHAR(50) DEFAULT NULL
 );
-
 
 CREATE TABLE IF NOT EXISTS `product_review` (
     `product_review_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
@@ -174,31 +178,17 @@ CREATE TABLE IF NOT EXISTS `product_review` (
    `comment` TEXT NOT NULL,
    `star` INT NOT NULL,
    `status` INT NOT NULL,
-    FOREIGN KEY (`product_id`) REFERENCES product(product_id),
-    FOREIGN KEY (`user_id`) REFERENCES user(user_id),
+    FOREIGN KEY (`product_id`) REFERENCES products(product_id),
+    FOREIGN KEY (`user_id`) REFERENCES users(user_id),
     `updated_at` TIMESTAMP NOT NULL,
     `created_by` VARCHAR(50) NOT NULL,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_by` VARCHAR(50) DEFAULT NULL
 );
 
-ALTER TABLE product
-DROP COLUMN sport;
+SELECT * FROM cart_item ci WHERE ci.cart_id = 1;
 
-
-ALTER TABLE cart_item
-DROP COLUMN sub_total;
-
-ALTER TABLE users
-ADD COLUMN enabled TINYINT(1) DEFAULT 0;
-
-ALTER TABLE users
-ADD COLUMN otp VARCHAR(5) NULL;
-
-ALTER TABLE users
-ADD COLUMN otp_generated_time DATETIME ;
-
-
+SELECT count(ci.cart_item_id) FROM cart_item ci WHERE ci.cart_id = 1;
 
 
 
