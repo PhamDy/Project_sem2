@@ -5,16 +5,14 @@ import fptAptech.theSun.dto.UserDto;
 import fptAptech.theSun.dto.mapper.ObjectMapper;
 import fptAptech.theSun.email.EmailService;
 import fptAptech.theSun.email.OtpUtil;
+import fptAptech.theSun.entity.Address;
 import fptAptech.theSun.entity.Carts;
 import fptAptech.theSun.entity.Enum.CartsStatus;
 import fptAptech.theSun.entity.Enum.RoleName;
 import fptAptech.theSun.entity.Role;
 import fptAptech.theSun.entity.User;
 import fptAptech.theSun.exception.DuplicatedTupleException;
-import fptAptech.theSun.respository.CartItemRepository;
-import fptAptech.theSun.respository.CartRepository;
-import fptAptech.theSun.respository.RoleRepository;
-import fptAptech.theSun.respository.UserRepository;
+import fptAptech.theSun.respository.*;
 import fptAptech.theSun.security.jwt.AccessToken;
 import fptAptech.theSun.security.jwt.JwtService;
 import fptAptech.theSun.service.UserService;
@@ -53,6 +51,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private AddressRepository addressRepository;
 
     @Autowired
     private OtpUtil otpUtil;
@@ -155,6 +156,13 @@ public class UserServiceImpl implements UserService {
                 carts.setCreatedBy("User");
                 carts.setStatus(CartsStatus.Open);
                 cartRepository.save(carts);
+
+                Address address = new Address();
+                address.setUser(user);
+                address.setEmail(user.getEmail());
+                address.setCreatedBy("User");
+                addressRepository.save(address);
+
                 LOGGER.info("User with email {} successfully verified and enabled.", user.getEmail());
             } else {
                 throw new IllegalArgumentException("Invalid OTP or expired");

@@ -3,13 +3,9 @@ package fptAptech.theSun.service.Impl;
 import fptAptech.theSun.dto.CartDto;
 import fptAptech.theSun.dto.CartItemDto;
 import fptAptech.theSun.dto.UpdateQuantityDto;
-import fptAptech.theSun.dto.mapper.ObjectMapper;
 import fptAptech.theSun.entity.CartItem;
 import fptAptech.theSun.entity.Carts;
 import fptAptech.theSun.entity.Enum.CartsStatus;
-import fptAptech.theSun.entity.Enum.ProductStatus;
-import fptAptech.theSun.entity.User;
-import fptAptech.theSun.entity.Warehouse;
 import fptAptech.theSun.exception.CustomException;
 import fptAptech.theSun.respository.*;
 import fptAptech.theSun.security.jwt.JwtFilter;
@@ -18,10 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -76,13 +70,10 @@ public class CartServiceImpl implements CartService {
                                             new CustomException("Not found product"));
 
         String email = JwtFilter.CURRENT_USER;
-        Optional<User> user;
-         user = Optional.ofNullable(userRepository.findByEmail(email).orElseThrow(() ->
+         var user = Optional.ofNullable(userRepository.findByEmail(email).orElseThrow(() ->
                 new CustomException("You must log in before!")));
 
-        Carts cart;
-        CartDto cartDto = new CartDto();
-            cart = cartRepository.findByUser_IdAndStatus(user.get().getId(), CartsStatus.Open);
+         var cart = cartRepository.findByUser_IdAndStatus(user.get().getId(), CartsStatus.Open);
             if (cart == null) {
                 cart = new Carts();
                 cart.setUser(user.get());
@@ -91,7 +82,7 @@ public class CartServiceImpl implements CartService {
                 cart = cartRepository.save(cart);
             }
 
-        CartItem cartItem = cartItemRepository.findByCarts_IdAndProducts_IdAndColorAndSize(cart.getId(), product.getId(), color, size);
+        var cartItem = cartItemRepository.findByCarts_IdAndProducts_IdAndColorAndSize(cart.getId(), product.getId(), color, size);
         if (cartItem == null) {
             cartItem = new CartItem();
             cartItem.setCarts(cart);
