@@ -116,7 +116,7 @@ public class CartServiceImpl implements CartService {
     @Override
     @Transactional
     public void updateQuantity(List<UpdateQuantityDto> cartItems) {
-        if (cartItems==null) {
+        if (cartItems.isEmpty()) {
             throw new  CustomException("The product has not been added to the cart");
         }
         for (UpdateQuantityDto item: cartItems

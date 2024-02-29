@@ -41,7 +41,6 @@ public class CartController {
         return new ResponseEntity<>("Items has been updated " , HttpStatus.OK);
     }
 
-
     @DeleteMapping("/deleteItem/{id}")
     @Operation(summary = "Xóa item sản phẩm có trong giỏ hàng", description = "Xóa CartItem có trong Cart dựa theo cartItemId")
     public ResponseEntity<?> deleteCartItem(@PathVariable Long id) {
