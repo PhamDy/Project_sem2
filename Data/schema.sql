@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `products` (
     `updated_by` VARCHAR(50) DEFAULT NULL
 );
 
-CREATE TABLE IF NOT EXISTS warehouse (
+CREATE TABLE IF NOT EXISTS `warehouse` (
     `warehouse_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
     `product_id` BIGINT NOT NULL, 
     `size` VARCHAR(50) NOT NULL,
@@ -110,8 +110,8 @@ CREATE TABLE IF NOT EXISTS `address` (
 
 CREATE TABLE IF NOT EXISTS `payment` (
     `payment_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
-    `payment_method` ENUM('ONLINE', 'CODING'),
-    `status` ENUM('Success', 'Pending', 'Delivering', 'Cancel'),
+    `payment_method` ENUM('Online', 'Coding'),
+    `status` ENUM('Paid', 'Unpaid'),
     `updated_at` TIMESTAMP NOT NULL,
     `created_by` VARCHAR(50) NOT NULL,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -120,9 +120,10 @@ CREATE TABLE IF NOT EXISTS `payment` (
 
 CREATE TABLE IF NOT EXISTS `delivery` (
     `delivery_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
-    `address_id` BIGINT NOT NULL,
-    `delivery_status` ENUM('Success', 'Delivering', 'Cancel'),
-    FOREIGN KEY (`address_id`) REFERENCES address(address_id),
+    `name` VARCHAR(50) NOT NULL,
+    `price` DOUBLE NOT NULL,
+    `img` VARCHAR(50) NOT NULL,
+  --  `delivery_status` ENUM('Success', 'Delivering', 'Cancel'),
     `updated_at` TIMESTAMP NOT NULL,
     `created_by` VARCHAR(50) NOT NULL,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -131,11 +132,22 @@ CREATE TABLE IF NOT EXISTS `delivery` (
 
 CREATE TABLE IF NOT EXISTS `order` (
     `order_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
-    `user_id` BIGINT NOT NULL,
+   `first_name` VARCHAR(100) NOT NULL,
+    `last_name` VARCHAR(100) NOT NULL,
+    `country` VARCHAR(100) NOT NULL,
+    `city` VARCHAR(100) NOT NULL,
+    `address` VARCHAR(500) NOT NULL,
+    `optional` VARCHAR(200) NULL,
+    `zip_code` VARCHAR(100) NOT NULL,
+    `email` VARCHAR(100) NOT NULL,
+    `phone` VARCHAR(100) NOT NULL,
+    `tax` DOUBLE NOT NULL,
+     `code` VARCHAR(100) NOT NULL,
+    `total_price` DOUBLE NOT NULL,
+   `user_id` BIGINT NOT NULL,
     `payment_id` BIGINT NOT NULL,
     `delivery_id` BIGINT NOT NULL,
-    `total_price` DOUBLE NOT NULL,
-    `order_status` VARCHAR(100) NOT NULL,
+    `order_status` ENUM('Success', 'Pending', 'Delivering', 'Cancel'),
     FOREIGN KEY (`user_id`) REFERENCES users(user_id),
     FOREIGN KEY (`payment_id`) REFERENCES payment(payment_id),
     FOREIGN KEY (`delivery_id`) REFERENCES delivery(delivery_id),
