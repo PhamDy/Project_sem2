@@ -35,7 +35,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtFilter jwtFilter) throws Exception{
         return http
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(cors -> cors.configure(http))
+                .cors(cors -> cors.disable())
+//                .cors(cors -> cors.configure(http))
                 .authorizeHttpRequests(auth -> { auth
                     .requestMatchers("/api/**").permitAll()
                     .anyRequest().authenticated();
@@ -44,15 +45,29 @@ public class SecurityConfig {
                 .build();
     }
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration config = new CorsConfiguration().applyPermitDefaultValues();
+//    @Bean
+//    public CorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration config = new CorsConfiguration().applyPermitDefaultValues();
+//
+//        UrlBasedCorsConfigurationSource cors = new UrlBasedCorsConfigurationSource();
+//        cors.registerCorsConfiguration("/**", config);
+//
+//        return cors;
+//    }
 
-        UrlBasedCorsConfigurationSource cors = new UrlBasedCorsConfigurationSource();
-        cors.registerCorsConfiguration("/**", config);
-
-        return cors;
-    }
+//    @Bean
+//    public CorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration config = new CorsConfiguration();
+//        config.setAllowCredentials(true);
+//        config.addAllowedOrigin("http://127.0.0.1:5500");
+//        config.addAllowedHeader("*");
+//        config.addAllowedMethod("*");
+//
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", config);
+//
+//        return source;
+//    }
 
 
 

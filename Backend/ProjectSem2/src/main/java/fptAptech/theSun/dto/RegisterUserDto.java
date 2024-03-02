@@ -25,7 +25,7 @@ public class RegisterUserDto implements Serializable {
     private String email;
 
     @NotNull
-    @Size(min=5, max = 30)
+    @Size(min=8, max = 30)
     private String password;
 
     private Set<String> role;

@@ -41,7 +41,6 @@ public class JwtFilter extends OncePerRequestFilter {
                 CURRENT_USER = email;
                 var user = userService.getByEmail(email);
                     setUserAsAuthenticated(user);
-                System.out.println(email + " " + CURRENT_USER);
             } catch (InvalidTokenException exception){
                 log.error("Token invalid: {}", exception.getMessage());
             } catch (Exception exception) {

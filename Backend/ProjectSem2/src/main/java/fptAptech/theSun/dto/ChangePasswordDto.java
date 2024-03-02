@@ -14,15 +14,15 @@ import java.io.Serializable;
 public class ChangePasswordDto implements Serializable {
 
     @NotNull
-    @Size(min=5, max = 30)
+    @Size(min=8, max = 30)
     private String passwordOld;
 
     @NotNull
-    @Size(min=5, max = 30)
+    @Size(min=8, max = 30)
     private String passwordNew1;
 
     @NotNull
-    @Size(min=5, max = 30)
+    @Size(min=8, max = 30)
     private String passwordNew2;
 
 }

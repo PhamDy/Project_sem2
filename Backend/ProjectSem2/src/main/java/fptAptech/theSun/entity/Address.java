@@ -2,6 +2,7 @@ package fptAptech.theSun.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Table(name = "address")
 public class Address extends BaseEntity{
 
@@ -35,8 +37,11 @@ public class Address extends BaseEntity{
     @Column(name = "optional")
     private String optional;
 
-    @Column(name = "zipCode")
+    @Column(name = "zip_code")
     private String zipCode;
+
+    @Column(name = "email")
+    private String email;
 
     @Column(name = "phone")
     private String phone;

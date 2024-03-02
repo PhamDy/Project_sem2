@@ -1,14 +1,12 @@
 package fptAptech.theSun.controller;
 
-import fptAptech.theSun.dto.ChangePasswordDto;
-import fptAptech.theSun.dto.LoginDto;
-import fptAptech.theSun.dto.RegisterUserDto;
-import fptAptech.theSun.dto.ResetPassworDto;
+import fptAptech.theSun.dto.*;
 import fptAptech.theSun.entity.User;
 import fptAptech.theSun.exception.CustomException;
 import fptAptech.theSun.exception.DuplicatedTupleException;
 import fptAptech.theSun.security.jwt.JwtFilter;
 import fptAptech.theSun.security.jwt.JwtService;
+import fptAptech.theSun.service.AddressService;
 import fptAptech.theSun.service.ResetPasswordService;
 import fptAptech.theSun.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -43,6 +41,9 @@ public class UserController {
     @Autowired
     private ResetPasswordService resetPasswordService;
 
+    @Autowired
+    private AddressService addressService;
+
     @PostMapping("/register")
     @Operation(summary = "Khách hàng đăng ký tài khoản cá nhân", description = "Lưu thông tin tài khoản vào database")
     public ResponseEntity<?> save(@Valid @RequestBody RegisterUserDto dto) {
@@ -70,7 +71,7 @@ public class UserController {
     }
 
     @PatchMapping("/changePassword")
-    @Operation(summary = "Khách hàng thay đổi mật khẩu")
+    @Operation(summary = "Khách hàng thay đổi mật khẩu khi đã đăng nhập")
     public ResponseEntity<?>changePassword(HttpServletRequest request,
             @Valid @RequestBody ChangePasswordDto changePasswordDto) {
         String jwt = jwtFilter.getToken(request);
@@ -121,6 +122,13 @@ public class UserController {
     @Operation(summary = "Kiểm tra mã otp trước khi cho khách hàng cập nhập lại mật khẩu")
     public ResponseEntity<?>checkOtpReset(@Valid @RequestBody ResetPassworDto dto) {
         return new ResponseEntity<>(resetPasswordService.checkOtpReset(dto), HttpStatus.OK);
+    }
+
+    @PostMapping("/saveAddress")
+    @Operation(summary = "Khách hàng lưu thông tin địa chỉ để sau hiện luôn trên Order")
+    public ResponseEntity<?>saveAddress(@Valid @RequestBody AddressDto addressDto) {
+        addressService.saveAddreessOfUser(addressDto);
+        return new ResponseEntity<>("Save address by user Successfully!", HttpStatus.CREATED);
     }
 
 
