@@ -18,12 +18,17 @@ public class Delivery extends BaseEntity{
     @Column(name = "delivery_id")
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "delivery_status")
-    private DeliveryStatus status;
+    @Column(name = "name")
+    private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "address_id")
-    private Address address;
+    @Column(name = "price")
+    private Double price;
+
+    @Column(name = "img")
+    private String img;
+
+//    @Enumerated(EnumType.ORDINAL)
+//    @Column(name = "delivery_status")
+//    private DeliveryStatus status;
 
 }

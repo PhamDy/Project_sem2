@@ -1,7 +1,7 @@
 package fptAptech.theSun.entity;
 
+import fptAptech.theSun.entity.Enum.PaymenStatus;
 import fptAptech.theSun.entity.Enum.PaymentMethod;
-import fptAptech.theSun.entity.Enum.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,8 +23,8 @@ public class Payment extends BaseEntity{
     @Column(name = "payment_method")
     private PaymentMethod paymentMethod;
 
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private PaymentStatus paymentStatus;
+    private PaymenStatus status;
 
 }

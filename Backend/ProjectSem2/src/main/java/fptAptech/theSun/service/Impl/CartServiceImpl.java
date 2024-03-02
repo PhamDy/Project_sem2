@@ -31,6 +31,9 @@ public class CartServiceImpl implements CartService {
     private ProductRepository productRepository;
 
     @Autowired
+    private WarehouseRepository warehouseRepository;
+
+    @Autowired
     private UserRepository userRepository;
 
     @Override
@@ -78,10 +81,11 @@ public class CartServiceImpl implements CartService {
                 cart = new Carts();
                 cart.setUser(user.get());
                 cart.setStatus(CartsStatus.Open);
-                cart.setCreatedBy("CUSTOMER");
+                cart.setCreatedBy("User");
                 cart = cartRepository.save(cart);
             }
 
+         var warehouse = warehouseRepository.findByProducts_IdAndColorAndSize(productId, color, size);
         var cartItem = cartItemRepository.findByCarts_IdAndProducts_IdAndColorAndSize(cart.getId(), product.getId(), color, size);
         if (cartItem == null) {
             cartItem = new CartItem();
@@ -94,10 +98,16 @@ public class CartServiceImpl implements CartService {
             } else {
                 cartItem.setPrice(product.getPrice());
             }
+            if (quantity > warehouse.getQuantity()) {
+                throw new CustomException("Order quantity exceeds inventory quantity");
+            }
             cartItem.setQuantity(quantity);
-            cartItem.setCreatedBy("CUSTOMER");
+            cartItem.setCreatedBy("User");
             cartItemRepository.save(cartItem);
         } else {
+            if ((cartItem.getQuantity() + quantity) > warehouse.getQuantity()) {
+                throw new CustomException("Order quantity exceeds inventory quantity");
+            }
             cartItem.setQuantity(cartItem.getQuantity() + quantity);
             cartItemRepository.save(cartItem);
         }
