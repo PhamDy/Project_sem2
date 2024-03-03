@@ -77,9 +77,6 @@ public class UserController {
         String jwt = jwtFilter.getToken(request);
         String username = jwtService.getUsernameFromToken(jwt);
         String email = jwtService.getEmailFromToken(jwt);
-        System.out.println("JWT: " + jwt);
-        System.out.println("username: " + username);
-        System.out.println("email: " + email);
         User user;
         try {
             user = userService.getByUsername(username);

@@ -1,13 +1,15 @@
 package fptAptech.theSun.service;
 
 
+import fptAptech.theSun.dto.ProductDetailDto;
+import fptAptech.theSun.dto.ProductViewDto;
 import fptAptech.theSun.entity.Products;
 
 import java.util.List;
 
 public interface ProductService {
 
-    List<Products> getAll();
+    List<ProductViewDto> getAll();
 
     List<Products> getProductFeatured();
 
@@ -33,7 +35,7 @@ public interface ProductService {
 //                                        String sortDirection, String sortBy);
 
 
-    Products getProduct(Long id);
+    ProductDetailDto getProduct(Long id);
 
     List<Products> searchProduct(String keyword);
 

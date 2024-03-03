@@ -4,12 +4,12 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import fptAptech.theSun.exception.CustomException;
 
-public enum PaymentStatus {
+public enum OrderStatus {
     Success(0),Pending(1),Delivering(2),Cancel(3);
 
     private Integer value;
 
-    PaymentStatus(Integer value) {
+    OrderStatus(Integer value) {
         this.value = value;
     }
 
@@ -19,12 +19,12 @@ public enum PaymentStatus {
     }
 
     @JsonCreator
-    public static PaymentStatus of(Integer value) {
+    public static OrderStatus of(Integer value) {
         if (null == value) {
             return null;
         }
 
-        for (PaymentStatus item : PaymentStatus.values()) {
+        for (OrderStatus item : OrderStatus.values()) {
             if (value.equals(item.getValue())) {
                 return item;
             }

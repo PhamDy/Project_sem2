@@ -1,7 +1,11 @@
 package fptAptech.theSun.service.Impl;
 
+import fptAptech.theSun.dto.ProductDetailDto;
+import fptAptech.theSun.dto.ProductViewDto;
+import fptAptech.theSun.dto.mapper.ObjectMapper;
 import fptAptech.theSun.entity.Products;
 import fptAptech.theSun.respository.ProductRepository;
+import fptAptech.theSun.respository.WarehouseRepository;
 import fptAptech.theSun.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -16,14 +20,39 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private WarehouseRepository warehouseRepository;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @Override
-    public List<Products> getAll() {
-        return productRepository.findAll();
+    public List<ProductViewDto> getAll() {
+        var list = productRepository.findAll();
+        var productViews = objectMapper.mapListProductsToDto(list);
+        return productViews;
     }
 
     @Override
-    public Products getProduct(Long id) {
-        return productRepository.findById(id).orElseThrow( () -> new NotFoundException("Not Found Product With Id: " + id));
+    public ProductDetailDto getProduct(Long id) {
+        var product = productRepository.findById(id).orElseThrow( () -> new NotFoundException("Not Found Product With Id: " + id));
+        var dto = new ProductDetailDto();
+        dto.setId(product.getId());
+        dto.setName(product.getName());
+        dto.setCategoryName(product.getCategory().getName());
+        dto.setAvatar(product.getImg());
+        dto.setImg1(product.getImg1());
+        dto.setImg2(product.getImg2());
+        dto.setImg3(product.getImg3());
+        dto.setDesc(product.getDescription());
+        dto.setBrand(product.getBrand());
+        dto.setPrice(product.getPrice());
+        dto.setDiscount(product.getDiscount());
+        var sizeList = warehouseRepository.getBySize(id);
+        var colorList = warehouseRepository.getByColor(id);
+        dto.setSize(sizeList);
+        dto.setColor(colorList);
+        return dto;
     }
 
     @Override
