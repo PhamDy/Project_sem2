@@ -1,7 +1,7 @@
 package fptAptech.theSun.entity;
 
+import fptAptech.theSun.entity.Enum.PaymenStatus;
 import fptAptech.theSun.entity.Enum.PaymentMethod;
-import fptAptech.theSun.entity.Enum.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,16 +15,16 @@ import lombok.NoArgsConstructor;
 public class Payment extends BaseEntity{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "payment_id")
-    private Long id;
+    private String id;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_method")
     private PaymentMethod paymentMethod;
 
-    @Enumerated(EnumType.ORDINAL)
-    @Column(name = "status")
-    private PaymentStatus paymentStatus;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = true)
+    private PaymenStatus status;
 
 }

@@ -193,30 +193,8 @@ function clearMessages() {
   });
 }
 
-function setCookie(name, value, days) {
-  const expires = new Date();
-  expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
-  document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
-}
-
-function getCookie(name) {
-  const cookieName = `${name}=`;
-  const decodedCookie = decodeURIComponent(document.cookie);
-  const cookieArray = decodedCookie.split(';');
-  for(let i = 0; i < cookieArray.length; i++) {
-      let cookie = cookieArray[i];
-      while (cookie.charAt(0) === ' ') {
-          cookie = cookie.substring(1);
-      }
-      if (cookie.indexOf(cookieName) === 0) {
-          return cookie.substring(cookieName.length, cookie.length);
-      }
-  }
-  return null;
-}
-
-function deleteCookie(name) {
-  document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+function setCookie(name, value) {
+  document.cookie = name + "=" + value + "; path=/";
 }
 
 document.getElementById("sign-in-button").addEventListener("click", function(event) {
@@ -230,19 +208,12 @@ document.getElementById("sign-in-button").addEventListener("click", function(eve
       password: password
   })
   .then(response => {
-      const token = response.data;
-      setCookie('authToken', token, 7);
-      window.location.href = "navbarloginsucess.html";
+      const token = response.data.accessToken;
+      setCookie('authToken', token);
+      window.location.href = "index.html";
 
-      const authToken = getCookie('authToken');
-      if (authToken) {
-          axios.defaults.headers.common['Authorization'] = `Bearer ${authToken}`;
-      } else {
-          console.error("Authentication token not found.");
-      }
   })
   .catch(error => {
     document.getElementById("wrongpassword").innerText = "Wrong email or password.";
   });
 });
-

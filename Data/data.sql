@@ -144,4 +144,12 @@ INSERT INTO `warehouse` (`product_id`,`size`, `color`, `quantity`, `status`, `cr
  			(1, 'M','White', 10, 'InStock', 'Admin'),
  			(1, 'L','Black', 10, 'InStock', 'Admin'),
  			(1, 'L','White', 10, 'InStock', 'Admin');
+ 			
+INSERT INTO `delivery` (`name`,`price`, `img`, `created_by`)
+ VALUES ('Standard', 2.01, 'https://img.upanh.tv/2024/03/02/12b8a46bf6788246d.png', 'Admin'),
+  ('Priority', 4.03, 'https://img.upanh.tv/2024/03/02/20594040c364dafeb.png', 'Admin'),
+   ('Overnight', 6.05, 'https://img.upanh.tv/2024/03/02/397ff5f8a9acc63ea.png', 'Admin');
+   			
+
+
 

@@ -20,15 +20,10 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
     @GetMapping("/")
     @Operation(summary = "Lấy ra danh sách sản phẩm", description = "Trả về toàn bộ danh sách sản phẩm có trong hệ thống")
     public ResponseEntity<?> getAllProduct() {
-        List<Products> products = productService.getAll();
-        List<ProductViewDto> productViewDtos = objectMapper.mapListProductsToDto(products);
-        return new ResponseEntity<>(productViewDtos, HttpStatus.OK);
+        return new ResponseEntity<>(productService.getAll(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -113,13 +108,13 @@ public class ProductController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
-    @GetMapping("/search")
-    @Operation(summary = "Tìm kiếm sản phẩm không phân biệt chữ hoa chữ thường")
-    public ResponseEntity<?> searchProduct(@RequestParam(name = "keyword") String keyword) {
-        List<Products> products = productService.searchProduct(keyword);
-        List<ProductViewDto> productViewDtos = objectMapper.mapListProductsToDto(products);
-        return new ResponseEntity<>(productViewDtos, HttpStatus.OK);
-    }
+//    @GetMapping("/search")
+//    @Operation(summary = "Tìm kiếm sản phẩm không phân biệt chữ hoa chữ thường")
+//    public ResponseEntity<?> searchProduct(@RequestParam(name = "keyword") String keyword) {
+//        List<Products> products = productService.searchProduct(keyword);
+//        List<ProductViewDto> productViewDtos = objectMapper.mapListProductsToDto(products);
+//        return new ResponseEntity<>(productViewDtos, HttpStatus.OK);
+//    }
 
 
 }
