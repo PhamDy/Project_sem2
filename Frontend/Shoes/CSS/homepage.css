@@ -673,8 +673,18 @@ html, body {
     opacity: 1;
 }
 
+.quantity-all input {
+    width: 45px;
+    height: 50px;
+    text-align: center;
+    border-right: 2px solid #ddd;
+}
 
-
+.quantity-all input::-webkit-outer-spin-button,
+.quantity-all input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 
 .color-header {
     display: flex;
@@ -723,7 +733,7 @@ html, body {
     opacity: 1;
 }
 
-.color-header input:checked + .link-color::after {
+.color-header input[type="radio"]:checked + .link-color::after {
     opacity: 1;
 }
 

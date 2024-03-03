@@ -75,3 +75,29 @@ function closeSearch() {
     }, 500)
 }
 
+
+function checkAuthToken() {
+    const authToken = getCookie('authToken');
+    if (authToken) {
+        displayLoggedInContent();
+    } else {
+        displayGuestContent();
+    }
+}
+
+function displayLoggedInContent() {
+
+    document.querySelector(".user-icon").classList.add("hide-guest");
+    document.querySelector(".profile").classList.remove("hide-user");
+}
+
+function displayGuestContent() {
+
+
+    document.querySelector(".user-icon").classList.remove("hide-guest");
+    document.querySelector(".profile").classList.add("hide-user");
+}
+
+checkAuthToken();
+
+

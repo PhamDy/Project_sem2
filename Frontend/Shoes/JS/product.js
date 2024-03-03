@@ -176,15 +176,16 @@ axios.get(apiUrl)
         console.error('Error fetching products:', error);
     });
 
-function renderProducts(products) {
-    const productRow = document.querySelector(".product-row");
-    products.forEach(product => {
-        const { name, img, price, discount, description } = product;
-        productRow.innerHTML += `
-            <div class="product-box">
+    function renderProducts(products) {
+        const productRow = document.querySelector(".product-row");
+        products.forEach(product => {
+            const { id, name, img, price, discount, description } = product;
+            const productBox = document.createElement('div');
+            productBox.classList.add('product-box');
+            productBox.innerHTML = `
                 <div class="product">
                     <div class="img-product">
-                        <a href="">
+                        <a href="#">
                             <img style="width: 100%;" src="${img}" alt="${name}">
                         </a>
                         ${discount > 0 ? `<figure style="background: #e12c43; color: #ffffff;" class="label-sale">
@@ -192,31 +193,186 @@ function renderProducts(products) {
                         </figure>` : ''}
                         <ul class="product-icon">
                             <li class="add-cart mr-0">
-                                <a href="">
+                                <a href="#">
                                     <i class="fa-solid fa-bag-shopping icon-1"></i>
                                 </a>
                             </li>
                             <li class="view-product mr-0">
-                                <button onclick="togglePopup()" href="">
+                                <button onclick="openQuickView(${id})">
                                     <i class="fa-solid fa-magnifying-glass icon-2"></i>
                                 </button>
                             </li>
                             <li class="add-favorite mr-0">
-                                <a href="">
+                                <a href="#">
                                     <i class="fa-regular fa-heart icon-3"></i>
                                 </a>
                             </li>
                         </ul>
                     </div>
                     <h4 class="product-title">
-                        <a href="">${name}</a>
+                        <a href="#">${name}</a>
                     </h4>
                     <p class="product-price">
                         ${discount > 0 ? `<s class="">$${price.toFixed(2)}</s>` : ''}
                         <span class="">$${(price - (price * discount / 100)).toFixed(2)}</span>
                     </p>
                 </div>  
+            `;
+            productRow.appendChild(productBox);
+        });
+    }
+
+    function openQuickView(productId) {
+        axios.get(apiUrl + productId)
+            .then(response => {
+                const product = response.data;
+                renderPopup(product);
+                togglePopup(`popup-${product.id}`);
+                console.log(product)
+            })
+            .catch(error => {
+                console.error('Error fetching product details:', error);
+            });
+    }
+
+    function updateQuantity(productId, selectedColor, selectedSize) {
+        return axios.get(`http://localhost:8080/api/warehouse/quantityProduct/${productId}?color=${selectedColor}&size=${selectedSize}`)
+            .then(response => {
+                const quantity = response.data;
+                quantityInput.value = 1;
+                quantityInput.max = quantity;
+            })
+            .catch(error => {
+                console.error('Error fetching quantity:', error);
+                throw error;
+            });
+    }
+
+    function addToCart(productId, selectedColor, selectedSize, selectedQuantity) {
+        return axios.post(`http://localhost:8080/api/cart/${productId}?color=${selectedColor}&size=${selectedSize}&quantity=${selectedQuantity}`)
+            .then(response =>  {
+                const addtocart = response.data;
+            })
+            .catch(error => {
+                console.error('error fetching addtocart: ', error)
+                throw error
+            })
+    }
+    
+    function renderPopup(product) {
+        const popupContent = `
+            <div class="popup-trigger" id="popup-${product.id}">
+                <div class="overview-overlay" onclick="togglePopup('popup-${product.id}')"></div>
+                <div class="popup-content">
+                    <span class="popup-close" onclick="togglePopup('popup-${product.id}')">&times;</span>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <img style="width: 100%;" src="${product.avatar}" alt="${product.name}">
+                        </div>
+                        <div class="col-md-6 popup-detail">
+                            <a class="product-name" href="#"><h2>${product.name}</h2></a>
+                            <span>$${product.price.toFixed(2)} USD</span>
+                            <hr>
+                            <p class="product-info">${product.desc}</p>
+                            <div class="size-header">
+                                <div class="header">Size</div>
+                                <div class="size-content">
+                                    ${product.size.map(size => `
+                                        <div class="${size}-available">
+                                            <input type="radio" name="option-size-${product.id}" id="option-${size}-${product.id}" value="${size}" onchange="updateURL(${product.id})">
+                                            <label class="variant-other" for="option-${size}-${product.id}">${size}</label>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                            <div class="color-header">
+                                <div class="header">Color</div>
+                                ${product.color.map(color => `
+                                    <div class="${color.toLowerCase()}-color">
+                                        <input type="radio" name="option-color-${product.id}" id="option-${color.toLowerCase()}-${product.id}" value="${color}" onchange="updateURL(${product.id})">
+                                        <label class="link-color" for="option-${color.toLowerCase()}-${product.id}" style="background-color: ${color.toLowerCase()}"></label>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <div class="product-action">
+                            <div class="product-quantity">
+                                <div class="quantity-all">
+                                    <span class="qty-minus" onclick="decreaseQuantity()">
+                                        <i class="fa fa-caret-down"></i>
+                                    </span>
+                                    <input type="number" name="quantity" id="quantityInput" pattern="[0-9]*">
+                                    <span class="qty-plus" onclick="increaseQuantity()">
+                                        <i class="fa fa-caret-up"></i>
+                                    </span>
+                                </div>
+                                <p id="quantityErrorMessage" style="color: red; display: none;">Quantity must be less than maxQuantity</p>
+                            </div>
+                                <div class="btn-addtocart">
+                                    <button type="button" class="btn-addtocart" onclick="updateUrlAddToCart(productId)">Add To Cart</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         `;
+    
+        document.body.insertAdjacentHTML('beforeend', popupContent);
+    }
+    
+    document.getElementById('quantityInput').addEventListener('input', function() {
+        updateURL(productId);
     });
+
+    function updateURL(productId) {
+        try {
+            const selectedSize = document.querySelector('input[name^="option-size"]:checked').value;
+            const selectedColor = document.querySelector('input[name^="option-color"]:checked').value;
+            const selectedQuantity = document.getElementById('quantityInput').value;
+    
+            const currentURL = new URL(window.location.href);
+            currentURL.searchParams.set('productId', productId);
+            currentURL.searchParams.set('color', selectedColor);
+            currentURL.searchParams.set('size', selectedSize);
+            currentURL.searchParams.set('quantity', selectedQuantity);
+    
+            window.history.replaceState({}, '', currentURL);
+    
+            updateQuantity(productId, selectedColor, selectedSize);
+            addToCart(productId, selectedColor, selectedSize, selectedQuantity);
+        } catch (error) {
+            console.error('Error updating URL:', error);
+        }
+    }
+
+    function togglePopup(popupId) {
+        const popupTrigger = document.getElementById(popupId);
+        popupTrigger.classList.toggle('active');
+    }
+
+function stopPropagation(event) {
+    event.stopPropagation();
+}
+
+function increaseQuantity() {
+    const quantityInput = document.getElementById('quantityInput');
+    let quantity = parseInt(quantityInput.value); // Parse as integer
+    const maxQuantity = parseInt(quantityInput.max); // Parse as integer
+
+    if (quantity < maxQuantity) {
+        quantity++;
+        quantityInput.value = quantity; // Update input value with the new quantity
+        updateURL(productId); // Update URL
+    }
+}
+
+function decreaseQuantity() {
+    const quantityInput = document.getElementById('quantityInput');
+    let quantity = parseInt(quantityInput.value) || 0; // Parse as integer
+
+    if (quantity > 0) { 
+        quantity--;
+        quantityInput.value = quantity; // Update input value with the new quantity
+        updateURL(productId); // Update URL
+    }
 }

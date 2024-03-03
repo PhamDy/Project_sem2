@@ -49,11 +49,6 @@ const hiddenElements = document.querySelectorAll('.hidden')
 hiddenElements.forEach((el) => observer.observe(el));
 
 
-function togglePopup() {
-document.getElementById("popup-1").classList.toggle("active")
-}
-
-
 function renderRecentProducts(products) {
   products.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
   const recentProducts = products.slice(0, 9);
