@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "order")
+@Table(name = "orders")
 public class Order extends BaseEntity{
 
     @Id
@@ -45,17 +45,17 @@ public class Order extends BaseEntity{
     @Column(name = "phone")
     private String phone;
 
-    @Column(name = "note", nullable = true)
-    private String note;
-
     @Column(name = "tax")
     private Double tax;
 
-    @Column(name = "total_price")
-    private Double totalPrice;
+    @Column(name = "note", nullable = true)
+    private String note;
 
     @Column(name = "code")
     private String code;
+
+    @Column(name = "total_price")
+    private Double totalPrice;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "order_status")
@@ -72,11 +72,5 @@ public class Order extends BaseEntity{
     @ManyToOne
     @JoinColumn(name = "delivery_id", nullable = true)
     private Delivery delivery;
-
-
-
-
-
-
 
 }

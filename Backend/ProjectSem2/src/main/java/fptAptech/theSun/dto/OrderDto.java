@@ -1,5 +1,7 @@
 package fptAptech.theSun.dto;
 
+import fptAptech.theSun.entity.Enum.PaymenStatus;
+import fptAptech.theSun.entity.Enum.PaymentMethod;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -51,6 +53,26 @@ public class OrderDto implements Serializable {
     @NotEmpty
     @Size(min = 10, max = 10)
     private String phone;
+
+    @NotNull
+    @NotEmpty
+    private Double tax;
+
+    private String note;
+
+    @NotNull
+    @NotEmpty
+    private Double total;
+
+    @NotNull
+    @NotEmpty
+    private Long deliveryId;
+
+    @NotNull
+    @NotEmpty
+    private PaymentMethod paymentMethod;
+
+    private PaymenStatus paymenStatus = PaymenStatus.Unpaid;
 
 
 }
