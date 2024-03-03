@@ -356,23 +356,23 @@ function stopPropagation(event) {
 
 function increaseQuantity() {
     const quantityInput = document.getElementById('quantityInput');
-    let quantity = parseInt(quantityInput.value); // Parse as integer
-    const maxQuantity = parseInt(quantityInput.max); // Parse as integer
+    let quantity = parseInt(quantityInput.value);
+    const maxQuantity = parseInt(quantityInput.max); 
 
     if (quantity < maxQuantity) {
         quantity++;
-        quantityInput.value = quantity; // Update input value with the new quantity
-        updateURL(productId); // Update URL
+        quantityInput.value = quantity;
+        updateURL(productId);
     }
 }
 
 function decreaseQuantity() {
     const quantityInput = document.getElementById('quantityInput');
-    let quantity = parseInt(quantityInput.value) || 0; // Parse as integer
+    let quantity = parseInt(quantityInput.value) || 0;
 
     if (quantity > 0) { 
         quantity--;
-        quantityInput.value = quantity; // Update input value with the new quantity
-        updateURL(productId); // Update URL
+        quantityInput.value = quantity; 
+        updateURL(productId);
     }
 }
