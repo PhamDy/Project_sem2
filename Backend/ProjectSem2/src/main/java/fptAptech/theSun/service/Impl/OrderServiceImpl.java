@@ -1,9 +1,9 @@
 package fptAptech.theSun.service.Impl;
 
 import fptAptech.theSun.dto.DeliveryDto;
-import fptAptech.theSun.dto.OrderDto;
+import fptAptech.theSun.dto.OrderRequestDto;
+import fptAptech.theSun.dto.OrderViewDto;
 import fptAptech.theSun.entity.Enum.OrderStatus;
-import fptAptech.theSun.entity.Enum.PaymenStatus;
 import fptAptech.theSun.entity.Order;
 import fptAptech.theSun.entity.Payment;
 import fptAptech.theSun.exception.CustomException;
@@ -58,13 +58,19 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public OrderViewDto showOrderView() {
+        return null;
+    }
+
+    @Override
     public Order saveOrder(Order order) {
         return orderRepository.save(order);
     }
 
     @Override
     @Transactional
-    public Order saveOrderByDto(OrderDto dto, String paymenId) {
+    public Order saveOrderByDtoPaypal(OrderRequestDto dto, String paymenId, Double tax, Double totalPrice) {
+
         var order = mapToOrder(dto);
 
         String email = JwtFilter.CURRENT_USER;
@@ -78,6 +84,9 @@ public class OrderServiceImpl implements OrderService {
         var delivery = deliveryRepository.findById(dto.getDeliveryId())
                 .orElseThrow(() -> new CustomException("Delivery not found"));
         order.setDelivery(delivery);
+        order.setTax(tax);
+        order.setTotalPrice(totalPrice);
+
 
         Payment payment = new Payment();
         payment.setId(paymenId);
@@ -101,7 +110,7 @@ public class OrderServiceImpl implements OrderService {
         return order;
     }
 
-    public Order mapToOrder(OrderDto dto) {
+    public Order mapToOrder(OrderRequestDto dto) {
         Order order = new Order();
         order.setFirst_name(dto.getFirstName());
         order.setLast_name(dto.getLastName());
@@ -112,9 +121,7 @@ public class OrderServiceImpl implements OrderService {
         order.setZipCode(dto.getZipCode());
         order.setEmail(dto.getEmail());
         order.setPhone(dto.getPhone());
-        order.setTax(dto.getTax());
         order.setNote(dto.getNote());
-        order.setTotalPrice(dto.getTotal());
         return order;
     }
 
