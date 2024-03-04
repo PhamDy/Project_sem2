@@ -31,10 +31,10 @@ CREATE TABLE IF NOT EXISTS `products` (
     `updated_by` VARCHAR(50) DEFAULT NULL
     );
 
-CREATE TABLE IF NOT EXISTS warehouse (
-                                         `warehouse_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
-                                         `product_id` BIGINT NOT NULL,
-                                         `size` VARCHAR(50) NOT NULL,
+CREATE TABLE IF NOT EXISTS `warehouse` (
+                                           `warehouse_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
+                                           `product_id` BIGINT NOT NULL,
+                                           `size` VARCHAR(50) NOT NULL,
     `color` VARCHAR(50) NOT NULL,
     `quantity` INT NOT NULL,
     `status` ENUM('InStock', 'OutOfStock'),
@@ -109,8 +109,8 @@ CREATE TABLE IF NOT EXISTS `address` (
     );
 
 CREATE TABLE IF NOT EXISTS `payment` (
-                                         `payment_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
-                                         `payment_method` ENUM('Online', 'Coding'),
+    `payment_id` VARCHAR(255) PRIMARY KEY,
+    `payment_method` ENUM('Online', 'Coding'),
     `status` ENUM('Paid', 'Unpaid') NULL,
     `updated_at` TIMESTAMP NOT NULL,
     `created_by` VARCHAR(50) NOT NULL,
@@ -118,20 +118,9 @@ CREATE TABLE IF NOT EXISTS `payment` (
     `updated_by` VARCHAR(50) DEFAULT NULL
     );
 
-CREATE TABLE IF NOT EXISTS `delivery` (
-                                          `delivery_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
-                                          `address_id` BIGINT NOT NULL,
-                                          `delivery_status` ENUM('Success', 'Delivering', 'Cancel'),
-    FOREIGN KEY (`address_id`) REFERENCES address(address_id),
-    `updated_at` TIMESTAMP NOT NULL,
-    `created_by` VARCHAR(50) NOT NULL,
-    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `updated_by` VARCHAR(50) DEFAULT NULL
-    );
-
 CREATE TABLE IF NOT EXISTS `orders` (
-                                       `order_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
-                                       `first_name` VARCHAR(100) NOT NULL,
+                                        `order_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
+                                        `first_name` VARCHAR(100) NOT NULL,
     `last_name` VARCHAR(100) NOT NULL,
     `country` VARCHAR(100) NOT NULL,
     `city` VARCHAR(100) NOT NULL,
@@ -145,7 +134,7 @@ CREATE TABLE IF NOT EXISTS `orders` (
     `code` VARCHAR(100) NOT NULL,
     `total_price` DOUBLE NOT NULL,
     `user_id` BIGINT NOT NULL,
-    `payment_id` BIGINT NOT NULL,
+    `payment_id` VARCHAR(255) NOT NULL,
     `delivery_id` BIGINT NOT NULL,
     `order_status` ENUM('Success', 'Pending', 'Delivering', 'Cancel'),
     FOREIGN KEY (`user_id`) REFERENCES users(user_id),
@@ -157,10 +146,22 @@ CREATE TABLE IF NOT EXISTS `orders` (
     `updated_by` VARCHAR(50) DEFAULT NULL
     );
 
+CREATE TABLE IF NOT EXISTS `delivery` (
+                                          `delivery_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
+                                          `name` VARCHAR(50) NOT NULL,
+    `price` DOUBLE NOT NULL,
+    `img` VARCHAR(50) NOT NULL,
+    --  `delivery_status` ENUM('Success', 'Delivering', 'Cancel'),
+    `updated_at` TIMESTAMP NOT NULL,
+    `created_by` VARCHAR(50) NOT NULL,
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updated_by` VARCHAR(50) DEFAULT NULL
+    );
+
 CREATE TABLE IF NOT EXISTS `carts` (
-    `cart_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
-    `user_id` BIGINT NOT NULL,
-    `status` ENUM('Open', 'Close') DEFAULT 'Open',
+                                       `cart_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
+                                       `user_id` BIGINT NOT NULL,
+                                       `status` ENUM('Open', 'Close') DEFAULT 'Open',
     FOREIGN KEY (`user_id`) REFERENCES users(user_id),
     `updated_at` TIMESTAMP NOT NULL,
     `created_by` VARCHAR(50) NOT NULL,
@@ -198,6 +199,3 @@ CREATE TABLE IF NOT EXISTS `product_review` (
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_by` VARCHAR(50) DEFAULT NULL
     );
-
-
-

@@ -96,7 +96,7 @@ public class OrderController {
 //        }
 //    }
 
-
+    // URL_PAYPAL_SUCCESS = http://localhost:8080/api/order/pay/success
     @GetMapping(URL_PAYPAL_SUCCESS)
     @Operation(summary = "Khi khách hàng thanh toán với Paypal thành công")
     public ResponseEntity<?> successPay(@RequestParam("paymentId") String paymentId, @RequestParam("PayerID") String payerId) {
@@ -115,6 +115,7 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Payment not approved.");
     }
 
+    // URL_PAYPAL_CANCEL = http://localhost:8080/api/order/pay/cancel
     @GetMapping(URL_PAYPAL_CANCEL)
     @Operation(summary = "Khi khách hàng thanh toán với Paypal thất bại")
     private ResponseEntity<?> cancelPaypal(){
