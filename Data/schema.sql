@@ -110,7 +110,7 @@ CREATE TABLE IF NOT EXISTS `address` (
 
 CREATE TABLE IF NOT EXISTS `payment` (
     `payment_id` VARCHAR(255) PRIMARY KEY,
-    `payment_method` ENUM('Online', 'Coding'),
+    `payment_method` VARCHAR(50) NOT NULL,
     `status` ENUM('Paid', 'Unpaid') NULL,
     `updated_at` TIMESTAMP NOT NULL,
     `created_by` VARCHAR(50) NOT NULL,
