@@ -136,7 +136,7 @@ CREATE TABLE IF NOT EXISTS `orders` (
    `user_id` BIGINT NOT NULL,
     `payment_id` VARCHAR(255) NOT NULL,
     `delivery_id` BIGINT NOT NULL,
-    `order_status` ENUM('Success', 'Pending', 'Delivering', 'Cancel'),
+    `order_status` ENUM('Success', 'Pending', 'Confirmed', 'Delivering', 'Cancel'),
     FOREIGN KEY (`user_id`) REFERENCES users(user_id),
     FOREIGN KEY (`payment_id`) REFERENCES payment(payment_id),
     FOREIGN KEY (`delivery_id`) REFERENCES delivery(delivery_id),
