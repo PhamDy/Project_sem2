@@ -24,7 +24,7 @@ public class ProductDetailDto implements Serializable {
     private String gender;
     private String brand;
     private Double price;
-    private Float discount;
+    private Double discount;
     private List<String> size;
     private List<String> color;
 }

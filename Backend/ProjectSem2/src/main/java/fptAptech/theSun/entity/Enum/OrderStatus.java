@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import fptAptech.theSun.exception.CustomException;
 
 public enum OrderStatus {
-    Success(0),Pending(1),Delivering(2),Cancel(3);
+    Success(0),Pending(1), Confirmed(2), Delivering(3),Cancel(4);
 
     private Integer value;
 

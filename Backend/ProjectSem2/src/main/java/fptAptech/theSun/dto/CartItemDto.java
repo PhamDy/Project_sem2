@@ -21,4 +21,5 @@ public class CartItemDto implements Serializable {
     private Integer quantity;
     private Double price;
     private Double subTotal;
+    private Double discount;
 }

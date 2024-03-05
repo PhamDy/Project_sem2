@@ -62,7 +62,7 @@ public class OrderRequestDto implements Serializable {
 
     @NotNull
     @NotEmpty
-    private PaymentMethod paymentMethod;
+    private String paymentMethod;
 
     private PaymenStatus paymenStatus = PaymenStatus.Unpaid;
 

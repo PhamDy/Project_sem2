@@ -5,13 +5,13 @@ import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
 import fptAptech.theSun.config.Utils;
 import fptAptech.theSun.dto.OrderRequestDto;
-import fptAptech.theSun.email.EmailService;
+import fptAptech.theSun.entity.Enum.CartsStatus;
+import fptAptech.theSun.entity.Enum.OrderStatus;
 import fptAptech.theSun.entity.Enum.PaymenStatus;
 import fptAptech.theSun.exception.CustomException;
 import fptAptech.theSun.paypal.PaypalPaymentIntent;
 import fptAptech.theSun.paypal.PaypalPaymentMethod;
 import fptAptech.theSun.respository.DeliveryRepository;
-import fptAptech.theSun.respository.PaymentRepository;
 import fptAptech.theSun.service.CartService;
 import fptAptech.theSun.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,9 +19,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 
 
 @RestController
@@ -44,9 +47,6 @@ public class OrderController {
     private CartService cartService;
 
     @Autowired
-    private EmailService emailService;
-
-    @Autowired
     private DeliveryRepository deliveryRepository;
 
     @PostMapping("/paypal")
@@ -57,15 +57,8 @@ public class OrderController {
 
         var delivery = deliveryRepository.findById(dto.getDeliveryId())
                 .orElseThrow(() -> new CustomException("Delivery not found"));
-        var cart = cartService.showCart();
-        Double tax;
-        if (cart.getTotalPrice()<= 100 && cart.getTotalPrice()>0) {
-            tax = cart.getTotalPrice()*0.1;
-        } else if (cart.getTotalPrice()>100 && cart.getTotalPrice()<=500) {
-            tax = cart.getTotalPrice()*0.08;
-        } else {
-            tax = cart.getTotalPrice()*0.05;
-        }
+        var cart = cartService.showCart(CartsStatus.Open);
+        Double tax = getTax(cart.getTotalPrice());
         Double totalOrder = cart.getTotalPrice() + delivery.getPrice() + tax;
 
         try {
@@ -80,8 +73,7 @@ public class OrderController {
 
             for (Links links : payment.getLinks()) {
                 if (links.getRel().equals("approval_url")) {
-                    var order = orderService.saveOrderByDtoPaypal(dto, payment.getId(), tax, totalOrder);
-//                    return ResponseEntity.ok(Map.of("approvalUrl", links.getHref(), "paymentId", payment.getId()));
+                    orderService.saveOrderByDtoPaypal(dto, payment.getId(), tax, totalOrder);
                     return ResponseEntity.ok(links.getHref());
                 }
             }
@@ -100,8 +92,17 @@ public class OrderController {
             if(payment.getState().equals("approved")){
                 var order = orderService.findByPaymentId(paymentId);
                 order.getPayment().setStatus(PaymenStatus.Paid);
+                order.setStatus(OrderStatus.Confirmed);
                 orderService.saveOrder(order);
-                return ResponseEntity.status(HttpStatus.OK).body("Payment success");
+                orderService.updateQuantityWarehouse();
+                var cart = cartService.showCart(CartsStatus.Open);
+                orderService.sendMailOrder(cart, order);
+                cartService.changeStatusCart(cart.getId(), CartsStatus.Close);
+
+                URI uri = URI.create("https://aptech.fpt.edu.vn/");
+                HttpHeaders httpHeaders = new HttpHeaders();
+                httpHeaders.setLocation(uri);
+                return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
             }
         }		 catch (PayPalRESTException e) {
             log.error(e.getMessage());
@@ -113,7 +114,11 @@ public class OrderController {
     @GetMapping(URL_PAYPAL_CANCEL)
     @Operation(summary = "Khi khách hàng thanh toán với Paypal thất bại")
     private ResponseEntity<?> cancelPaypal(){
-        return ResponseEntity.status(HttpStatus.OK).body("Payment canceled");
+        orderService.deleteOrderWhenCancelPayment();
+        URI uri = URI.create("https://www.google.com/");
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setLocation(uri);
+        return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
     }
 
     @GetMapping("/showDelivery")
@@ -122,6 +127,20 @@ public class OrderController {
         return new ResponseEntity<>(orderService.getAllDelivery(), HttpStatus.OK);
     }
 
+    @GetMapping("/testSendMail")
+    public ResponseEntity<?> testSendMail() {
+        orderService.testSendMail();
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
+    public Double getTax(Double total) {
+        if (total<= 100 && total>0) {
+            return total*0.1;
+        } else if (total>100 && total<=500) {
+            return total*0.08;
+        } else {
+            return total*0.05;
+        }
+    }
 
 }

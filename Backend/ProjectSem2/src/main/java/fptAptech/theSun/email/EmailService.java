@@ -22,20 +22,20 @@ public class EmailService {
     @Value("${spring.mail.username}")
     private String fromMail;
 
-    public void sendMail(String email, String content) {
+    public void sendMail(String email, String subject, String htmlContent) {
         try {
-
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
             helper.setFrom(fromMail);
             helper.setTo(email);
-            helper.setSubject("Send to OTP from WalkZ Shop");
-            helper.setText(content);
+            helper.setSubject(subject);
+            helper.setText(htmlContent, true);
+
             javaMailSender.send(mimeMessage);
-        }catch (MessagingException e) {
-            LOGGER.error("failed to send email", e);
-            throw new IllegalStateException("failed to send email");
+        } catch (MessagingException e) {
+            LOGGER.error("Failed to send email", e);
+            throw new IllegalStateException("Failed to send email");
         }
     }
 

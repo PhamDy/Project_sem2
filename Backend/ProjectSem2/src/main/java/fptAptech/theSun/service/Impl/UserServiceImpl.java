@@ -139,7 +139,7 @@ public class UserServiceImpl implements UserService {
         user.setOtp(otp);
         user.setOtpGeneratedTime(LocalDateTime.now());
         userRepository.save(user);
-        emailService.sendMail(user.getEmail(), "This is your authentication code: " + otp);
+        emailService.sendMail(user.getEmail(), "Send to OTP from WalkZ Shop" ,"This is your authentication code: " + otp);
     }
 
     @Override
@@ -181,7 +181,7 @@ public class UserServiceImpl implements UserService {
             user.setOtp(otp);
             user.setOtpGeneratedTime(LocalDateTime.now());
             userRepository.save(user);
-            emailService.sendMail(user.getEmail(), "This is your authentication code: " + otp);
+            emailService.sendMail(user.getEmail(), "Send to OTP from WalkZ Shop" ,"This is your authentication code: " + otp);
             LOGGER.info("OTP regenerated for user with email: {}", email);
         } catch (NoSuchElementException e) {
             LOGGER.error("User not found with email: {}", e);

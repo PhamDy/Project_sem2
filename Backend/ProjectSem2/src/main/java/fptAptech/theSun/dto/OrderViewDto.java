@@ -1,6 +1,7 @@
 package fptAptech.theSun.dto;
 
 import fptAptech.theSun.entity.Enum.OrderStatus;
+import fptAptech.theSun.entity.Order;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,14 +14,6 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Builder
 public class OrderViewDto implements Serializable {
-    private Long id;
-    private OrderRequestDto orderRequestDto;
+    private Order order;
     private CartDto cartDto;
-    private String shippingMethod;
-    private Double tax;
-    private Double shipPrice;
-    private Double toal =  cartDto.getTotalPrice() + tax + shipPrice;
-    private OrderStatus orderStatus = OrderStatus.Pending;
-
-
 }

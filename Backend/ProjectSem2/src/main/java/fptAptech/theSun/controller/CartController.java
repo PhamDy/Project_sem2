@@ -1,6 +1,7 @@
 package fptAptech.theSun.controller;
 
 import fptAptech.theSun.dto.UpdateQuantityDto;
+import fptAptech.theSun.entity.Enum.CartsStatus;
 import fptAptech.theSun.service.CartService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class CartController {
     @GetMapping("/showCart")
     @Operation(summary = "Show giỏ hàng cho khách hàng xem")
     public ResponseEntity<?> showCart() {
-        return new ResponseEntity<>(cartService.showCart(), HttpStatus.OK);
+        return new ResponseEntity<>(cartService.showCart(CartsStatus.Open), HttpStatus.OK);
     }
 
     @PostMapping("/{id}")

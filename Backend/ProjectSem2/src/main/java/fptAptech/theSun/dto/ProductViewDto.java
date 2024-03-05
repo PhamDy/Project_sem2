@@ -19,6 +19,6 @@ public class ProductViewDto implements Serializable {
 
     private Double price;
 
-    private Float discount;
+    private Double discount;
 
 }
