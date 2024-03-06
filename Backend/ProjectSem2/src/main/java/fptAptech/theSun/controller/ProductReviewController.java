@@ -16,12 +16,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/products/{productId}")
 public class ProductReviewController {
-    private final ProductReviewService productReviewService;
 
     @Autowired
-    public ProductReviewController(ProductReviewService productReviewService) {
-        this.productReviewService = productReviewService;
-    }
+    private ProductReviewService productReviewService;
 
     @PostMapping("/create")
     @Operation(summary = "Khách hàng tạo đánh giá sản phẩm", description = "Khách hàng nhâp comment và star vào đánh giá")
