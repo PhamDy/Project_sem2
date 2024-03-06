@@ -73,6 +73,7 @@ public class OrderController {
 
             for (Links links : payment.getLinks()) {
                 if (links.getRel().equals("approval_url")) {
+                    orderService.updateQuantityWarehouse();
                     orderService.saveOrderByDtoPaypal(dto, payment.getId(), tax, totalOrder);
                     return ResponseEntity.ok(links.getHref());
                 }
@@ -94,7 +95,6 @@ public class OrderController {
                 order.getPayment().setStatus(PaymenStatus.Paid);
                 order.setStatus(OrderStatus.Confirmed);
                 orderService.saveOrder(order);
-                orderService.updateQuantityWarehouse();
                 var cart = cartService.showCart(CartsStatus.Open);
                 orderService.sendMailOrder(cart, order);
                 cartService.changeStatusCart(cart.getId(), CartsStatus.Close);
@@ -115,6 +115,8 @@ public class OrderController {
     @Operation(summary = "Khi khách hàng thanh toán với Paypal thất bại")
     private ResponseEntity<?> cancelPaypal(){
         orderService.deleteOrderWhenCancelPayment();
+        orderService.returnQuantity();
+
         URI uri = URI.create("https://www.google.com/");
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(uri);
