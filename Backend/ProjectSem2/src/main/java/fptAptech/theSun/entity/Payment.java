@@ -19,9 +19,8 @@ public class Payment extends BaseEntity{
     @Column(name = "payment_id")
     private String id;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "payment_method")
-    private PaymentMethod paymentMethod;
+    private String paymentMethod;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = true)

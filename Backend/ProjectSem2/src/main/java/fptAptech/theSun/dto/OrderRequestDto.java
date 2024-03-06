@@ -17,7 +17,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class OrderDto implements Serializable {
+public class OrderRequestDto implements Serializable {
     @NotNull
     @NotEmpty
     private String firstName;
@@ -54,15 +54,7 @@ public class OrderDto implements Serializable {
     @Size(min = 10, max = 10)
     private String phone;
 
-    @NotNull
-    @NotEmpty
-    private Double tax;
-
     private String note;
-
-    @NotNull
-    @NotEmpty
-    private Double total;
 
     @NotNull
     @NotEmpty
@@ -70,9 +62,8 @@ public class OrderDto implements Serializable {
 
     @NotNull
     @NotEmpty
-    private PaymentMethod paymentMethod;
+    private String paymentMethod;
 
     private PaymenStatus paymenStatus = PaymenStatus.Unpaid;
-
 
 }

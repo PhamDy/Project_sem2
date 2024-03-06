@@ -49,7 +49,7 @@ public class ResetPasswordServiceImpl implements ResetPasswordService {
         resetPassword.setUser(user);
         resetPassword.setCreatedBy("User");
         resetPasswordRepository.save(resetPassword);
-        emailService.sendMail(email, otp);
+        emailService.sendMail(email,"Send to OTP from WalkZ Shop" ,otp);
         return otp;
     }
 

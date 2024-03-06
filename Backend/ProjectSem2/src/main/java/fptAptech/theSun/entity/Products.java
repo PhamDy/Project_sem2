@@ -54,7 +54,7 @@ public class Products extends BaseEntity{
     private ProductStatus status;
 
     @Column(name = "discount")
-    private Float discount;
+    private Double discount;
 
     @ManyToOne
     @JoinColumn(name = "category_id")

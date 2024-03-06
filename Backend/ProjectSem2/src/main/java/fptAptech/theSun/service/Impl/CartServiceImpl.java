@@ -37,15 +37,15 @@ public class CartServiceImpl implements CartService {
     private UserRepository userRepository;
 
     @Override
-    public CartDto showCart() {
+    public CartDto showCart(CartsStatus status) {
         String email = JwtFilter.CURRENT_USER;
         var user = Optional.ofNullable(userRepository.findByEmail(email).orElseThrow(() ->
                 new CustomException("You must log in before!")));
 
-        var cart = cartRepository.findByUser_IdAndStatus(user.get().getId(), CartsStatus.Open);
+        var cart = cartRepository.findByUser_IdAndStatus(user.get().getId(), status);
 
         if (cart == null) {
-            throw new CustomException("Cart is Null");
+            return new CartDto();
         }
         var cartDto = new CartDto();
         var cartItems = cartItemRepository.getByCarts_Id(cart.getId());
@@ -128,6 +128,15 @@ public class CartServiceImpl implements CartService {
 
     @Override
     @Transactional
+    public void changeStatusCart(Long cartId, CartsStatus cartsStatus) {
+        var cart = cartRepository.findById(cartId).orElseThrow(() ->
+                new CustomException("Cart not found"));
+        cart.setStatus(cartsStatus);
+        cartRepository.save(cart);
+    }
+
+    @Override
+    @Transactional
     public void deleteCariItem(Long id) {
         cartItemRepository.deleteById(id);
     }
@@ -145,6 +154,7 @@ public class CartServiceImpl implements CartService {
                     cartItemDto.setQuantity(cartItem.getQuantity());
                     cartItemDto.setPrice(cartItem.getPrice());
                     cartItemDto.setSubTotal(cartItem.getSubtotal());
+                    cartItemDto.setDiscount(cartItem.getProducts().getDiscount());
                     return cartItemDto;
                 })
                 .collect(Collectors.toList());

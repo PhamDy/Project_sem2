@@ -57,23 +57,6 @@ public class ObjectMapper {
                 .collect(Collectors.toList());
     }
 
-    // Carts mapper
-
-    public CartItemDto mapCartItemsToDto(CartItem cartItem) {
-        return CartItemDto.builder()
-                .id(cartItem.getId())
-                .productName(cartItem.getProducts().getName())
-                .color(cartItem.getColor())
-                .size(cartItem.getSize())
-                .quantity(cartItem.getQuantity())
-                .price(cartItem.getPrice())
-                .build();
-    }
-
-    // address
-//    public Address mapDtoToAdress(AddressDto dto) {
-//        return Address.builder().build();
-//    }
 
 
 }
