@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 public class OrderServiceImpl implements OrderService {
     private static int i = 1;
     private static int nextOrderId = i++;
+    private static final long TIMEOUT_DURATION_MS = 10 * 1000;
 
     @Autowired
     private OrderRepository orderRepository;
@@ -165,6 +166,21 @@ public class OrderServiceImpl implements OrderService {
                 warehouse.setStatus(ProductStatus.OutOfStock);
             }
             warehouseRepository.save(warehouse);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void returnQuantity() {
+        var carts = cartService.showCart(CartsStatus.Open);
+        List<CartItemDto> list = new ArrayList<>();
+        list.addAll(carts.getCartItemList());
+
+        for (CartItemDto item: list
+             ) {
+            var warehouse =
+                    warehouseRepository.findByProducts_IdAndColorAndSize(item.getProductId(), item.getColor(), item.getSize());
+            warehouse.setQuantity(warehouse.getQuantity() + item.getQuantity());
         }
     }
 

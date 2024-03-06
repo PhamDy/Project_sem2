@@ -1,6 +1,5 @@
 package fptAptech.theSun.entity;
 
-import fptAptech.theSun.entity.Enum.DeliveryStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
