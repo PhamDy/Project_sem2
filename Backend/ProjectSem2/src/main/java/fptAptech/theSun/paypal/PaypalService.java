@@ -1,4 +1,4 @@
-package fptAptech.theSun.controller;
+package fptAptech.theSun.paypal;
 
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
