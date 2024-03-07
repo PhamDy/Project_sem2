@@ -17,6 +17,7 @@ import fptAptech.theSun.service.CartService;
 import fptAptech.theSun.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +53,7 @@ public class OrderController {
 
     @PostMapping("/paypal")
     @Operation(summary = "Khách hàng bấm vào thanh toán với paypal")
-    private ResponseEntity<?> placeOrder(HttpServletRequest request, @RequestBody OrderRequestDto dto){
+    private ResponseEntity<?> placeOrder(HttpServletRequest request, @Valid @RequestBody OrderRequestDto dto){
         String cancelUrl = Utils.getBaseURL(request) + "/api/order/" + URL_PAYPAL_CANCEL;
         String successUrl = Utils.getBaseURL(request) + "/api/order/" + URL_PAYPAL_SUCCESS;
 

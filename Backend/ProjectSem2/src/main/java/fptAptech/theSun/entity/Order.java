@@ -2,12 +2,13 @@ package fptAptech.theSun.entity;
 
 import fptAptech.theSun.entity.Enum.OrderStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "orders")
@@ -65,12 +66,20 @@ public class Order extends BaseEntity{
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "payment_id", nullable = true)
+    @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @JoinColumn(name = "payment_id")
     private Payment payment;
 
     @ManyToOne
-    @JoinColumn(name = "delivery_id", nullable = true)
+    @JoinColumn(name = "delivery_id")
     private Delivery delivery;
+
+    @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @JoinColumn(name = "billing_address_id")
+    private BillingAddress billingAddress;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Order_details> detailsList;
+
 
 }

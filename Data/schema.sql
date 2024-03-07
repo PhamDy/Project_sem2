@@ -146,6 +146,23 @@ CREATE TABLE IF NOT EXISTS `orders` (
     `updated_by` VARCHAR(50) DEFAULT NULL
 );
 
+CREATE TABLE IF NOT EXISTS `order_details` (
+    `order_detail_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
+   `size` VARCHAR(50) NOT NULL,
+    `color` VARCHAR(50) NOT NULL,
+    `quantity` INT NOT NULL,
+    `price` DOUBLE NOT NULL,
+     `discount` DOUBLE NOT NULL,
+	`orders_id` BIGINT NOT NULL,
+   `product_id` BIGINT NOT NULL,
+    FOREIGN KEY (`product_id`) REFERENCES products(product_id),
+    FOREIGN KEY (`orders_id`) REFERENCES orders(order_id),
+    `updated_at` TIMESTAMP NOT NULL,
+    `created_by` VARCHAR(50) NOT NULL,
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updated_by` VARCHAR(50) DEFAULT NULL
+);
+
 CREATE TABLE IF NOT EXISTS `delivery` (
     `delivery_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
     `name` VARCHAR(50) NOT NULL,

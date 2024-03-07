@@ -3,12 +3,11 @@ package fptAptech.theSun.entity;
 import fptAptech.theSun.entity.Enum.CartsStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Null;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "carts")

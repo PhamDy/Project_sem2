@@ -2,10 +2,12 @@ package fptAptech.theSun.service.Impl;
 
 import fptAptech.theSun.dto.*;
 import fptAptech.theSun.email.EmailService;
+import fptAptech.theSun.entity.BillingAddress;
 import fptAptech.theSun.entity.Enum.CartsStatus;
 import fptAptech.theSun.entity.Enum.OrderStatus;
 import fptAptech.theSun.entity.Enum.ProductStatus;
 import fptAptech.theSun.entity.Order;
+import fptAptech.theSun.entity.Order_details;
 import fptAptech.theSun.entity.Payment;
 import fptAptech.theSun.exception.CustomException;
 import fptAptech.theSun.respository.*;
@@ -38,10 +40,19 @@ public class OrderServiceImpl implements OrderService {
     private UserRepository userRepository;
 
     @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
     private WarehouseRepository warehouseRepository;
 
     @Autowired
     private PaymentRepository paymentRepository;
+
+    @Autowired
+    private OrderDetailsRepository orderDetailsRepository;
+
+    @Autowired
+    private BillingAddressRepository billingAddressRepository;
 
     @Autowired
     private CartService cartService;
@@ -110,7 +121,45 @@ public class OrderServiceImpl implements OrderService {
 
         order.setStatus(OrderStatus.Pending);
         order.setCreatedBy(dto.getLastName() + " " + dto.getFirstName());
-        return orderRepository.save(order);
+
+        var billingAddress = new BillingAddress();
+        billingAddress.setFirst_name(dto.getBiilingAddress().getFirstName());
+        billingAddress.setLast_name(dto.getBiilingAddress().getLastName());
+        billingAddress.setCountry(dto.getBiilingAddress().getCountry());
+        billingAddress.setCity(dto.getBiilingAddress().getCity());
+        billingAddress.setAddress(dto.getBiilingAddress().getAddress());
+        billingAddress.setOptional(dto.getBiilingAddress().getOptional());
+        billingAddress.setZipCode(dto.getBiilingAddress().getZipCode());
+        billingAddress.setEmail(dto.getBiilingAddress().getEmail());
+        billingAddress.setPhone(dto.getBiilingAddress().getPhone());
+        billingAddress.setCreatedBy("User");
+        billingAddressRepository.save(billingAddress);
+
+        order.setBillingAddress(billingAddress);
+        var orders = orderRepository.save(order);
+
+        var cart = cartService.showCart(CartsStatus.Open);
+        List<CartItemDto> list = new ArrayList<>();
+        list.addAll(cart.getCartItemList());
+        List<Order_details> orderDetails = new ArrayList<>();
+
+        for (CartItemDto item: list
+             ) {
+            var orderDetail = new Order_details();
+            var product = productRepository.findById(item.getProductId());
+            orderDetail.setOrder(orders);
+            orderDetail.setProducts(product.get());
+            orderDetail.setColor(item.getColor());
+            orderDetail.setSize(item.getSize());
+            orderDetail.setQuantity(item.getQuantity());
+            orderDetail.setPrice(item.getPrice());
+            orderDetail.setDiscount(item.getDiscount());
+            orderDetail.setCreatedBy("User");
+            orderDetails.add(orderDetail);
+        }
+        orderDetailsRepository.saveAll(orderDetails);
+
+        return orders;
     }
 
     @Override
@@ -128,7 +177,7 @@ public class OrderServiceImpl implements OrderService {
         var cart = cartService.showCart(CartsStatus.Open);
         var order = orderRepository.getOrderByUserIdAndCreatedAtNearest(cart.getUserId());
         orderRepository.deleteById(order.getId());
-        paymentRepository.deleteById(order.getPayment().getId());
+//        paymentRepository.deleteById(order.getPayment().getId());
     }
 
     public Order mapToOrder(OrderRequestDto dto) {
