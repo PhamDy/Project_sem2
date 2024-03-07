@@ -68,7 +68,6 @@ function renderViewCartProduct(viewcartProduct) {
         prod.appendChild(productCart);
     });
 
-    // Update total price
     const totalPriceElement = document.querySelector('.total-price');
     if (totalPriceElement) {
         totalPriceElement.textContent = '$' + totalPrice.toFixed(2);

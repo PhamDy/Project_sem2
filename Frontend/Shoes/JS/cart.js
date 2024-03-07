@@ -72,7 +72,6 @@ function renderShowcart(CartProduct) {
 
 document.addEventListener('click', function(event) {
     if (event.target.classList.contains('delete-item')) {
-        // Prevent default link behavior
         event.preventDefault();
 
         const itemId = event.target.dataset.itemId;
@@ -90,7 +89,6 @@ document.addEventListener('click', function(event) {
 
         })
         .catch(error => {
-            // Handle errors (if needed)
             console.error('Error deleting item from cart:', error);
         });
     }
