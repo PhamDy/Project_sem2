@@ -364,6 +364,12 @@ header {
     display: block;
     color: #51adcd;
 }
+.total-prices {
+    width: auto;
+    font-weight: 600;
+    display: block;
+    color: #51adcd;
+}
 
 .cart-actions {
     bottom: 0;

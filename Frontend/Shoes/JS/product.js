@@ -228,7 +228,6 @@ axios.get(apiUrl)
                 const product = response.data;
                 renderPopup(product);
                 togglePopup(`popup-${product.id}`);
-                console.log(product)
             })
             .catch(error => {
                 console.error('Error fetching product details:', error);
@@ -236,29 +235,78 @@ axios.get(apiUrl)
     }
 
     function updateQuantity(productId, selectedColor, selectedSize) {
-        return axios.get(`http://localhost:8080/api/warehouse/quantityProduct/${productId}?color=${selectedColor}&size=${selectedSize}`)
-            .then(response => {
-                const quantity = response.data;
-                quantityInput.value = 1;
-                quantityInput.max = quantity;
+        axios.get(`http://localhost:8080/api/warehouse/quantityProduct/${productId}?color=${selectedColor}&size=${selectedSize}`)
+            .then(quantityResponse => {
+                const quantity = quantityResponse.data;
+                const selectQuantity = document.getElementById('quantitySelect');
+                const selectedQuantity = selectQuantity.value;
+                selectQuantity.innerHTML = '';
+    
+                const maxQuantity = Math.min(quantity, 10);
+                selectQuantity.setAttribute('max', maxQuantity);
+                
+                for (let optionValue = 1; optionValue <= maxQuantity; optionValue++) {
+                    const option = document.createElement('option');
+                    option.text = optionValue;
+                    option.value = optionValue;
+                    if (optionValue == selectedQuantity) {
+                        option.selected = true;
+                    }
+                    selectQuantity.appendChild(option);
+                }
+    
+                selectQuantity.addEventListener('change', function() {
+                    const selectedQuantity = this.value;
+                    updateURL(productId, selectedColor, selectedSize, selectedQuantity);
+                });
+            })
+            .then(cartResponse => {
             })
             .catch(error => {
-                console.error('Error fetching quantity:', error);
                 throw error;
             });
     }
 
-    function addToCart(productId, selectedColor, selectedSize, selectedQuantity) {
-        return axios.post(`http://localhost:8080/api/cart/${productId}?color=${selectedColor}&size=${selectedSize}&quantity=${selectedQuantity}`)
-            .then(response =>  {
-                const addtocart = response.data;
-            })
-            .catch(error => {
-                console.error('error fetching addtocart: ', error)
-                throw error
-            })
-    }
+    document.body.addEventListener('click', function(event) {
+        if (event.target.classList.contains('addToCartButton')) {
+            const clickedProductId = event.target.dataset.productId;
     
+            const urlParams = new URLSearchParams(window.location.search);
+            const productIdFromUrl = urlParams.get('productId');
+            const color = urlParams.get('color');
+            const size = urlParams.get('size');
+            const quantity = urlParams.get('quantity');
+    
+            const authToken = getCookie('authToken');
+    
+            if (authToken) {
+                const url = `http://localhost:8080/api/cart/${clickedProductId}?&color=${color}&size=${size}&quantity=${quantity}`;
+    
+                axios.post(url, null, {
+                    headers: {
+                        Authorization: `Bearer ${authToken}`
+                    }
+                })
+                .then(response => {
+                    if (response.status === 201) {
+                        console.log('Item added to cart successfully.');
+    
+                        updateQuantity(clickedProductId, color, size);
+                        window.location.reload();
+                    } else {
+                        console.log('Failed to add item to cart. Status:', response.status);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error adding item to cart:', error);
+                });
+            } else {
+                document.getElementById("LoginBeforeAddToCart").innerText = "Please log in to add items to cart."
+            }
+        }
+    });
+
+
     function renderPopup(product) {
         const popupContent = `
             <div class="popup-trigger" id="popup-${product.id}">
@@ -296,22 +344,21 @@ axios.get(apiUrl)
                             </div>
                             <div class="product-action">
                             <div class="product-quantity">
-                                <div class="quantity-all">
-                                    <span class="qty-minus" onclick="decreaseQuantity()">
-                                        <i class="fa fa-caret-down"></i>
-                                    </span>
-                                    <input type="number" name="quantity" id="quantityInput" pattern="[0-9]*">
-                                    <span class="qty-plus" onclick="increaseQuantity()">
-                                        <i class="fa fa-caret-up"></i>
-                                    </span>
+                                <label for="">Quantity</label>
+                                <div class="quantity-option-container">
+                                    <div class="font-quantity-arrow-down">
+                                        <i id="caretdown" class="fa-solid fa-caret-down"></i>
+                                    </div>
+                                    <select name="quantitySelect" id="quantitySelect" class="select-quantity">
+                                    <option value="1">1</option>
+                                    </select>
                                 </div>
-                                <p id="quantityErrorMessage" style="color: red; display: none;">Quantity must be less than maxQuantity</p>
                             </div>
-                                <div class="btn-addtocart">
-                                    <button type="button" class="btn-addtocart" onclick="updateUrlAddToCart(productId)">Add To Cart</button>
-                                </div>
+                            <div class="btn-addtocart">
+                            <button class="btn-addtocart addToCartButton" data-product-id="${product.id}" type="button">Add To Cart</button>
                             </div>
                         </div>
+                        <p id="LoginBeforeAddToCart"></p>
                     </div>
                 </div>
             </div>
@@ -320,18 +367,16 @@ axios.get(apiUrl)
         document.body.insertAdjacentHTML('beforeend', popupContent);
     }
     
-    document.getElementById('quantityInput').addEventListener('input', function() {
-        updateURL(productId);
-    });
 
     function updateURL(productId) {
         try {
             const selectedSize = document.querySelector('input[name^="option-size"]:checked').value;
             const selectedColor = document.querySelector('input[name^="option-color"]:checked').value;
-            const selectedQuantity = document.getElementById('quantityInput').value;
+    
+            const selectedQuantity = document.getElementById('quantitySelect').value;
     
             const currentURL = new URL(window.location.href);
-            currentURL.searchParams.set('productId', productId);
+            currentURL.searchParams.set('', productId);
             currentURL.searchParams.set('color', selectedColor);
             currentURL.searchParams.set('size', selectedSize);
             currentURL.searchParams.set('quantity', selectedQuantity);
@@ -339,11 +384,11 @@ axios.get(apiUrl)
             window.history.replaceState({}, '', currentURL);
     
             updateQuantity(productId, selectedColor, selectedSize);
-            addToCart(productId, selectedColor, selectedSize, selectedQuantity);
         } catch (error) {
-            console.error('Error updating URL:', error);
         }
     }
+
+    
 
     function togglePopup(popupId) {
         const popupTrigger = document.getElementById(popupId);
@@ -352,27 +397,4 @@ axios.get(apiUrl)
 
 function stopPropagation(event) {
     event.stopPropagation();
-}
-
-function increaseQuantity() {
-    const quantityInput = document.getElementById('quantityInput');
-    let quantity = parseInt(quantityInput.value);
-    const maxQuantity = parseInt(quantityInput.max); 
-
-    if (quantity < maxQuantity) {
-        quantity++;
-        quantityInput.value = quantity;
-        updateURL(productId);
-    }
-}
-
-function decreaseQuantity() {
-    const quantityInput = document.getElementById('quantityInput');
-    let quantity = parseInt(quantityInput.value) || 0;
-
-    if (quantity > 0) { 
-        quantity--;
-        quantityInput.value = quantity; 
-        updateURL(productId);
-    }
 }

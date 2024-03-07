@@ -285,6 +285,68 @@
     
 }
 
+.quantity-option-container {
+    position: relative;
+    background: rgb(255, 255, 255);
+    display: inline-block;
+    min-width: 52px;
+    vertical-align: bottom;
+    overflow: hidden;
+    z-index: 0; 
+}
+
+.quantity-option-container .select-quantity {
+    padding-left: 10px;
+    height: 100%;
+    width: 100%;
+    padding-right: 32px;
+    min-height: inherit;
+    background: none;
+    border: 1px solid #000;
+    border-radius: 2px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    appearance: none;
+}
+
+.quantity-option-container .font-quantity-arrow-down {
+    font-family: nike-glyphs;
+    display: inline-block;
+    font-size: inherit;
+    line-height: inherit;
+    vertical-align: top;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 400;
+    text-decoration: none;
+    text-transform: none;
+    -webkit-font-smoothing: antialiased;
+    padding-left: 16px;
+    padding-right: 12px;
+    position: absolute;
+    right: 0px;
+    text-align: right;
+    color: var(--podium-cds-color-text-secondary);
+    z-index: -1;
+}
+
+.product-quantity {
+    margin-right: 20px;
+}
+
+.product-quantity label{
+    font-family: Jost;
+    color: #000;
+    position: relative;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    line-height: 45px;
+    font-weight: 600;
+    min-width: 65px;
+    height: 35px;
+    margin-bottom: 0px;
+}
+
 @media screen and (max-width: 767.98px) {
     .page-cart .content-pages {
         padding-top: 20px;

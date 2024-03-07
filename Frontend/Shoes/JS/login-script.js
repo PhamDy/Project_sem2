@@ -128,7 +128,7 @@ document.getElementById("signup-form").addEventListener("submit", function(event
     return;
   }
 
-  if (!email.endsWith("@gmail.com") && !email.endsWith("@hotmail.com")) {
+  if (!email.endsWith("@gmail.com") && !email.endsWith("@hotmail.com") && !email.endsWith("@fpt.edu.vn")) {
     return;
   }
 
