@@ -118,6 +118,23 @@ CREATE TABLE IF NOT EXISTS `payment` (
     `updated_by` VARCHAR(50) DEFAULT NULL
 );
 
+CREATE TABLE IF NOT EXISTS `billing_address` (
+    `billing_address_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
+   `first_name` VARCHAR(100) NOT NULL,
+    `last_name` VARCHAR(100) NOT NULL,
+    `country` VARCHAR(100) NOT NULL,
+    `city` VARCHAR(100) NOT NULL,
+    `address` VARCHAR(500) NOT NULL,
+    `optional` VARCHAR(200) NULL,
+     `zip_code` VARCHAR(100) NOT NULL,
+    `email` VARCHAR(100) NOT NULL,
+    `phone` VARCHAR(100) NOT NULL,
+    `updated_at` TIMESTAMP NOT NULL,
+    `created_by` VARCHAR(50) NOT NULL,
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updated_by` VARCHAR(50) DEFAULT NULL
+);
+
 CREATE TABLE IF NOT EXISTS `orders` (
     `order_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
    `first_name` VARCHAR(100) NOT NULL,
@@ -136,10 +153,12 @@ CREATE TABLE IF NOT EXISTS `orders` (
    `user_id` BIGINT NOT NULL,
     `payment_id` VARCHAR(255) NOT NULL,
     `delivery_id` BIGINT NOT NULL,
+    `billing_address_id` BIGINT NOT NULL,
     `order_status` ENUM('Success', 'Pending', 'Confirmed', 'Delivering', 'Cancel'),
     FOREIGN KEY (`user_id`) REFERENCES users(user_id),
     FOREIGN KEY (`payment_id`) REFERENCES payment(payment_id),
     FOREIGN KEY (`delivery_id`) REFERENCES delivery(delivery_id),
+    FOREIGN KEY (`billing_address_id`) REFERENCES billing_address(billing_address_id),
     `updated_at` TIMESTAMP NOT NULL,
     `created_by` VARCHAR(50) NOT NULL,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -153,10 +172,10 @@ CREATE TABLE IF NOT EXISTS `order_details` (
     `quantity` INT NOT NULL,
     `price` DOUBLE NOT NULL,
      `discount` DOUBLE NOT NULL,
-	`orders_id` BIGINT NOT NULL,
+	`order_id` BIGINT NOT NULL,
    `product_id` BIGINT NOT NULL,
     FOREIGN KEY (`product_id`) REFERENCES products(product_id),
-    FOREIGN KEY (`orders_id`) REFERENCES orders(order_id),
+    FOREIGN KEY (`order_id`) REFERENCES orders(order_id),
     `updated_at` TIMESTAMP NOT NULL,
     `created_by` VARCHAR(50) NOT NULL,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
