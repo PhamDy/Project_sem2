@@ -135,6 +135,17 @@ CREATE TABLE IF NOT EXISTS `billing_address` (
     `updated_by` VARCHAR(50) DEFAULT NULL
 );
 
+CREATE TABLE IF NOT EXISTS `delivery` (
+    `delivery_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
+    `name` VARCHAR(50) NOT NULL,
+    `price` DOUBLE NOT NULL,
+    `img` VARCHAR(50) NOT NULL,
+    `updated_at` TIMESTAMP NOT NULL,
+    `created_by` VARCHAR(50) NOT NULL,
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updated_by` VARCHAR(50) DEFAULT NULL
+);
+
 CREATE TABLE IF NOT EXISTS `orders` (
     `order_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
    `first_name` VARCHAR(100) NOT NULL,
@@ -182,18 +193,6 @@ CREATE TABLE IF NOT EXISTS `order_details` (
     `updated_by` VARCHAR(50) DEFAULT NULL
 );
 
-CREATE TABLE IF NOT EXISTS `delivery` (
-    `delivery_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
-    `name` VARCHAR(50) NOT NULL,
-    `price` DOUBLE NOT NULL,
-    `img` VARCHAR(50) NOT NULL,
-  --  `delivery_status` ENUM('Success', 'Delivering', 'Cancel'),
-    `updated_at` TIMESTAMP NOT NULL,
-    `created_by` VARCHAR(50) NOT NULL,
-    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `updated_by` VARCHAR(50) DEFAULT NULL
-);
-
 CREATE TABLE IF NOT EXISTS `carts` (
     `cart_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
    `user_id` BIGINT NOT NULL,
@@ -235,37 +234,4 @@ CREATE TABLE IF NOT EXISTS `product_review` (
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_by` VARCHAR(50) DEFAULT NULL
 );
-
-SELECT * FROM cart_item ci WHERE ci.cart_id = 1;
-
-SELECT count(ci.cart_item_id) FROM cart_item ci WHERE ci.cart_id = 1;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
