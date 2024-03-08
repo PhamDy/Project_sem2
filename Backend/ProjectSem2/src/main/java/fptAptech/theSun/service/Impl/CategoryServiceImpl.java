@@ -56,10 +56,14 @@ public class CategoryServiceImpl implements CategoryService {
         String email = JwtFilter.CURRENT_USER;
         var user = Optional.ofNullable(userRepository.findByEmail(email).orElseThrow(() ->
                 new CustomException("You must log in before!")));
+        if (categoryRepository.existsByName(name)){
+            throw new CustomException("Category name is existed");
+        }
         var category = new Category();
         category.setName(name);
         category.setStatus(status);
-        category.setCreatedBy(user.get().getRoles().toString());
+        category.setCreatedBy("Admin");
+
         categoryRepository.save(category);
     }
 

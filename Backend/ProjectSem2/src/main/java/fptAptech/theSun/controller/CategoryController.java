@@ -33,8 +33,8 @@ public class CategoryController {
     @PostMapping("/create")
     @Operation(summary = "Admin tạo mới một Category")
     ResponseEntity<?> createCategory(@RequestParam(name = "name") String name,
-                                     @RequestParam(name = "status")CategoryStatus status) {
-         categoryService.createCategory(name, status);
+                                     @RequestParam(name = "status")String status) {
+         categoryService.createCategory(name, CategoryStatus.valueOf(status));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
