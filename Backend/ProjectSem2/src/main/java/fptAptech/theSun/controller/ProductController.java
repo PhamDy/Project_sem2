@@ -56,6 +56,18 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProductPriceDesc());
     }
 
+    @GetMapping("/getGender")
+    @Operation(summary = "Lấy ra danh sách Gender")
+    public ResponseEntity<?> getGender() {
+        return new ResponseEntity<>(productService.getGender(), HttpStatus.OK);
+    }
+
+    @GetMapping("/getBrand")
+    @Operation(summary = "Lấy ra danh sách Brand")
+    public ResponseEntity<?> getBrand() {
+        return new ResponseEntity<>(productService.getBrand(), HttpStatus.OK);
+    }
+
     @GetMapping("/filter")
     @Operation(summary = "Lấy ra danh sách sản phẩm theo các tiêu chí lọc")
     public ResponseEntity<?> getProductsByFilters(

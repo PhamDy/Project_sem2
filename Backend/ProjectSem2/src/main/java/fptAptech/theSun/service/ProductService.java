@@ -19,6 +19,10 @@ public interface ProductService {
 
     List<Products> getProductPriceDesc();
 
+    List<String> getGender();
+
+    List<String> getBrand();
+
 //     Lọc sản phẩm
     List<Products> getProductsByFilters(String gender1, String gender2, String gender3,
                                        String brand1, String brand2 ,String brand3 , String brand4, String brand5,

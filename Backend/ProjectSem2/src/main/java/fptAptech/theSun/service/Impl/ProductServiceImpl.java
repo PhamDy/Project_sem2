@@ -56,6 +56,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<String> getGender() {
+        return productRepository.getByGender();
+    }
+
+    @Override
+    public List<String> getBrand() {
+        return productRepository.getByBrand();
+    }
+
+    @Override
     public List<Products> getProductFeatured() {
         return productRepository.getListByFeatured();
     }

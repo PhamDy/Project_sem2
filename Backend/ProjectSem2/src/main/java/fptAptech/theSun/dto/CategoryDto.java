@@ -1,6 +1,6 @@
 package fptAptech.theSun.dto;
 
-import fptAptech.theSun.entity.Order;
+import fptAptech.theSun.entity.Enum.CategoryStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +12,8 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class OrderViewDto implements Serializable {
-    private Order order;
-    private CartDto cartDto;
+public class CategoryDto implements Serializable {
+    private Long id;
+    private String name;
+    private CategoryStatus status;
 }
