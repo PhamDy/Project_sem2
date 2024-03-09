@@ -23,6 +23,7 @@
     line-height: 20px;
 }
 
-#deliveryForm .form-group {
+#billingForm .form-group {
     display: none;
 }
+

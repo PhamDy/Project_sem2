@@ -62,34 +62,20 @@ function renderShowcart(CartProduct) {
                         </div>
                     </div>
                     <div class="product-remove">
-                        <a href="#" class="delete-item" data-item-id="${id}"><i class="fa-solid fa-trash"></i></a>
-                    </div>
+                    <a href="#" class="delete-item" onclick="deleteProduct(${id})"><i class="fa-solid fa-trash"></i></a>
+                </div>
                 </li>
             </ol>`;
         prod.appendChild(productCart);
     });
 }
 
-document.addEventListener('click', function(event) {
-    if (event.target.classList.contains('delete-item')) {
-        event.preventDefault();
-
-        const itemId = event.target.dataset.itemId;
-
-        const deleteUrl = `http://localhost:8080/api/cart/deleteItem/${itemId}`;
-
-        axios.delete(deleteUrl, {
-            headers: {
-                'Authorization': `Bearer ${authToken}`
-            }
-        })
+function deleteProduct(id) {
+    axios.delete(`http://localhost:8080/api/cart/deleteItem/${id}`)
         .then(response => {
-            console.log('Item deleted from cart:', response.data);
-            
-
+            window.location.reload();
         })
         .catch(error => {
-            console.error('Error deleting item from cart:', error);
+            console.error('There was a problem with your Axios request:', error);
         });
-    }
-});
+}
