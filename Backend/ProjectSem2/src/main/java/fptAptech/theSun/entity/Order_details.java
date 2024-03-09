@@ -40,4 +40,13 @@ public class Order_details extends BaseEntity{
     @JoinColumn(name = "order_id")
     private Order order;
 
+    @Transient
+    public double getSubtotal(){
+        if(this.getDiscount() != 0){
+            return Math.round((this.getPrice()*((100-this.getDiscount())/100)) * quantity);
+        }else{
+            return this.getPrice()*quantity;
+        }
+    }
+
 }
