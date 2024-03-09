@@ -21,6 +21,9 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -135,6 +138,12 @@ public class OrderController {
     public ResponseEntity<?> testSendMail() {
         orderService.testSendMail();
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/page")
+    public ResponseEntity<?> getAllOrder(@PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC)
+                                         Pageable pageable) {
+        return new ResponseEntity<>(orderService.getAllOrder(pageable), HttpStatus.OK);
     }
 
     public Double getTax(Double total) {

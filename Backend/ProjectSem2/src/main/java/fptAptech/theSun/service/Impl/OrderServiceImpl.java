@@ -14,7 +14,11 @@ import fptAptech.theSun.respository.*;
 import fptAptech.theSun.security.jwt.JwtFilter;
 import fptAptech.theSun.service.CartService;
 import fptAptech.theSun.service.OrderService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -231,6 +235,28 @@ public class OrderServiceImpl implements OrderService {
                     warehouseRepository.findByProducts_IdAndColorAndSize(item.getProductId(), item.getColor(), item.getSize());
             warehouse.setQuantity(warehouse.getQuantity() + item.getQuantity());
         }
+    }
+
+    @Override
+    public Page<?> getAllOrder(Pageable pageable) {
+        var list = orderRepository.findAll(pageable);
+        List<OrderViewAdmin> listDto = new ArrayList<>();
+        for (Order item: list
+             ) {
+            OrderViewAdmin dto = new OrderViewAdmin();
+            dto.setId(item.getId());
+            dto.setOrderCode(item.getCode());
+            dto.setCreatAt(item.getCreatedAt());
+            dto.setCustomerName(item.getFirst_name() + " " + item.getLast_name());
+            dto.setTotal(item.getTotalPrice());
+            dto.setAddress(item.getAddress() + " " + item.getCity());
+            dto.setPaymentMethod(item.getPayment().getPaymentMethod());
+            dto.setPaymenStatus(item.getPayment().getStatus());
+            dto.setStatus(item.getStatus());
+            dto.setUsername(item.getUser().getEmail());
+            listDto.add(dto);
+        }
+        return new PageImpl<>(listDto, list.getPageable(), list.getTotalPages());
     }
 
     @Override

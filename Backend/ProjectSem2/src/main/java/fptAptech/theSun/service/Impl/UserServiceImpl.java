@@ -100,6 +100,7 @@ public class UserServiceImpl implements UserService {
         user.setUserName(registerUserDto.getUsername());
         user.setCreatedBy("User");
         user.setEmail(registerUserDto.getEmail());
+        user.setAvatar("https://img.upanh.tv/2024/03/08/defaultuserimg.jpg");
 
         var checkUsername = getByUsername(user.getUserName());
         var checkEmail = getByEmail(user.getEmail());

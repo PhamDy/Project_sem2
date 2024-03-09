@@ -43,5 +43,4 @@ public class BillingAddress extends BaseEntity{
     @Column(name = "phone")
     private String phone;
 
-
 }

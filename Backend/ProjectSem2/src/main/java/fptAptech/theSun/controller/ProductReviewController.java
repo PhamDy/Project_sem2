@@ -2,10 +2,7 @@ package fptAptech.theSun.controller;
 
 import fptAptech.theSun.dto.ProductReviewDto;
 import fptAptech.theSun.entity.ProductReview;
-import fptAptech.theSun.entity.Products;
-import fptAptech.theSun.service.Impl.ProductServiceImpl;
 import fptAptech.theSun.service.ProductReviewService;
-import fptAptech.theSun.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

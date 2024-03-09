@@ -1,6 +1,5 @@
 package fptAptech.theSun.dto;
 
-import fptAptech.theSun.entity.Enum.OrderStatus;
 import fptAptech.theSun.entity.Order;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

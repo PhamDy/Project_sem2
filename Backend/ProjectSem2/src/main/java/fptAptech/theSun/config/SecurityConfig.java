@@ -39,6 +39,7 @@ public class SecurityConfig {
 //                .cors(cors -> cors.configure(http))
                 .authorizeHttpRequests(auth -> { auth
                     .requestMatchers("/api/**").permitAll()
+//                    .requestMatchers("/api/category/create").hasRole("ADMIN")
                     .anyRequest().authenticated();
                 })
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)

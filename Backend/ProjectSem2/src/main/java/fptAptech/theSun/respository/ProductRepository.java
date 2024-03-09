@@ -22,6 +22,12 @@ public interface ProductRepository extends JpaRepository<Products, Long> {
     @Query(value = "SELECT * FROM Products ORDER BY price DESC ", nativeQuery = true)
     List<Products> getListByPriceDesc();
 
+    @Query(value = "SELECT DISTINCT p.gender FROM Products p ")
+    List<String> getByGender();
+
+    @Query(value = "SELECT DISTINCT p.brand FROM Products p ")
+    List<String> getByBrand();
+
     @Query(value = "SELECT p FROM Products p " +
             "INNER JOIN Category c ON c.id = p.category.id " +
             "INNER JOIN Warehouse wh ON wh.products.id = p.id WHERE " +
