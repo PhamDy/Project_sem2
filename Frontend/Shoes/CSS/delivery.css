@@ -1,5 +1,28 @@
 
+.product-container::-webkit-scrollbar {
+    width: 10px;
+}
 
+
+.product-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+
+.product-container::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 5px; 
+}
+
+
+.product-container::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.product-container {
+    height: 400px; 
+    overflow-y: auto; 
+}
 
 .progress-container ul{
     padding: 0;
@@ -211,6 +234,16 @@
     margin-bottom: 20px;
 }
 
+.continue button {
+    width: 30%;
+    height: 35px;
+    background: #000;
+    color: #FFF;
+    border-radius: 3px;
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+}
 .continue input {
     width: 30%;
     height: 35px;
@@ -221,6 +254,7 @@
     cursor: pointer;
     text-transform: uppercase;
 }
+
 
 .have-account{
     text-align: right;
@@ -270,8 +304,7 @@
 .order-summary {
     border-bottom: 2px solid #000;
 }
-
-.product-content {
+ {
     position: relative;
     height: 370px;
     max-height: 100%;
@@ -344,6 +377,7 @@
     color: #000;
     font-weight: 600;
     margin-left: 10px;
+    margin-bottom: 5px;
 }
 
 .remove-product-order {

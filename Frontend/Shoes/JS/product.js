@@ -268,7 +268,9 @@ axios.get(apiUrl)
     }
 
     document.body.addEventListener('click', function(event) {
+        
         if (event.target.classList.contains('addToCartButton')) {
+            
             const clickedProductId = event.target.dataset.productId;
     
             const urlParams = new URLSearchParams(window.location.search);
@@ -298,7 +300,7 @@ axios.get(apiUrl)
                     }
                 })
                 .catch(error => {
-                    console.error('Error adding item to cart:', error);
+                    document.getElementById("LoginBeforeAddToCart").innerText = "The product is already added to cart."
                 });
             } else {
                 document.getElementById("LoginBeforeAddToCart").innerText = "Please log in to add items to cart."
