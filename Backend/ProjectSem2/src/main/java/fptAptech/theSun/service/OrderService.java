@@ -13,7 +13,7 @@ public interface OrderService {
 
     List<DeliveryDto> getAllDelivery();
 
-    OrderViewDto sendMailOrder(CartDto cartDto, Order order);
+    String sendMailOrder(CartDto cartDto, Order order);
 
     Order saveOrderByDtoPaypal(OrderRequestDto dto, String paymentId, Double tax, Double toalPrice);
 

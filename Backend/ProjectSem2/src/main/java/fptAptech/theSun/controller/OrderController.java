@@ -106,7 +106,7 @@ public class OrderController {
                 orderService.sendMailOrder(cart, order);
                 cartService.changeStatusCart(cart.getId(), CartsStatus.Close);
 
-                URI uri = URI.create("https://aptech.fpt.edu.vn/");
+                URI uri = URI.create("http://127.0.0.1:5500/index.html");
                 HttpHeaders httpHeaders = new HttpHeaders();
                 httpHeaders.setLocation(uri);
                 return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
@@ -124,7 +124,7 @@ public class OrderController {
         orderService.deleteOrderWhenCancelPayment();
         orderService.returnQuantity();
 
-        URI uri = URI.create("https://www.google.com/");
+        URI uri = URI.create("http://127.0.0.1:5500/404.html");
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(uri);
         return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
@@ -180,9 +180,6 @@ public class OrderController {
         orderService.deleteOrder(id);
         return new ResponseEntity<>("Order id " + id + " was deleted",HttpStatus.OK);
     }
-
-
-
 
     @GetMapping("/testSendMail")
     public ResponseEntity<?> testSendMail() {
