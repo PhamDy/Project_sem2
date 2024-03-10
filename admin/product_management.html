@@ -17,11 +17,15 @@
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
 
-    <!-- Custom styles for this template -->
+    <!-- Custom styles-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/sb-admin-2.css">
 
     <!-- Custom styles for this page -->
     <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <!-- import axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
 
 </head>
 
@@ -66,6 +70,13 @@
                 <a class="nav-link" href="user_management.html">
                     <i class="fas fa-fw fa-table"></i>
                     <span>User Management</span></a>
+            </li>
+
+            <!-- Nav item - Order Management -->
+            <li class="nav-item active">
+                <a class="nav-link" href="order_management.html">
+                    <i class="fas fa-fw fa-table"></i>
+                    <span>Order Management</span></a>
             </li>
 
             <!-- Nav Item - Pages Collapse Menu -->
@@ -143,7 +154,7 @@
                             <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
                                 aria-label="Search" aria-describedby="basic-addon2">
                             <div class="input-group-append">
-                                <button class="btn btn-primary" type="button">
+                                <button class="btn btn-primary" type="button" style="background-color: black;">
                                     <i class="fas fa-search fa-sm"></i>
                                 </button>
                             </div>
@@ -336,47 +347,89 @@
                 <div class="container-fluid">
 
                     <!-- Page Heading -->
-                    <h1 class="h3 mb-2 text-gray-800">Tables</h1>
-                    
+                    <div class="card-header py-3 d-flex justify-content-between">
+                        <h1 class="h3 mb-2 text-gray-800 mr-3">Tables</h1>
+                        <a href="#" class="btn btn-success">Add Product</a>
+                    </div>
+                   
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
-                        <div class="card-header py-3 d-flex justify-content-around">
-                            <h6 class="m-0 font-weight-bold text-primary">Products</h6>
-                            <a href="#" class="btn btn-success">Add Product</a>
-                        </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
+                                            <th>ID</th>
                                             <th>Img</th>
                                             <th>Product Name</th>
                                             <th>Category</th>
+                                            <th>Brand</th>
                                             <th>Price</th>
                                             <th>Discount</th>
-                                            <th>Date</th>
+                                            <th>Actions</th> 
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>Tiger Nixon</td>
-                                            <td>System Architect</td>
-                                            <td>Edinburgh</td>
-                                            <td>61</td>
-                                            <td>2011/04/25</td>
-                                            <td>$320,800</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Garrett Winters</td>
-                                            <td>Accountant</td>
-                                            <td>Tokyo</td>
-                                            <td>63</td>
-                                            <td>2011/07/25</td>
-                                            <td>$170,750</td>
-                                        </tr>
+                                    <tbody id="tableBody">
+                                       
                                     </tbody>
                                 </table>
+                                
+                                <script>
+                                    // Function to fetch data from API and populate the table
+                                    async function getProducts() {
+                                        try {
+                                            const response = await axios.get('http://localhost:8080/api/products/');
+                                            const data = response.data;
+                                
+                                            const tableBody = document.getElementById('tableBody');
+                                
+                                            // Clear existing table rows
+                                            tableBody.innerHTML = '';
+                                
+                                            // Iterate through the data and populate the table
+                                            data.forEach(item => {
+                                                const row = document.createElement('tr');
+                                                row.innerHTML = `
+                                                    <td>${item.id}</td>
+                                                    <td class="img_product"><img src="${item.img}" alt="Product Image"></td>
+                                                    <td>${item.name}</td>
+                                                    <td>${item.categoryName}</td> <!-- Sửa tên cột category -->
+                                                    <td>${item.brand}</td>
+                                                    <td>${item.price}</td>
+                                                    <td>${item.discount}</td>
+                                                    <td>
+                                                        <button class="btn btn-primary" onclick="details('${item._id}')">Details</button>
+                                                        <button class="btn btn-warning" onclick="edit('${item._id}')">Edit</button>
+                                                        <button class="btn btn-danger" onclick="remove('${item._id}')">Delete</button> 
+                                                    </td>
+                                                `;
+                                                tableBody.appendChild(row);
+                                            });
+                                        } catch (error) {
+                                            console.error('Error fetching data:', error);
+                                        }
+                                    }
+                                
+                                    // Function to display details
+                                    function details(id) {
+                                       
+                                    }
+                                    
+                                    //function to edit product
+                                    function edit(id) {
+                                        
+                                    }
+                                    
+                                    //function to delete product
+                                    async function remove(id) {
+                                        
+                                    }
+                                
+                                    // Call the function to fetch data and populate the table
+                                    getProducts();
+                                </script>
+                                
                             </div>
                         </div>
                     </div>
@@ -433,7 +486,6 @@
 
     <!-- Page level custom scripts -->
     <script src="js/demo/datatables-demo.js"></script>
-
 </body>
 
 </html>
