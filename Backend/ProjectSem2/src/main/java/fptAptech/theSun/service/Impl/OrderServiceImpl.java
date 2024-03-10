@@ -83,15 +83,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderViewDto sendMailOrder(CartDto cartDto, Order order) {
-        OrderViewDto view = new OrderViewDto();
-        view.setOrder(order);
-        view.setCartDto(cartDto);
-        emailService.sendMail(order.getEmail(), "Orders by " + order.getLast_name() + " " + order.getFirst_name(),view.toString());
-        return view;
-    }
-
-    @Override
     public Order saveOrder(Order order) {
         return orderRepository.save(order);
     }
@@ -344,6 +335,64 @@ public class OrderServiceImpl implements OrderService {
             throw new CustomException("You can not delete When Order success");
         }
         orderRepository.deleteById(id);
+    }
+
+    @Override
+    public String sendMailOrder(CartDto cart, Order order) {
+        StringBuilder productsHtml = new StringBuilder();
+
+        for (CartItemDto item : cart.getCartItemList()) {
+            String productHtml = "<tr>\n" +
+                    "<td style=\"vertical-align: middle;padding: 10px;text-align: left;border-bottom: 1px solid #ddd;\"><img src=\"" + item.getImg() + "\" alt=\"Product\" style=\"max-width: 50px;height: auto;margin-bottom: 10px;vertical-align: middle;\"> " + item.getProductName() + "</td>\n" +
+                    "<td style=\"vertical-align: middle;padding: 10px;text-align: left;border-bottom: 1px solid #ddd;\">" + item.getColor() + "/" + item.getSize() + "</td>\n" +
+                    "<td style=\"vertical-align: middle;padding: 10px;text-align: left;border-bottom: 1px solid #ddd;\">" + item.getQuantity() + "</td>\n" +
+                    "<td style=\"vertical-align: middle;padding: 10px;text-align: left;border-bottom: 1px solid #ddd;\">" + item.getSubTotal() + "</td>\n" +
+                    "</tr>\n";
+            productsHtml.append(productHtml);
+        }
+
+        String htmlContent = "<div class=\"container\" style=\"font-family: Arial, sans-serif;\n" +
+                "    background-color: #f4f4f4;\n" +
+                "    margin: 0;\n" +
+                "    padding: 0;\">\n" +
+                "    <div style=\"@media screen and (max-width: 600px) { max-width: 100%; border-radius: 0; }; max-width: 600px;\n" +
+                "    margin: 20px auto;\n" +
+                "    background-color: #fff;\n" +
+                "    padding: 20px;\n" +
+                "    border-radius: 8px;\n" +
+                "    box-shadow: 0 0 10px rgba(0,0,0,0.1); \">\n" +
+                "        <h2 style=\"color: #333;\">Order Successfully</h2>\n" +
+                "        <div class=\"customer-info\">\n" +
+                "            <h3>Customer Information</h3>\n" +
+                "            <p><strong>Name: </strong>" + order.getFirst_name() + " " + order.getLast_name() + " </p>\n" +
+                "            <p><strong>Email: </strong>" + order.getEmail() + "  </p>\n" +
+                "            <p><strong>Address: </strong>" + order.getAddress() + " " + order.getCity() + " </p>\n" +
+                "        </div>\n" +
+                "        <div class=\"product-info\">\n" +
+                "            <h3>Product Information</h3>\n" +
+                "            <table style=\"width: 100%;\n" +
+                "            border-collapse: collapse;\n" +
+                "            margin-top: 20px;\">\n" +
+                "                <tr>\n" +
+                "                    <th style=\" background-color: #f2f2f2; padding: 10px;text-align: left;border-bottom: 1px solid #ddd;\">Name</th>\n" +
+                "                    <th style=\" background-color: #f2f2f2; padding: 10px;text-align: left;border-bottom: 1px solid #ddd;\">Color/Size</th>\n" +
+                "                    <th style=\" background-color: #f2f2f2; padding: 10px;text-align: left;border-bottom: 1px solid #ddd;\">Quantity</th>\n" +
+                "                    <th style=\" background-color: #f2f2f2; padding: 10px;text-align: left;border-bottom: 1px solid #ddd;\">Subtotal</th>\n" +
+                "                </tr>\n" +
+                productsHtml.toString() +
+                "            </table>\n" +
+                "        </div>\n" +
+                "        <div class=\"total-wrapper\" style=\"margin-top: 20px; text-align: right;\">\n" +
+                "            <p style=\"margin-bottom: 0;\"><strong>Subtotal:</strong> $" + cart.getTotalPrice() + "</p>\n" +
+                "            <p style=\"margin-bottom: 0;\"><strong>Tax:</strong> $" + order.getTax() + "</p>\n" +
+                "            <p style=\"margin-bottom: 0;\"><strong>Shipping:</strong> $" + order.getDelivery().getPrice() + "</p>\n" +
+                "            <p style=\"display: inline-block; margin-left: 20px; margin-bottom: 0;\"><strong>Total:</strong> $" + order.getTotalPrice() + "</p>\n" +
+                "        </div>\n" +
+                "    </div>\n" +
+                "</div>\n" +
+                "\n";
+        emailService.sendMail(order.getEmail(), "Orders by " + order.getLast_name() + " " + order.getFirst_name(), htmlContent);
+        return "Send meal successfully";
     }
 
     @Override
