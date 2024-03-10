@@ -300,7 +300,7 @@ axios.get(apiUrl)
                     }
                 })
                 .catch(error => {
-                    document.getElementById("LoginBeforeAddToCart").innerText = "The product is already added to cart."
+                    document.getElementById("LoginBeforeAddToCart").innerText = "Order quantity exceeds warehouse quantity"
                 });
             } else {
                 document.getElementById("LoginBeforeAddToCart").innerText = "Please log in to add items to cart."

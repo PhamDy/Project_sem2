@@ -13,15 +13,29 @@ document.getElementById('addApartmentBtn').addEventListener('click', function(ev
 });
 
 function validateForm(form) {
-    var requiredInputs = form.querySelectorAll('[required]');
-    for (var i = 0; i < requiredInputs.length; i++) {
-        if (!requiredInputs[i].checkValidity()) {
-            alert("Please fill in all required fields.");
-            return false;
+    let isValid = true;
+
+    const errorMessages = form.querySelectorAll('.error-message');
+    errorMessages.forEach(message => message.remove());
+
+
+    const inputs = form.querySelectorAll('input[required], select[required]');
+    inputs.forEach(input => {
+        if (!input.value) {
+            isValid = false;
+            const errorMessage = document.createElement('span');
+            errorMessage.textContent = 'Please fill out this field.';
+            errorMessage.classList.add('error-message');
+            input.parentNode.appendChild(errorMessage);
         }
-    }
-    return true;
+    });
+
+    return isValid;
 }
+
+document.querySelector('.header-logos').addEventListener('click', function(event) {
+    sessionStorage.clear();
+});
 
 const authTokensOrders = getCookie('authToken');
 
@@ -166,6 +180,13 @@ checkAuthToken();
 
 function saveDeliveryInformation() {
     event.preventDefault();
+
+    const isValid = validateForm(document.getElementById('deliveryForm'));
+
+    if (!isValid) {
+        return false;
+    }
+
     const optional = document.querySelector('#apartmentName input[name="optional"]').value;
     const deliveryData = {
         firstName: document.querySelector('input[name="firstName"]').value,
@@ -180,6 +201,7 @@ function saveDeliveryInformation() {
     };
 
     sessionStorage.setItem('deliveryData', JSON.stringify(deliveryData));
+
     window.location.href = "shipping.html";
 }
 

@@ -67,14 +67,11 @@
         <div class="row">
             <div class="col-md-8" style="border-right: 2px solid #000;">
                 <div class="have-account">
-                    <span>Have an account?
-                        <a href="login.html">Log In</a>
-                    </span>
                 </div>
                 <form action="shipping.html" id="deliveryForm" onsubmit="return validateForm(this)">
                     <div class="select-country">
                         <label for="">Country/Region</label>
-                        <select name="country" id="">
+                        <select name="country" id="" required>
                             <option value="Afghanistan">Afghanistan</option> 
                             <option value="Albania">Albania</option> 
                             <option value="Algeria">Algeria</option> 
@@ -318,11 +315,11 @@
                         </select>
                     </div>
                     <div class="name-container">
-                        <input autocomplete="off" type="text" name="firstName" placeholder="First Name" style="margin-right: 2%;">
-                        <input type="text" name="lastName" placeholder="Last Name" >
+                        <input autocomplete="off" type="text" name="firstName" placeholder="First Name" style="margin-right: 2%;" required>
+                        <input type="text" name="lastName" placeholder="Last Name" required>
                     </div>
                         <div class="address">
-                        <input type="text" name="address" id="" placeholder="Address">
+                        <input type="text" name="address" id="" placeholder="Address" required>
                     </div>
 
                     <div class="apartment">
@@ -336,24 +333,19 @@
                     </div>
 
                     <div class="location">
-                        <input class="input-animation" name="city" style="margin-right: 2%" type="text" placeholder="City">
-                        <input class="input-animation" name="zipCode" type="text" placeholder="ZIP Code">
+                        <input class="input-animation" name="city" style="margin-right: 2%" type="text" placeholder="City" required>
+                        <input class="input-animation" name="zipCode" type="text" placeholder="ZIP Code" required>
                     </div>
 
                 
                     <div class="email">
                         <label for="">Email</label>
-                        <input type="text" name="email" id="">
+                        <input type="text" name="email" id="" required>
                     </div>
 
                     <div class="phone-number">
                         <label for="">Phone Number</label>
-                        <input type="text" name="phone" id="">
-                    </div>
-
-                    <div class="save-info">
-                        <input type="checkbox" name="" id="">
-                        <label for="">Save the information for next time</label>
+                        <input type="text" name="phone" id="" required>
                     </div>
                     <div class="continue">
                         <button type="button" onclick="saveDeliveryInformation()">Continue</button>
@@ -368,11 +360,11 @@
                     <div class="summary-content">
                         <div class="content-order">
                             <span class="detail">Subtotal</span>
-                            <span class="price-order-subtotal"></span>
+                            <span class="price-order-subtotal">$ 0</span>
                         </div>
                         <div class="content-order">
                             <span class="detail">Tax</span>
-                            <span class="price-order-tax">$ 3</span>
+                            <span class="price-order-tax">$ 0</span>
                         </div>
                         <div class="content-order">
                             <span class="detail">Shipping</span>
@@ -382,7 +374,7 @@
 
                     <div class="total">
                         <span>Total</span>
-                        <span class="total-price-in-order">$ </span>
+                        <span class="total-price-in-order">$ 0</span>
                     </div>
                 </div>
 

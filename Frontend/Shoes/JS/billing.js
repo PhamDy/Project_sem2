@@ -15,8 +15,42 @@ function synchronizeBillingWithDelivery() {
     }
 }
 
+function validateForm(form) {
+    let isValid = true;
+
+    const errorMessages = form.querySelectorAll('.error-message');
+    errorMessages.forEach(message => message.remove());
+
+    const inputs = form.querySelectorAll('input[required], select[required]');
+    inputs.forEach(input => {
+        if (input.offsetParent === null) {
+            return;
+        }
+        
+        if (!input.value) {
+            isValid = false;
+            const errorMessage = document.createElement('span');
+            errorMessage.textContent = 'Please fill out this field.';
+            errorMessage.classList.add('error-message');
+            input.parentNode.appendChild(errorMessage);
+        }
+    });
+
+    return isValid;
+}
+
+document.querySelector('.header-logos').addEventListener('click', function(event) {
+    sessionStorage.clear();
+});
+
 function saveBillingInformation() {
     event.preventDefault();
+
+    const isValid = validateForm(document.getElementById('billingForm'));
+
+    if (!isValid) {
+        return false;
+    }
 
     const billingCheckbox = document.getElementById('billingCheckbox');
     if (!billingCheckbox.checked) {

@@ -243,6 +243,7 @@
     border: none;
     cursor: pointer;
     text-transform: uppercase;
+    margin-top: 10px;
 }
 .continue input {
     width: 30%;
@@ -303,13 +304,6 @@
 
 .order-summary {
     border-bottom: 2px solid #000;
-}
- {
-    position: relative;
-    height: 370px;
-    max-height: 100%;
-    overflow: auto;
-    margin-top: 30px;
 }
 
 .product-order {
@@ -395,4 +389,12 @@
 
 .remove-product-order a:hover {
     color: #000;
+}
+
+.error-message {
+    color: red;
+    font-size: 12px;
+    position: absolute;
+    bottom: -15px;
+    left: 0;
 }
