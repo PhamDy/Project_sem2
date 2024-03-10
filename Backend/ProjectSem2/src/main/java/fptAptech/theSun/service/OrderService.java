@@ -1,9 +1,8 @@
 package fptAptech.theSun.service;
 
-import fptAptech.theSun.dto.CartDto;
-import fptAptech.theSun.dto.DeliveryDto;
-import fptAptech.theSun.dto.OrderRequestDto;
-import fptAptech.theSun.dto.OrderViewDto;
+import fptAptech.theSun.dto.*;
+import fptAptech.theSun.entity.Enum.OrderStatus;
+import fptAptech.theSun.entity.Enum.PaymenStatus;
 import fptAptech.theSun.entity.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,5 +31,14 @@ public interface OrderService {
 
     Page<?> getAllOrder(Pageable pageable);
 
+    Page<?> getOrderByUser(Pageable pageable);
+
+    Page<?> getOrderDetailsByOrderId(Pageable pageable, Long orderId);
+
+    OrderViewAdmin findOrderById(Long orderId);
+
+    void updateOrderStatus(Long orderId, OrderViewAdmin dto);
+
+    void deleteOrder(Long id);
 
 }

@@ -5,6 +5,7 @@ import fptAptech.theSun.email.EmailService;
 import fptAptech.theSun.entity.BillingAddress;
 import fptAptech.theSun.entity.Enum.CartsStatus;
 import fptAptech.theSun.entity.Enum.OrderStatus;
+import fptAptech.theSun.entity.Enum.PaymenStatus;
 import fptAptech.theSun.entity.Enum.ProductStatus;
 import fptAptech.theSun.entity.Order;
 import fptAptech.theSun.entity.Order_details;
@@ -257,6 +258,92 @@ public class OrderServiceImpl implements OrderService {
             listDto.add(dto);
         }
         return new PageImpl<>(listDto, list.getPageable(), list.getTotalPages());
+    }
+
+    @Override
+    public Page<?> getOrderByUser(Pageable pageable) {
+        String email = JwtFilter.CURRENT_USER;
+        userRepository.findByEmail(email).orElseThrow(() ->
+                new CustomException("You must log in before"));
+        var list = orderRepository.findByUser_Email(email, pageable);
+        List<OrderViewAdmin> listDto = new ArrayList<>();
+        for (Order item: list
+        ) {
+            OrderViewAdmin dto = new OrderViewAdmin();
+            dto.setId(item.getId());
+            dto.setOrderCode(item.getCode());
+            dto.setCreatAt(item.getCreatedAt());
+            dto.setCustomerName(item.getFirst_name() + " " + item.getLast_name());
+            dto.setTotal(item.getTotalPrice());
+            dto.setAddress(item.getAddress() + " " + item.getCity());
+            dto.setPaymentMethod(item.getPayment().getPaymentMethod());
+            dto.setPaymenStatus(item.getPayment().getStatus());
+            dto.setStatus(item.getStatus());
+            dto.setUsername(item.getUser().getEmail());
+            listDto.add(dto);
+        }
+        return new PageImpl<>(listDto, list.getPageable(), list.getTotalPages() );
+    }
+
+    @Override
+    public OrderViewAdmin findOrderById(Long orderId) {
+        var item = orderRepository.findById(orderId);
+        OrderViewAdmin dto = new OrderViewAdmin();
+        dto.setId(item.get().getId());
+        dto.setOrderCode(item.get().getCode());
+        dto.setCreatAt(item.get().getCreatedAt());
+        dto.setCustomerName(item.get().getFirst_name() + " " + item.get().getLast_name());
+        dto.setTotal(item.get().getTotalPrice());
+        dto.setAddress(item.get().getAddress() + " " + item.get().getCity());
+        dto.setPaymentMethod(item.get().getPayment().getPaymentMethod());
+        dto.setPaymenStatus(item.get().getPayment().getStatus());
+        dto.setStatus(item.get().getStatus());
+        dto.setUsername(item.get().getUser().getEmail());
+        return dto;
+    }
+
+    @Override
+    public Page<?> getOrderDetailsByOrderId(Pageable pageable, Long orderId) {
+        var list = orderDetailsRepository.findByOrder_Id(orderId, pageable);
+        List<OrderDeatilDto> listDto = new ArrayList<>();
+        for (Order_details item: list
+             ) {
+            OrderDeatilDto dto = new OrderDeatilDto();
+            dto.setId(item.getId());
+            dto.setProductName(item.getProducts().getName());
+            dto.setColor(item.getColor());
+            dto.setSize(item.getSize());
+            dto.setDiscount(item.getDiscount());
+            dto.setQuantity(item.getQuantity());
+            dto.setPrice(item.getPrice());
+            dto.setSubtotal(item.getSubtotal());
+            listDto.add(dto);
+        }
+        return new PageImpl<>(listDto, list.getPageable(), list.getTotalPages());
+    }
+
+    @Override
+    @Transactional
+    public void updateOrderStatus(Long orderId, OrderViewAdmin dto) {
+        var order = orderRepository.findById(orderId);
+        var payment = paymentRepository.findById(order.get().getPayment().getId());
+        payment.get().setStatus(dto.getPaymenStatus());
+        var paymentSave = paymentRepository.save(payment.get());
+        order.get().setStatus(dto.getStatus());
+        order.get().setPayment(paymentSave);
+        orderRepository.save(order.get());
+    }
+
+    @Override
+    public void deleteOrder(Long id) {
+        var order = orderRepository.findById(id);
+        if (order.isEmpty()) {
+            throw new CustomException("Invoice do not existed");
+        }
+        if (order.get().getStatus() == OrderStatus.Success){
+            throw new CustomException("You can not delete When Order success");
+        }
+        orderRepository.deleteById(id);
     }
 
     @Override

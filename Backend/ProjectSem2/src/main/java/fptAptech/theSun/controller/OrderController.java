@@ -5,6 +5,7 @@ import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
 import fptAptech.theSun.config.Utils;
 import fptAptech.theSun.dto.OrderRequestDto;
+import fptAptech.theSun.dto.OrderViewAdmin;
 import fptAptech.theSun.entity.Enum.CartsStatus;
 import fptAptech.theSun.entity.Enum.OrderStatus;
 import fptAptech.theSun.entity.Enum.PaymenStatus;
@@ -27,6 +28,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -134,16 +136,58 @@ public class OrderController {
         return new ResponseEntity<>(orderService.getAllDelivery(), HttpStatus.OK);
     }
 
+    @GetMapping("/")
+    @Operation(summary = "Show danh sách các đơn hàng trong trang Admin và tối đa 5 đơn hàng trong 1 trang")
+    public ResponseEntity<?> getAllOrder(@PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC)
+                                         Pageable pageable) {
+        return new ResponseEntity<>(orderService.getAllOrder(pageable), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Hiển thị thông tin Order bằng Id")
+    public ResponseEntity<?> getOrderById(@PathVariable(name = "id") Long id) {
+        return new ResponseEntity<>(orderService.findOrderById(id) ,HttpStatus.OK);
+    }
+
+    @GetMapping("/page/user")
+    @Operation(summary = "Show danh sách các đơn hàng trong trang Admin của User nào đó ta tìm kiếm và tối đa 5 đơn hàng trong 1 trang")
+    public ResponseEntity<?> getOrderByUser(@PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC)
+                                                 Pageable pageable) {
+        return new ResponseEntity<>(orderService.getOrderByUser(pageable), HttpStatus.OK);
+    }
+
+    @GetMapping("/page/orderDetails/{id}")
+    @Operation(summary = "Show danh sách order details trong order theo orderId trong trang Admin và tối đa 5 đơn hàng trong 1 trang")
+    public ResponseEntity<?> getOrderByUser(@PathVariable(name = "id") Long id,
+            @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC)
+                                                    Pageable pageable) {
+        return new ResponseEntity<>(orderService.getOrderDetailsByOrderId(pageable, id), HttpStatus.OK);
+    }
+
+    @Secured({"ROLE_ADMIN"})
+    @PatchMapping("/{id}")
+    @Operation(summary = "Admin thay đổi statusOrder hoặc paymenStatus trong order")
+    public ResponseEntity<?> updateOrder(@PathVariable(name = "id") Long id,
+                                         @RequestBody OrderViewAdmin orderViewAdmin) {
+        orderService.updateOrderStatus(id, orderViewAdmin);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @Secured({"ROLE_ADMIN"})
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Admin xóa order theo id")
+    public ResponseEntity<?> deleteOrderById(@PathVariable(name = "id") Long id) {
+        orderService.deleteOrder(id);
+        return new ResponseEntity<>("Order id " + id + " was deleted",HttpStatus.OK);
+    }
+
+
+
+
     @GetMapping("/testSendMail")
     public ResponseEntity<?> testSendMail() {
         orderService.testSendMail();
         return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @GetMapping("/page")
-    public ResponseEntity<?> getAllOrder(@PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC)
-                                         Pageable pageable) {
-        return new ResponseEntity<>(orderService.getAllOrder(pageable), HttpStatus.OK);
     }
 
     public Double getTax(Double total) {
