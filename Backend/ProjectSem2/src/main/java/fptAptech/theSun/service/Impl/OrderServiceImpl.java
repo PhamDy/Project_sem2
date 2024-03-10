@@ -2,14 +2,11 @@ package fptAptech.theSun.service.Impl;
 
 import fptAptech.theSun.dto.*;
 import fptAptech.theSun.email.EmailService;
-import fptAptech.theSun.entity.BillingAddress;
+import fptAptech.theSun.entity.*;
 import fptAptech.theSun.entity.Enum.CartsStatus;
 import fptAptech.theSun.entity.Enum.OrderStatus;
 import fptAptech.theSun.entity.Enum.PaymenStatus;
 import fptAptech.theSun.entity.Enum.ProductStatus;
-import fptAptech.theSun.entity.Order;
-import fptAptech.theSun.entity.Order_details;
-import fptAptech.theSun.entity.Payment;
 import fptAptech.theSun.exception.CustomException;
 import fptAptech.theSun.respository.*;
 import fptAptech.theSun.security.jwt.JwtFilter;
@@ -65,6 +62,9 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private AddressRepository addressRepository;
+
 
     @Override
     public List<DeliveryDto> getAllDelivery() {
@@ -87,7 +87,7 @@ public class OrderServiceImpl implements OrderService {
         OrderViewDto view = new OrderViewDto();
         view.setOrder(order);
         view.setCartDto(cartDto);
-        emailService.sendMail(order.getEmail(), "Orders by " + order.getLast_name() + " " + order.getFirst_name(),view.toString() + test);
+        emailService.sendMail(order.getEmail(), "Orders by " + order.getLast_name() + " " + order.getFirst_name(),view.toString());
         return view;
     }
 
@@ -351,140 +351,62 @@ public class OrderServiceImpl implements OrderService {
         String email = JwtFilter.CURRENT_USER;
         var user = Optional.ofNullable(userRepository.findByEmail(email).orElseThrow(() ->
                 new CustomException("You must log in before!")));
+        Address address = addressRepository.findByUser_Id(user.get().getId());
+
         var cart = cartService.showCart(CartsStatus.Open);
 
-        String htmlContent = "<html><body>" +
-                "<h1>Thông tin đơn hàng</h1>" +
-                "<p>Mã đơn hàng: " + cart.getId() + "</p>" +
-                "<p>Email khách hàng: " + cart.getTotalPrice() + "</p>" +
-                "<p>Sản phẩm: " + user.get().getUserName() + "</p>" +
-                //Thêm các thông tin khác nếu cần
-                "</body></html>";
+        StringBuilder productsHtml = new StringBuilder();
 
-        emailService.sendMail(user.get().getEmail(), "Order By Walkz", test);
+        for (CartItemDto item : cart.getCartItemList()) {
+            String productHtml = "<tr>\n" +
+                    "<td style=\"vertical-align: middle;padding: 10px;text-align: left;border-bottom: 1px solid #ddd;\"><img src=\"" + item.getImg() + "\" alt=\"Product\" style=\"max-width: 50px;height: auto;margin-bottom: 10px;vertical-align: middle;\">" + item.getProductName() + "</td>\n" +
+                    "<td style=\"vertical-align: middle;padding: 10px;text-align: left;border-bottom: 1px solid #ddd;\">" + item.getColor() + "/" + item.getSize() + "</td>\n" +
+                    "<td style=\"vertical-align: middle;padding: 10px;text-align: left;border-bottom: 1px solid #ddd;\">" + item.getQuantity() + "</td>\n" +
+                    "<td style=\"vertical-align: middle;padding: 10px;text-align: left;border-bottom: 1px solid #ddd;\">" + item.getSubTotal() + "</td>\n" +
+                    "</tr>\n";
+            productsHtml.append(productHtml);
+        }
+
+        String htmlContent = "<div class=\"container\" style=\"font-family: Arial, sans-serif;\n" +
+                "    background-color: #f4f4f4;\n" +
+                "    margin: 0;\n" +
+                "    padding: 0;\">\n" +
+                "    <div style=\"@media screen and (max-width: 600px) { max-width: 100%; border-radius: 0; }; max-width: 600px;\n" +
+                "    margin: 20px auto;\n" +
+                "    background-color: #fff;\n" +
+                "    padding: 20px;\n" +
+                "    border-radius: 8px;\n" +
+                "    box-shadow: 0 0 10px rgba(0,0,0,0.1); \">\n" +
+                "        <h2 style=\"color: #333;\">Order Successfully</h2>\n" +
+                "        <div class=\"customer-info\">\n" +
+                "            <h3>Customer Information</h3>\n" +
+                "            <p><strong>Name: </strong>" + address.getFirst_name() + " " + address.getLast_name() + " </p>\n" +
+                "            <p><strong>Email: </strong>" + address.getEmail() + "  </p>\n" +
+                "            <p><strong>Address: </strong>" + address.getAddress() + " " + address.getCity() + " </p>\n" +
+                "        </div>\n" +
+                "        <div class=\"product-info\">\n" +
+                "            <h3>Product Information</h3>\n" +
+                "            <table style=\"width: 100%;\n" +
+                "            border-collapse: collapse;\n" +
+                "            margin-top: 20px;\">\n" +
+                "                <tr>\n" +
+                "                    <th style=\" background-color: #f2f2f2; padding: 10px;text-align: left;border-bottom: 1px solid #ddd;\">Name</th>\n" +
+                "                    <th style=\" background-color: #f2f2f2; padding: 10px;text-align: left;border-bottom: 1px solid #ddd;\">Color/Size</th>\n" +
+                "                    <th style=\" background-color: #f2f2f2; padding: 10px;text-align: left;border-bottom: 1px solid #ddd;\">Quantity</th>\n" +
+                "                    <th style=\" background-color: #f2f2f2; padding: 10px;text-align: left;border-bottom: 1px solid #ddd;\">Subtotal</th>\n" +
+                "                </tr>\n" +
+                productsHtml.toString() +
+                "            </table>\n" +
+                "        </div>\n" +
+                "        <div class=\"total-wrapper\" style=\"margin-top: 20px; text-align: right;\">\n" +
+                "            <p style=\"margin-bottom: 0;\"><strong>Subtotal:</strong> $50.00</p>\n" +
+                "            <p style=\"margin-bottom: 0;\"><strong>Tax:</strong> $50.00</p>\n" +
+                "            <p style=\"margin-bottom: 0;\"><strong>Shipping:</strong> $50.00</p>\n" +
+                "            <p style=\"display: inline-block; margin-left: 20px; margin-bottom: 0;\"><strong>Total:</strong> $50.00</p>\n" +
+                "        </div>\n" +
+                "    </div>\n" +
+                "</div>\n" +
+                "\n";
+        emailService.sendMail(user.get().getEmail(), "Order By Walkz", htmlContent);
     }
-
-    public static String test = "    <div class=\"container-fluid my-5  d-flex  justify-content-center\">\n" +
-            "        <div class=\"card card-1\">\n" +
-            "            <div class=\"card-header bg-white\">\n" +
-            "                <div class=\"media flex-sm-row flex-column-reverse justify-content-between  \">\n" +
-            "                    <div class=\"col my-auto\"> <h4 class=\"mb-0\">Thanks for your Order,<span class=\"change-color\">Anjali</span> !</h4> </div>\n" +
-            "                    <div class=\"col-auto text-center  my-auto pl-0 pt-sm-4\"> <img class=\"img-fluid my-auto align-items-center mb-0 pt-3\"  src=\"https://i.imgur.com/7q7gIzR.png\" width=\"115\" height=\"115\"> <p class=\"mb-4 pt-0 Glasses\">Glasses For Everyone</p>  </div>\n" +
-            "                </div>\n" +
-            "            </div>\n" +
-            "            <div class=\"card-body\">\n" +
-            "                <div class=\"row justify-content-between mb-3\">\n" +
-            "                    <div class=\"col-auto\"> <h6 class=\"color-1 mb-0 change-color\">Receipt</h6> </div>\n" +
-            "                    <div class=\"col-auto  \"> <small>Receipt Voucher : 1KAU9-84UIL</small> </div>\n" +
-            "                </div>\n" +
-            "                <div class=\"row\">\n" +
-            "                    <div class=\"col\">\n" +
-            "                        <div class=\"card card-2\">\n" +
-            "                            <div class=\"card-body\">\n" +
-            "                                <div class=\"media\">\n" +
-            "                                    <div class=\"sq align-self-center \"> <img class=\"img-fluid  my-auto align-self-center mr-2 mr-md-4 pl-0 p-0 m-0\" src=\"https:https://i.postimg.cc/6p2JCr26/adidas1-1.jpg\" width=\"135\" height=\"135\" /> </div>\n" +
-            "                                    <div class=\"media-body my-auto text-right\">\n" +
-            "                                        <div class=\"row  my-auto flex-column flex-md-row\">\n" +
-            "                                            <div class=\"col my-auto\"> <h6 class=\"mb-0\"> Jack Jacs</h6>  </div>\n" +
-            "                                            <div class=\"col-auto my-auto\"> <small>Golden Rim </small></div>\n" +
-            "                                            <div class=\"col my-auto\"> <small>Size : M</small></div>\n" +
-            "                                            <div class=\"col my-auto\"> <small>Qty : 1</small></div>\n" +
-            "                                            <div class=\"col my-auto\"><h6 class=\"mb-0\">&#8377;3,600.00</h6>\n" +
-            "                                            </div>\n" +
-            "                                        </div>\n" +
-            "                                    </div>\n" +
-            "                                </div>\n" +
-            "                                <hr class=\"my-3 \">\n" +
-            "                                <div class=\"row\">\n" +
-            "                                    <div class=\"col-md-3 mb-3\"> <small> Track Order <span><i class=\" ml-2 fa fa-refresh\"  aria-hidden=\"true\"></i></span></small> </div>\n" +
-            "                                    <div class=\"col mt-auto\">\n" +
-            "                                        <div class=\"progress my-auto\"> <div class=\"progress-bar progress-bar  rounded\" style=\"width: 62%\" role=\"progressbar\" aria-valuenow=\"25\" aria-valuemin=\"0\"  aria-valuemax=\"100\"></div> </div>\n" +
-            "                                        <div class=\"media row justify-content-between \">\n" +
-            "                                            <div class=\"col-auto text-right\"><span> <small  class=\"text-right mr-sm-2\"></small> <i class=\"fa fa-circle active\"></i> </span></div>\n" +
-            "                                            <div class=\"flex-col\"> <span> <small class=\"text-right mr-sm-2\">Out for delivary</small><i class=\"fa fa-circle active\"></i></span></div>\n" +
-            "                                            <div class=\"col-auto flex-col-auto\"><small  class=\"text-right mr-sm-2\">Delivered</small><span> <i  class=\"fa fa-circle\"></i></span></div>\n" +
-            "                                        </div>\n" +
-            "                                    </div>\n" +
-            "                                </div>\n" +
-            "                            </div>\n" +
-            "                        </div>\n" +
-            "                    </div>\n" +
-            "                </div>\n" +
-            "                <div class=\"row mt-4\">\n" +
-            "                    <div class=\"col\">\n" +
-            "                        <div class=\"card card-2\">\n" +
-            "                            <div class=\"card-body\">\n" +
-            "                                <div class=\"media\">\n" +
-            "                                    <div class=\"sq align-self-center \"> <img class=\"img-fluid  my-auto align-self-center mr-2 mr-md-4 pl-0 p-0 m-0\" src=\"https://i.postimg.cc/XJgTnxhL/adidas2-1.jpg\" width=\"135\" height=\"135\" /> </div>\n" +
-            "                                    <div class=\"media-body my-auto text-right\">\n" +
-            "                                        <div class=\"row  my-auto flex-column flex-md-row\">\n" +
-            "                                            <div class=\"col-auto my-auto \"> <h6 class=\"mb-0\"> Michel Mark</h6> </div>\n" +
-            "                                            <div class=\"col my-auto  \"> <small>Black Rim </small></div>\n" +
-            "                                            <div class=\"col my-auto  \"> <small>Size : L</small></div>\n" +
-            "                                            <div class=\"col my-auto  \"> <small>Qty : 1</small></div>\n" +
-            "                                            <div class=\"col my-auto \">  <h6 class=\"mb-0\">&#8377;1,235.00</h6>\n" +
-            "                                            </div>\n" +
-            "                                        </div>\n" +
-            "                                    </div>\n" +
-            "                                </div>\n" +
-            "                                <hr class=\"my-3 \">\n" +
-            "                                <div class=\"row \">\n" +
-            "                                    <div class=\"col-md-3 mb-3\">  <small> Track Order <span><i class=\" ml-2 fa fa-refresh\" aria-hidden=\"true\"></i></span></small> </div>\n" +
-            "                                    <div class=\"col mt-auto\">\n" +
-            "                                        <div class=\"progress\"><div class=\"progress-bar progress-bar  rounded\" style=\"width: 18%\"  role=\"progressbar\" aria-valuenow=\"25\" aria-valuemin=\"0\" aria-valuemax=\"100\"></div> </div>\n" +
-            "                                        <div class=\"media row justify-content-between \">\n" +
-            "                                            <div class=\"col-auto text-right\"><span> <small  class=\"text-right mr-sm-2\"></small> <i class=\"fa fa-circle active\"></i> </span></div>\n" +
-            "                                            <div class=\"flex-col\"> <span> <small class=\"text-right mr-sm-2\">Out for delivary</small><i class=\"fa fa-circle\"></i></span></div>\n" +
-            "                                            <div class=\"col-auto flex-col-auto\"><smallclass=\"text-right mr-sm-2>Delivered</small><span> <i class=\"fa fa-circle\"></i></span></div>\n" +
-            "                                        </div>\n" +
-            "                                    </div>\n" +
-            "                                </div>\n" +
-            "                            </div>\n" +
-            "                        </div>\n" +
-            "                    </div>\n" +
-            "                </div>\n" +
-            "                <div class=\"row mt-4\">\n" +
-            "                    <div class=\"col\">\n" +
-            "                        <div class=\"row justify-content-between\">\n" +
-            "                            <div class=\"col-auto\"><p class=\"mb-1 text-dark\"><b>Order Details</b></p></div>\n" +
-            "                            <div class=\"flex-sm-col text-right col\"> <p class=\"mb-1\"><b>Total</b></p> </div>\n" +
-            "                            <div class=\"flex-sm-col col-auto\"> <p class=\"mb-1\">&#8377;4,835</p> </div>\n" +
-            "                        </div>\n" +
-            "                        <div class=\"row justify-content-between\">\n" +
-            "                            <div class=\"flex-sm-col text-right col\"><p class=\"mb-1\"> <b>Discount</b></p> </div>\n" +
-            "                            <div class=\"flex-sm-col col-auto\"><p class=\"mb-1\">&#8377;150</p></div>\n" +
-            "                        </div>\n" +
-            "                        <div class=\"row justify-content-between\">\n" +
-            "                            <div class=\"flex-sm-col text-right col\"><p class=\"mb-1\"><b>GST 18%</b></p></div>\n" +
-            "                            <div class=\"flex-sm-col col-auto\"><p class=\"mb-1\">843</p></div>\n" +
-            "                        </div>\n" +
-            "                        <div class=\"row justify-content-between\">\n" +
-            "                            <div class=\"flex-sm-col text-right col\"><p class=\"mb-1\"><b>Delivery Charges</b></p></div>\n" +
-            "                            <div class=\"flex-sm-col col-auto\"><p class=\"mb-1\">Free</p></div>\n" +
-            "                        </div>\n" +
-            "                    </div>\n" +
-            "                </div>\n" +
-            "                <div class=\"row invoice \">\n" +
-            "                    <div class=\"col\"><p class=\"mb-1\"> Invoice Number : 788152</p><p class=\"mb-1\">Invoice Date : 22 Dec,2019</p><p class=\"mb-1\">Recepits Voucher:18KU-62IIK</p></div>\n" +
-            "                </div>\n" +
-            "            </div>\n" +
-            "            <div class=\"card-footer\">\n" +
-            "                <div class=\"jumbotron-fluid\">\n" +
-            "                    <div class=\"row justify-content-between \">\n" +
-            "                        <div class=\"col-sm-auto col-auto my-auto\"><img class=\"img-fluid my-auto align-self-center \" src=\"https://i.imgur.com/7q7gIzR.png\" width=\"115\" height=\"115\"></div>\n" +
-            "                        <div class=\"col-auto my-auto \"><h2 class=\"mb-0 font-weight-bold\">TOTAL PAID</h2></div>\n" +
-            "                        <div class=\"col-auto my-auto ml-auto\"><h1 class=\"display-3 \">&#8377; 5,528</h1></div>\n" +
-            "                    </div>\n" +
-            "                    <div class=\"row mb-3 mt-3 mt-md-0\">\n" +
-            "                        <div class=\"col-auto border-line\"> <small class=\"text-white\">PAN:AA02hDW7E</small></div>\n" +
-            "                        <div class=\"col-auto border-line\"> <small class=\"text-white\">CIN:UMMC20PTC </small></div>\n" +
-            "                        <div class=\"col-auto \"><small class=\"text-white\">GSTN:268FD07EXX </small> </div>\n" +
-            "                    </div>\n" +
-            "                </div>\n" +
-            "            </div>\n" +
-            "        </div>\n" +
-            "        <link rel=\"stylesheet\" href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css\">\n" +
-            "        <link rel=\"stylesheet\" href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js\">\n" +
-            "        <link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js\">    \n" +
-            "    </div>\n";
 }

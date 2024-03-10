@@ -164,7 +164,7 @@ public class OrderController {
         return new ResponseEntity<>(orderService.getOrderDetailsByOrderId(pageable, id), HttpStatus.OK);
     }
 
-    @Secured({"ROLE_ADMIN"})
+//    @Secured({"ROLE_ADMIN"})
     @PatchMapping("/{id}")
     @Operation(summary = "Admin thay đổi statusOrder hoặc paymenStatus trong order")
     public ResponseEntity<?> updateOrder(@PathVariable(name = "id") Long id,
