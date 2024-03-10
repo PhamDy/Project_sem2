@@ -23,35 +23,56 @@ function validateForm(form) {
     return true;
 }
 
-const authTokensOrder = getCookie('authToken');
+const authTokensOrders = getCookie('authToken');
 
-if (authTokensOrder) {
+if (authTokensOrders) {
     axios.get('http://localhost:8080/api/cart/showCart', {
         headers: {
-            'Authorization': `Bearer ${authTokensOrder}`
+            'Authorization': `Bearer ${authTokensOrders}`
         }
     })
     .then(response => {
-        const OrderProduct = response.data;
-        renderViewProductOrder(OrderProduct);
+        const OrderProductShipping = response.data;
+        renderViewProductOrderShipping(OrderProductShipping);
 
-        const viewOrderTotal = document.querySelector('.order-summary .total .total-price-in-order');
-        if (viewOrderTotal) {
-            viewOrderTotal.textContent = '$' + OrderProduct.totalPrice.toString();
+        const tax = calculateTax(OrderProductShipping.totalPrice);
+        const taxElement = document.querySelector('.price-order-tax');
+        if (taxElement) {
+            taxElement.textContent = '$' + tax.toFixed(2);
+        }
+
+        const viewOrderTotalShipping = document.querySelector('.order-summary .summary-content .content-order .price-order-subtotal');
+        if (viewOrderTotalShipping) {
+            viewOrderTotalShipping.textContent = '$' + OrderProductShipping.totalPrice.toFixed(2);
+        }
+
+        const viewShippingPrice = document.querySelector('.order-summary .summary-content .content-order .price-order-shipping');
+        let shipPrice = sessionStorage.getItem('shipPrice');
+        
+        if (viewShippingPrice && shipPrice) {
+            shipPrice = parseFloat(shipPrice.replace(/"/g, ''));
+            viewShippingPrice.textContent = '$' + shipPrice.toFixed(2);
+        }
+
+        const totalPrice = OrderProductShipping.totalPrice + tax + shipPrice;
+        const totalPriceElement = document.querySelector('.total-price-in-order');
+        if (totalPriceElement) {
+            totalPriceElement.textContent = '$' + totalPrice.toFixed(2);
         }
     }) 
     .catch(error => {
-        console.log('Error Fetching ShowOrderProduct', error);
+        console.log('Error Fetching ShowOrderProductShipping', error);
     });
 } else {
+
 }
 
-function renderViewProductOrder(OrderProduct) {
+function renderViewProductOrderShipping(OrderProductShipping) {
     const prod = document.querySelector(".product-content");
-    const viewOrderProduct = OrderProduct.cartItemList;
+    const viewOrderProductShipping = OrderProductShipping.cartItemList;
     let totalPrice = 0;
 
-    viewOrderProduct.forEach(item => {
+    viewOrderProductShipping.forEach(item => {
         const { id, productId, productName, img, quantity, price, color, size, subTotal } = item;
         const productCart = document.createElement('div');
         productCart.classList.add('product-order');
@@ -106,6 +127,16 @@ function renderViewProductOrder(OrderProduct) {
     }
 }
 
+function calculateTax(total) {
+    if (total <= 100 && total > 0) {
+        return total * 0.1;
+    } else if (total > 100 && total <= 500) {
+        return total * 0.08;
+    } else {
+        return total * 0.05;
+    }
+}
+
 function deleteProduct(id) {
     axios.delete(`http://localhost:8080/api/cart/deleteItem/${id}`)
         .then(response => {
@@ -136,7 +167,6 @@ checkAuthToken();
 function saveDeliveryInformation() {
     event.preventDefault();
     const optional = document.querySelector('#apartmentName input[name="optional"]').value;
-    console.log("saveDeliveryInformation function called");
     const deliveryData = {
         firstName: document.querySelector('input[name="firstName"]').value,
         lastName: document.querySelector('input[name="lastName"]').value,

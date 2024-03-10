@@ -106,3 +106,8 @@
     border: 2px solid #000;
     opacity: 1;
 }
+
+#Misssing-info {
+    margin-top: 15px;
+    color: red;
+}

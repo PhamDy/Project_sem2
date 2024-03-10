@@ -25,15 +25,36 @@ if (authTokensOrders) {
         const OrderProductShipping = response.data;
         renderViewProductOrderShipping(OrderProductShipping);
 
-        const viewOrderTotalShipping = document.querySelector('.order-summary .total .total-price-in-order');
+        const tax = calculateTax(OrderProductShipping.totalPrice);
+        const taxElement = document.querySelector('.price-order-tax');
+        if (taxElement) {
+            taxElement.textContent = '$' + tax.toFixed(2);
+        }
+
+        const viewOrderTotalShipping = document.querySelector('.order-summary .summary-content .content-order .price-order-subtotal');
         if (viewOrderTotalShipping) {
-            viewOrderTotalShipping.textContent = '$' + OrderProductShipping.totalPrice.toString();
+            viewOrderTotalShipping.textContent = '$' + OrderProductShipping.totalPrice.toFixed(2);
+        }
+
+        const viewShippingPrice = document.querySelector('.order-summary .summary-content .content-order .price-order-shipping');
+        let shipPrice = sessionStorage.getItem('shipPrice');
+        
+        if (viewShippingPrice && shipPrice) {
+            shipPrice = parseFloat(shipPrice.replace(/"/g, ''));
+            viewShippingPrice.textContent = '$' + shipPrice.toFixed(2);
+        }
+
+        const totalPrice = OrderProductShipping.totalPrice + tax + shipPrice;
+        const totalPriceElement = document.querySelector('.total-price-in-order');
+        if (totalPriceElement) {
+            totalPriceElement.textContent = '$' + totalPrice.toFixed(2);
         }
     }) 
     .catch(error => {
         console.log('Error Fetching ShowOrderProductShipping', error);
     });
 } else {
+
 }
 
 function renderViewProductOrderShipping(OrderProductShipping) {
@@ -42,7 +63,7 @@ function renderViewProductOrderShipping(OrderProductShipping) {
     let totalPrice = 0;
 
     viewOrderProductShipping.forEach(item => {
-        const { id, productId, productName, img, quantity, price, color, size ,subTotal} = item;
+        const { id, productId, productName, img, quantity, price, color, size, subTotal } = item;
         const productCart = document.createElement('div');
         productCart.classList.add('product-order');
         totalPrice += subTotal;
@@ -93,6 +114,16 @@ function renderViewProductOrderShipping(OrderProductShipping) {
     const totalPriceElement = document.querySelector('.total-price');
     if (totalPriceElement) {
         totalPriceElement.textContent = '$' + totalPrice.toFixed(2);
+    }
+}
+
+function calculateTax(total) {
+    if (total <= 100 && total > 0) {
+        return total * 0.1;
+    } else if (total > 100 && total <= 500) {
+        return total * 0.08;
+    } else {
+        return total * 0.05;
     }
 }
 

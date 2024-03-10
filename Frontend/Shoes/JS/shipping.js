@@ -1,5 +1,3 @@
-
-
 axios.get("http://localhost:8080/api/order/showDelivery")
     .then(response => {
         const deliveryMethods = response.data;
@@ -11,11 +9,13 @@ axios.get("http://localhost:8080/api/order/showDelivery")
 
 function renderDeliveryMethods(deliveryMethods) {
     const methodRow = document.querySelector('.ship-method-content');
+
     deliveryMethods.forEach(method => {
         const { id, img, name, price } = method;
         const methodBox = document.createElement('div');
         methodBox.classList.add('ship-method');
         methodBox.dataset.methodId = id;
+        methodBox.dataset.methodPrice = price;
         methodBox.innerHTML = `
             <div class="ship-box" style="display: inline-flex;">
                 <div class="ship-img">
@@ -29,20 +29,25 @@ function renderDeliveryMethods(deliveryMethods) {
                 </div>
             </div>
         `;
+
         methodBox.addEventListener('click', () => selectMethod(methodBox, deliveryMethods));
+
         methodRow.appendChild(methodBox);
     });
 }
 
 function selectMethod(selectedMethodBox, deliveryMethods) {
     const methodId = selectedMethodBox.dataset.methodId;
+    const methodPrice = selectedMethodBox.dataset.methodPrice
+
     document.querySelectorAll('.ship-method').forEach(methodBox => {
         methodBox.classList.remove('selected');
     });
     selectedMethodBox.classList.add('selected');
 
-    const selectedMethod = deliveryMethods.find(method => method.id === methodId);
-    console.log("Selected method:", selectedMethod);
+
+    sessionStorage.setItem('selectedShippingMethod', JSON.stringify(methodId));
+    sessionStorage.setItem('shipPrice', JSON.stringify(methodPrice));
 }
 
 function displayLoggedInContent() {
@@ -72,15 +77,36 @@ if (authTokensOrders) {
         const OrderProductShipping = response.data;
         renderViewProductOrderShipping(OrderProductShipping);
 
-        const viewOrderTotalShipping = document.querySelector('.order-summary .total .total-price-in-order');
+        const tax = calculateTax(OrderProductShipping.totalPrice);
+        const taxElement = document.querySelector('.price-order-tax');
+        if (taxElement) {
+            taxElement.textContent = '$' + tax.toFixed(2);
+        }
+
+        const viewOrderTotalShipping = document.querySelector('.order-summary .summary-content .content-order .price-order-subtotal');
         if (viewOrderTotalShipping) {
-            viewOrderTotalShipping.textContent = '$' + OrderProductShipping.totalPrice.toString();
+            viewOrderTotalShipping.textContent = '$' + OrderProductShipping.totalPrice.toFixed(2);
+        }
+
+        const viewShippingPrice = document.querySelector('.order-summary .summary-content .content-order .price-order-shipping');
+        let shipPrice = sessionStorage.getItem('shipPrice');
+        
+        if (viewShippingPrice && shipPrice) {
+            shipPrice = parseFloat(shipPrice.replace(/"/g, ''));
+            viewShippingPrice.textContent = '$' + shipPrice.toFixed(2);
+        }
+
+        const totalPrice = OrderProductShipping.totalPrice + tax + shipPrice;
+        const totalPriceElement = document.querySelector('.total-price-in-order');
+        if (totalPriceElement) {
+            totalPriceElement.textContent = '$' + totalPrice.toFixed(2);
         }
     }) 
     .catch(error => {
         console.log('Error Fetching ShowOrderProductShipping', error);
     });
 } else {
+
 }
 
 function renderViewProductOrderShipping(OrderProductShipping) {
@@ -140,6 +166,16 @@ function renderViewProductOrderShipping(OrderProductShipping) {
     const totalPriceElement = document.querySelector('.total-price');
     if (totalPriceElement) {
         totalPriceElement.textContent = '$' + totalPrice.toFixed(2);
+    }
+}
+
+function calculateTax(total) {
+    if (total <= 100 && total > 0) {
+        return total * 0.1;
+    } else if (total > 100 && total <= 500) {
+        return total * 0.08;
+    } else {
+        return total * 0.05;
     }
 }
 
