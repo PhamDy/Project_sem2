@@ -50,6 +50,19 @@ function selectMethod(selectedMethodBox, deliveryMethods) {
     sessionStorage.setItem('shipPrice', JSON.stringify(methodPrice));
 }
 
+document.getElementById('submitButton').addEventListener('click', function(event) {
+    const selectedMethod = sessionStorage.getItem('selectedShippingMethod');
+
+    if (!selectedMethod) {
+        document.getElementById("erorr-select").innerText = "Please Select a Shipping Method"
+        event.preventDefault();
+    }
+});
+
+document.querySelector('.header-logos').addEventListener('click', function(event) {
+    sessionStorage.clear();
+});
+
 function displayLoggedInContent() {
 
     document.querySelector(".user-icon").classList.add("hide-guest");

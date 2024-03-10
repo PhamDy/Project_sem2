@@ -11,6 +11,10 @@ function displayGuestContent() {
     document.querySelector(".profile").classList.add("hide-user");
 }
 
+document.querySelector('.header-logos').addEventListener('click', function(event) {
+    sessionStorage.clear();
+});
+
 checkAuthToken();
 
 const authTokensOrders = getCookie('authToken');

@@ -99,8 +99,12 @@
     border: 2px solid #000;
 }
 
-/* Additional styles for better appearance */
 .ship-method .ship-box {
     display: flex;
     align-items: center;
+}
+
+#erorr-select {
+    color: red;
+    margin-top: 10px;
 }
