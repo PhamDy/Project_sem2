@@ -109,7 +109,7 @@ CREATE TABLE IF NOT EXISTS `address` (
 );
 
 CREATE TABLE IF NOT EXISTS `payment` (
-    `payment_id` VARCHAR(255) PRIMARY KEY,
+    `payment_id` BIGINT AUTO_INCREMENT PRIMARY KEY,
     `payment_method` VARCHAR(50) NOT NULL,
     `status` ENUM('Paid', 'Unpaid') NULL,
     `updated_at` TIMESTAMP NOT NULL,
@@ -119,7 +119,7 @@ CREATE TABLE IF NOT EXISTS `payment` (
 );
 
 CREATE TABLE IF NOT EXISTS `billing_address` (
-    `billing_address_id` BIGINT AUTO_INCREMENT  PRIMARY KEY,
+    `billing_address_id` BIGINT AUTO_INCREMENT PRIMARY KEY,
    `first_name` VARCHAR(100) NOT NULL,
     `last_name` VARCHAR(100) NOT NULL,
     `country` VARCHAR(100) NOT NULL,
@@ -162,7 +162,7 @@ CREATE TABLE IF NOT EXISTS `orders` (
      `code` VARCHAR(100) NOT NULL,
     `total_price` DOUBLE NOT NULL,
    `user_id` BIGINT NOT NULL,
-    `payment_id` VARCHAR(255) NOT NULL,
+    `payment_id` BIGINT NOT NULL,
     `delivery_id` BIGINT NOT NULL,
     `billing_address_id` BIGINT NOT NULL,
     `order_status` ENUM('Success', 'Pending', 'Confirmed', 'Delivering', 'Cancel'),
