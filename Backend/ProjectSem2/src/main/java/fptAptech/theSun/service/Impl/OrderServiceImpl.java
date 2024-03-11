@@ -241,6 +241,7 @@ public class OrderServiceImpl implements OrderService {
             dto.setCreatAt(item.getCreatedAt());
             dto.setCustomerName(item.getFirst_name() + " " + item.getLast_name());
             dto.setTotal(item.getTotalPrice());
+            dto.setPhone(item.getPhone());
             dto.setAddress(item.getAddress() + " " + item.getCity());
             dto.setPaymentMethod(item.getPayment().getPaymentMethod());
             dto.setPaymenStatus(item.getPayment().getStatus());
