@@ -14,6 +14,8 @@ import fptAptech.theSun.paypal.PaypalPaymentIntent;
 import fptAptech.theSun.paypal.PaypalPaymentMethod;
 import fptAptech.theSun.paypal.PaypalService;
 import fptAptech.theSun.respository.DeliveryRepository;
+import fptAptech.theSun.respository.UserRepository;
+import fptAptech.theSun.security.jwt.JwtFilter;
 import fptAptech.theSun.service.CartService;
 import fptAptech.theSun.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -56,6 +58,9 @@ public class OrderController {
     @Autowired
     private DeliveryRepository deliveryRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @PostMapping("/paypal")
     @Operation(summary = "Khách hàng bấm vào thanh toán với paypal")
     private ResponseEntity<?> placeOrder(HttpServletRequest request, @Valid @RequestBody OrderRequestDto dto){
@@ -80,8 +85,7 @@ public class OrderController {
 
             for (Links links : payment.getLinks()) {
                 if (links.getRel().equals("approval_url")) {
-                    orderService.updateQuantityWarehouse();
-                    orderService.saveOrderByDtoPaypal(dto, payment.getId(), tax, totalOrder);
+                    orderService.saveOrderByDtoPaypal(dto, tax, totalOrder);
                     return ResponseEntity.ok(links.getHref());
                 }
             }
@@ -98,7 +102,12 @@ public class OrderController {
         try{
             Payment payment = paypalService.executePayment(paymentId, payerId);
             if(payment.getState().equals("approved")){
-                var order = orderService.findByPaymentId(paymentId);
+                String email = JwtFilter.CURRENT_USER;
+                var user = userRepository.findByEmail(email).orElseThrow(() ->
+                        new CustomException("You must log in before")
+                );
+                orderService.updateQuantityWarehouse();
+                var order = orderService.findByUserIdAndStatus(user.getId(), OrderStatus.Pending);
                 order.getPayment().setStatus(PaymenStatus.Paid);
                 order.setStatus(OrderStatus.Confirmed);
                 orderService.saveOrder(order);

@@ -89,14 +89,48 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public Order saveOrderByDtoPaypal(OrderRequestDto dto, String paymenId, Double tax, Double totalPrice) {
+    public Order saveOrderByDtoPaypal(OrderRequestDto dto, Double tax, Double totalPrice) {
+        String email = JwtFilter.CURRENT_USER;
+        var user = userRepository.findByEmail(email).orElseThrow(() ->
+            new CustomException("You must log in before")
+        );
+
+        if (orderRepository.existsByUserAndStatus(user, OrderStatus.Pending)) {
+            var order = orderRepository.findByUser_IdAndStatus(user.getId(), OrderStatus.Pending);
+            order.setFirst_name(dto.getFirstName());
+            order.setLast_name(dto.getLastName());
+            order.setCountry(dto.getCountry());
+            order.setCity(dto.getCity());
+            order.setAddress(dto.getAddress());
+            order.setOptional(dto.getOptional());
+            order.setZipCode(dto.getZipCode());
+            order.setEmail(dto.getEmail());
+            order.setPhone(dto.getPhone());
+            order.setNote(dto.getNote());
+            order.setDelivery(deliveryRepository.findById(dto.getDeliveryId()).get());
+            order.setTax(tax);
+            order.setTotalPrice(totalPrice);
+            order.setUser(user);
+
+            var billingAddress = order.getBillingAddress();
+            billingAddress.setFirst_name(dto.getBiilingAddress().getFirstName());
+            billingAddress.setLast_name(dto.getBiilingAddress().getLastName());
+            billingAddress.setCountry(dto.getBiilingAddress().getCountry());
+            billingAddress.setCity(dto.getBiilingAddress().getCity());
+            billingAddress.setAddress(dto.getBiilingAddress().getAddress());
+            billingAddress.setOptional(dto.getBiilingAddress().getOptional());
+            billingAddress.setZipCode(dto.getBiilingAddress().getZipCode());
+            billingAddress.setEmail(dto.getBiilingAddress().getEmail());
+            billingAddress.setPhone(dto.getBiilingAddress().getPhone());
+            billingAddress.setCreatedBy("User");
+            billingAddressRepository.save(billingAddress);
+            order.setBillingAddress(billingAddress);
+
+            return orderRepository.save(order);
+        }
 
         var order = mapToOrder(dto);
-
-        String email = JwtFilter.CURRENT_USER;
-        var user = Optional.ofNullable(userRepository.findByEmail(email).orElseThrow(() ->
-                new CustomException("You must log in before!")));
-        order.setUser(user.get());
+        order.setUser(user);
 
         String code = "#" + nextOrderId++ + UUID.randomUUID().toString().toUpperCase().replaceAll("-", "").substring(0, 12);
         order.setCode(code);
@@ -108,30 +142,19 @@ public class OrderServiceImpl implements OrderService {
         order.setTotalPrice(totalPrice);
 
         Payment payment = new Payment();
-        payment.setId(paymenId);
         payment.setPaymentMethod(dto.getPaymentMethod());
         payment.setStatus(dto.getPaymenStatus());
         payment.setCreatedBy(dto.getLastName() + " " + dto.getFirstName());
-        paymentRepository.save(payment);
+        payment = paymentRepository.save(payment);
         order.setPayment(payment);
 
         order.setStatus(OrderStatus.Pending);
         order.setCreatedBy(dto.getLastName() + " " + dto.getFirstName());
 
-        var billingAddress = new BillingAddress();
-        billingAddress.setFirst_name(dto.getBiilingAddress().getFirstName());
-        billingAddress.setLast_name(dto.getBiilingAddress().getLastName());
-        billingAddress.setCountry(dto.getBiilingAddress().getCountry());
-        billingAddress.setCity(dto.getBiilingAddress().getCity());
-        billingAddress.setAddress(dto.getBiilingAddress().getAddress());
-        billingAddress.setOptional(dto.getBiilingAddress().getOptional());
-        billingAddress.setZipCode(dto.getBiilingAddress().getZipCode());
-        billingAddress.setEmail(dto.getBiilingAddress().getEmail());
-        billingAddress.setPhone(dto.getBiilingAddress().getPhone());
-        billingAddress.setCreatedBy("User");
+        var billingAddress = mapToBilling(dto.getBiilingAddress());
         billingAddressRepository.save(billingAddress);
-
         order.setBillingAddress(billingAddress);
+
         var orders = orderRepository.save(order);
 
         var cart = cartService.showCart(CartsStatus.Open);
@@ -159,12 +182,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order findByPaymentId(String id) {
-        var order = orderRepository.findByPayment_Id(id);
-        if (order == null) {
-            throw new CustomException("Order not found");
-        }
-        return order;
+    public Order findByUserIdAndStatus(Long userId, OrderStatus status) {
+        return orderRepository.findByUser_IdAndStatus(userId, status);
     }
 
     @Override
@@ -189,6 +208,21 @@ public class OrderServiceImpl implements OrderService {
         order.setPhone(dto.getPhone());
         order.setNote(dto.getNote());
         return order;
+    }
+
+    private BillingAddress mapToBilling(AddressDto dto) {
+        BillingAddress billingAddress = new BillingAddress();
+        billingAddress.setFirst_name(dto.getFirstName());
+        billingAddress.setLast_name(dto.getLastName());
+        billingAddress.setCountry(dto.getCountry());
+        billingAddress.setCity(dto.getCity());
+        billingAddress.setAddress(dto.getAddress());
+        billingAddress.setOptional(dto.getOptional());
+        billingAddress.setZipCode(dto.getZipCode());
+        billingAddress.setEmail(dto.getEmail());
+        billingAddress.setPhone(dto.getPhone());
+        billingAddress.setCreatedBy("User");
+        return billingAddress;
     }
 
     @Override

@@ -4,6 +4,7 @@ import fptAptech.theSun.dto.*;
 import fptAptech.theSun.entity.Enum.OrderStatus;
 import fptAptech.theSun.entity.Enum.PaymenStatus;
 import fptAptech.theSun.entity.Order;
+import fptAptech.theSun.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -15,11 +16,11 @@ public interface OrderService {
 
     String sendMailOrder(CartDto cartDto, Order order);
 
-    Order saveOrderByDtoPaypal(OrderRequestDto dto, String paymentId, Double tax, Double toalPrice);
+    Order saveOrderByDtoPaypal(OrderRequestDto dto, Double tax, Double toalPrice);
 
     Order saveOrder(Order order);
 
-    Order findByPaymentId(String id);
+    Order findByUserIdAndStatus(Long userId, OrderStatus status);
 
     void updateQuantityWarehouse();
 
