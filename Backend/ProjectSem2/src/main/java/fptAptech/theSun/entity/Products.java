@@ -46,7 +46,7 @@ public class Products extends BaseEntity{
     @Column(name = "price")
     private Double price;
 
-    @Column(name = "status", nullable = false)
+    @Column(name = "status", nullable = true)
     @Enumerated(EnumType.STRING)
     private ProductStatus status;
 

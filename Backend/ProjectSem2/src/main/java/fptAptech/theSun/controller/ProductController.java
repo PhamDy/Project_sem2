@@ -1,10 +1,12 @@
 package fptAptech.theSun.controller;
 
+import fptAptech.theSun.dto.CreateProductDto;
 import fptAptech.theSun.dto.ProductViewDto;
 import fptAptech.theSun.dto.mapper.ObjectMapper;
 import fptAptech.theSun.entity.Products;
 import fptAptech.theSun.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -127,6 +129,13 @@ public class ProductController {
 //        List<ProductViewDto> productViewDtos = objectMapper.mapListProductsToDto(products);
 //        return new ResponseEntity<>(productViewDtos, HttpStatus.OK);
 //    }
+
+    @PostMapping("/addProduct")
+    @Operation(summary = "Tạo mới sản phẩm, đồn thời tạo mới warehouse")
+    public ResponseEntity<?>addProduct(@Valid @RequestBody CreateProductDto dto){
+        productService.createProduct(dto);
+        return new ResponseEntity<>("Add product successfully!", HttpStatus.CREATED);
+    }
 
 
 }

@@ -1,5 +1,7 @@
 package fptAptech.theSun.service;
 
+import fptAptech.theSun.entity.Warehouse;
+
 import java.util.List;
 
 public interface WarehouseService {
@@ -9,6 +11,8 @@ public interface WarehouseService {
     List<String> getByColor(Long id);
 
     List<String> getBySize(Long id);
+
+    Warehouse save(Long productId, String color, String size, Integer quantity);
 
 
 }
