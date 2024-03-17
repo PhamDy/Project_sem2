@@ -1,5 +1,6 @@
 package fptAptech.theSun.service.Impl;
 
+import fptAptech.theSun.dto.AddressDto;
 import fptAptech.theSun.dto.RegisterUserDto;
 import fptAptech.theSun.dto.UserDto;
 import fptAptech.theSun.dto.mapper.ObjectMapper;
@@ -11,9 +12,11 @@ import fptAptech.theSun.entity.Enum.CartsStatus;
 import fptAptech.theSun.entity.Enum.RoleName;
 import fptAptech.theSun.entity.Role;
 import fptAptech.theSun.entity.User;
+import fptAptech.theSun.exception.CustomException;
 import fptAptech.theSun.exception.DuplicatedTupleException;
 import fptAptech.theSun.respository.*;
 import fptAptech.theSun.security.jwt.AccessToken;
+import fptAptech.theSun.security.jwt.JwtFilter;
 import fptAptech.theSun.security.jwt.JwtService;
 import fptAptech.theSun.service.UserService;
 import org.slf4j.Logger;
@@ -24,9 +27,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.webjars.NotFoundException;
 
+import javax.management.relation.RoleStatus;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -219,5 +224,91 @@ public class UserServiceImpl implements UserService {
        return null;
     }
 
+    @Override
+    public AccessToken authenticateAdmin(String username, String password) {
+        var user = getByUsername(username);
+        if (user==null || !user.getEnabled()) {
+            return null;
+        }
+        boolean matches = passwordEncoder.matches(password, user.getPassword());
+        if (matches) {
+            for (Role role: user.getRoles()
+                 ) {
+                if (role.getName() == RoleName.ROLE_ADMIN){
+                    return jwtService.generateToken(user);
+                }
+            }
+        }
+        return null;
+    }
 
+    @Override
+    public List<UserDto> getAllUser() {
+        var user = userRepository.findAll();
+        List<UserDto> list = new ArrayList<>();
+        for (User item: user
+             ) {
+            UserDto userDto = new UserDto();
+            userDto.setId(item.getId());
+            userDto.setUserName(item.getUserName());
+            userDto.setEmail(item.getEmail());
+            String roleUser = "";
+            for (Role role: item.getRoles()
+                 ) {
+                roleUser+= role.getName() + ", ";
+            }
+            if (!roleUser.isEmpty()){
+                roleUser = roleUser.substring(0, roleUser.length()-2);
+            }
+            userDto.setRole(roleUser);
+            list.add(userDto);
+        }
+        return list;
+    }
+
+    @Override
+    public AddressDto getInforByUserId(Long userId) {
+        var infor = addressRepository.findByUser_Id(userId);
+        var dto = new AddressDto();
+        dto.setFirstName(infor.getFirst_name());
+        dto.setLastName(infor.getLast_name());
+        dto.setCountry(infor.getCountry());
+        dto.setCity(infor.getCity());
+        dto.setAddress(infor.getAddress());
+        dto.setOptional(infor.getOptional());
+        dto.setZipCode(infor.getZipCode());
+        dto.setEmail(infor.getEmail());
+        dto.setPhone(infor.getPhone());
+        return dto;
+    }
+
+    @Override
+    @Transactional
+    public void updateUpRoleUser(Long id, Set<Role> roles) {
+        var user = userRepository.findById(id);
+        if (user.get().getEmail()=="phamdacdy@gmail.com"){
+            throw new CustomException("Can not change Super Admin");
+        }
+        if (roles.size()==0){
+            var roleDefault = roleRepository.findByName(RoleName.ROLE_CUSTOMER);
+            roleDefault.get().setCreatedBy("Admin");
+            roles.add(roleDefault.get());
+        }
+        for (Role role: roles
+             ) {
+            role.setCreatedBy("Admin");
+        }
+        user.get().setRoles(roles);
+        userRepository.save(user.get());
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(Long id) {
+        var user = userRepository.findById(id);
+        if (user.get().getEmail()=="phamdacdy@gmail.com"){
+            throw new CustomException("Can not delete Super Admin");
+        }
+        userRepository.deleteById(id);
+    }
 }

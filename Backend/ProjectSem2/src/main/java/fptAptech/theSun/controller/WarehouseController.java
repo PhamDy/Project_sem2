@@ -36,5 +36,13 @@ public class WarehouseController {
         return new ResponseEntity<>(warehouseService.getBySize(productId), HttpStatus.OK);
     }
 
+    @PostMapping("/{id}")
+    @Operation(summary = "Update quantity của sản phẩm")
+    public ResponseEntity<?> updateQuantity(@PathVariable Long id, @RequestParam(name = "color") String color,
+                                            @RequestParam(name = "size") String size, @RequestParam(name = "quantity") Integer quantity) {
+        warehouseService.save(id, color, size, quantity);
+        return new ResponseEntity<>("Update successfully", HttpStatus.CREATED);
+    }
+
 
 }

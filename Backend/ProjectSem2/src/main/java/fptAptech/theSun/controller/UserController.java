@@ -1,6 +1,8 @@
 package fptAptech.theSun.controller;
 
 import fptAptech.theSun.dto.*;
+import fptAptech.theSun.entity.Enum.RoleName;
+import fptAptech.theSun.entity.Role;
 import fptAptech.theSun.entity.User;
 import fptAptech.theSun.exception.CustomException;
 import fptAptech.theSun.exception.DuplicatedTupleException;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/users")
@@ -109,6 +112,16 @@ public class UserController {
         return ResponseEntity.ok(token);
     }
 
+    @PostMapping("/admin/login")
+    @Operation(summary = "Kiểm tra đăng nhập Admin")
+    public ResponseEntity<?>authticateAdmin(@Valid @RequestBody LoginDto loginDto) {
+        var token = userService.authenticateAdmin(loginDto.getUsernameOrEmail(), loginDto.getPassword());
+        if (token==null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        return ResponseEntity.ok(token);
+    }
+
     @PostMapping("/create-otpReset")
     @Operation(summary = "Cung cấp mã otp để khách hàng đặt lại mật khẩu")
     public ResponseEntity<?>createOtpReset(@RequestParam String email) {
@@ -126,6 +139,33 @@ public class UserController {
     public ResponseEntity<?>saveAddress(@Valid @RequestBody AddressDto addressDto) {
         addressService.saveAddreessOfUser(addressDto);
         return new ResponseEntity<>("Save address by user Successfully!", HttpStatus.CREATED);
+    }
+
+    @GetMapping("/")
+    @Operation(summary = "Lấy ra danh sách các user có trong hệ thống")
+    public ResponseEntity<?>getAll(){
+        return new ResponseEntity<>(userService.getAllUser(), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Lấy ra thông tin user theo Id")
+    public ResponseEntity<?>getInforById(@PathVariable Long id){
+        var infor = userService.getInforByUserId(id);
+        return new ResponseEntity<>(infor, HttpStatus.OK);
+    }
+
+    @PatchMapping("/{id}/updateRole")
+    @Operation(summary = "Admin phân thêm quyền cho user")
+    private ResponseEntity<?> updateRoleUser(@PathVariable Long id, @RequestBody Set<Role> roles){
+        userService.updateUpRoleUser(id, roles);
+        return new  ResponseEntity("Update role successfully", HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Admin xóa tài khoản của khách hàng")
+    public ResponseEntity<?>deleteUserById(@PathVariable Long id) {
+        userService.deleteById(id);
+        return new ResponseEntity<>("Delete user Successfully!", HttpStatus.OK);
     }
 
 

@@ -26,8 +26,6 @@ public interface OrderService {
 
     void deleteOrderWhenCancelPayment();
 
-    void testSendMail();
-
     void returnQuantity();
 
     Page<?> getAllOrder(Pageable pageable);

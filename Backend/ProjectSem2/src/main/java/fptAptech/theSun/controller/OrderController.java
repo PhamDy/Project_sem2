@@ -9,6 +9,7 @@ import fptAptech.theSun.dto.OrderViewAdmin;
 import fptAptech.theSun.entity.Enum.CartsStatus;
 import fptAptech.theSun.entity.Enum.OrderStatus;
 import fptAptech.theSun.entity.Enum.PaymenStatus;
+import fptAptech.theSun.entity.Enum.RoleName;
 import fptAptech.theSun.exception.CustomException;
 import fptAptech.theSun.paypal.PaypalPaymentIntent;
 import fptAptech.theSun.paypal.PaypalPaymentMethod;
@@ -188,12 +189,6 @@ public class OrderController {
     public ResponseEntity<?> deleteOrderById(@PathVariable(name = "id") Long id) {
         orderService.deleteOrder(id);
         return new ResponseEntity<>("Order id " + id + " was deleted",HttpStatus.OK);
-    }
-
-    @GetMapping("/testSendMail")
-    public ResponseEntity<?> testSendMail() {
-        orderService.testSendMail();
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     public Double getTax(Double total) {

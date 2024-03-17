@@ -1,9 +1,14 @@
 package fptAptech.theSun.service.Impl;
 
+import fptAptech.theSun.dto.CreateProductDto;
 import fptAptech.theSun.dto.ProductDetailDto;
 import fptAptech.theSun.dto.ProductViewDto;
 import fptAptech.theSun.dto.mapper.ObjectMapper;
+import fptAptech.theSun.entity.Enum.ProductStatus;
 import fptAptech.theSun.entity.Products;
+import fptAptech.theSun.entity.Warehouse;
+import fptAptech.theSun.exception.CustomException;
+import fptAptech.theSun.respository.CategoryRepository;
 import fptAptech.theSun.respository.ProductRepository;
 import fptAptech.theSun.respository.WarehouseRepository;
 import fptAptech.theSun.service.ProductService;
@@ -22,6 +27,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private WarehouseRepository warehouseRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -137,4 +145,41 @@ public class ProductServiceImpl implements ProductService {
         List<Products> result = productRepository.searchProduct(keyword);
         return result;
     }
+
+    @Override
+    public void createProduct(CreateProductDto dto) {
+        var category = categoryRepository.findByName(dto.getCategoryName());
+        if (category==null){
+            throw new CustomException("Not found category!");
+        }
+        var product = mapToEntity(dto);
+        product.setCategory(category);
+        product.setCreatedBy("Admin");
+        product = productRepository.save(product);
+
+        var warehouse = new Warehouse();
+        warehouse.setProducts(product);
+        warehouse.setColor(dto.getColor());
+        warehouse.setSize(dto.getSize());
+        warehouse.setQuantity(dto.getQuantity());
+        warehouse.setCreatedBy("Admin");
+        warehouse.setStatus(dto.getQuantity() == 0 ? ProductStatus.OutOfStock : ProductStatus.InStock);
+        warehouseRepository.save(warehouse);
+    }
+
+    private Products mapToEntity(CreateProductDto dto){
+        return Products.builder()
+                .name(dto.getName())
+                .img(dto.getImg())
+                .img1(dto.getImg1())
+                .img2(dto.getImg2())
+                .img3(dto.getImg3())
+                .description(dto.getDescription())
+                .gender(dto.getGender())
+                .brand(dto.getBrand())
+                .price(dto.getPrice())
+                .discount(dto.getDiscount())
+                .build();
+    }
+
 }
