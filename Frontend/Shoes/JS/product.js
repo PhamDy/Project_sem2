@@ -185,7 +185,7 @@ axios.get(apiUrl)
             productBox.innerHTML = `
                 <div class="product">
                     <div class="img-product">
-                        <a href="#">
+                        <a href="#" onclick="openProductDetails(${id}); return false;">
                             <img style="width: 100%;" src="${img}" alt="${name}">
                         </a>
                         ${discount > 0 ? `<figure style="background: #e12c43; color: #ffffff;" class="label-sale">
@@ -210,7 +210,7 @@ axios.get(apiUrl)
                         </ul>
                     </div>
                     <h4 class="product-title">
-                        <a href="#">${name}</a>
+                        <a href="#" onclick="openProductDetails(${id}); return false;">${name}</a>
                     </h4>
                     <p class="product-price">
                         ${discount > 0 ? `<s class="">$${price.toFixed(2)}</s>` : ''}
@@ -221,6 +221,7 @@ axios.get(apiUrl)
             productRow.appendChild(productBox);
         });
     }
+    
 
     function openQuickView(productId) {
         axios.get(apiUrl + productId)
@@ -232,6 +233,10 @@ axios.get(apiUrl)
             .catch(error => {
                 console.error('Error fetching product details:', error);
             });
+    }
+
+    function openProductDetails(productId) {
+        window.location.href = `details.html?id=${productId}`;
     }
 
     function updateQuantity(productId, selectedColor, selectedSize) {
@@ -269,7 +274,7 @@ axios.get(apiUrl)
 
     document.body.addEventListener('click', function(event) {
         
-        if (event.target.classList.contains('addToCartButton')) {
+        if (event.target.classList.contains('addToCartButton', 'addToCartButtons')) {
             
             const clickedProductId = event.target.dataset.productId;
     
@@ -300,6 +305,7 @@ axios.get(apiUrl)
                     }
                 })
                 .catch(error => {
+                    document.getElementById("LoginBeforeDetailsAddtoCart").innerText = "Order quantity exceeds warehouse quantity"
                     document.getElementById("LoginBeforeAddToCart").innerText = "Order quantity exceeds warehouse quantity"
                 });
             } else {

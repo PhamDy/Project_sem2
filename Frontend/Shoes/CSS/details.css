@@ -4,6 +4,7 @@
     flex-grow: 1;
     gap: 70px;
     justify-content: center;
+    margin-left: 250px;
 }
 #details .icons{
     padding: 10px 60px;
@@ -1044,7 +1045,7 @@
     transition: all 0.5s ease;
 }
 .img-showcase img{
-    min-width: 100%;
+    min-width: 70%;
 }
 .img-select{
     display: flex;
