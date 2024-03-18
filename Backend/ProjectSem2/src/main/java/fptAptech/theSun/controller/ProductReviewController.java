@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -19,11 +20,14 @@ public class ProductReviewController {
 
     @PostMapping("/create")
     @Operation(summary = "Khách hàng tạo đánh giá sản phẩm", description = "Khách hàng nhâp comment và star vào đánh giá")
-    public ResponseEntity<ProductReview> createProductReview(@PathVariable("productId") Long productId, @RequestBody ProductReviewDto productReviewDto) {
-        ProductReview savedReview = productReviewService.saveProductReview(productId, productReviewDto);
+    public ResponseEntity<ProductReview> createProductReview(
+            @PathVariable("productId") Long productId,
+            @ModelAttribute ProductReviewDto productReviewDto,
+            @RequestParam("images") List<MultipartFile> images
+    ) {
+        ProductReview savedReview = productReviewService.saveProductReview(productId, productReviewDto, images);
         return ResponseEntity.ok(savedReview);
     }
-
     @PutMapping("/update/{reviewId}")
     @Operation(summary = "Khách hàng sửa đánh giá sản phẩm", description = "Khách hàng nhập comment và star mới")
     public ResponseEntity<Void> updateReview(@PathVariable Long reviewId, @RequestBody ProductReview updatedReview) {

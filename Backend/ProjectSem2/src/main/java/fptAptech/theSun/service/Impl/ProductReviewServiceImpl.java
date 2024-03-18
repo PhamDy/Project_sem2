@@ -35,7 +35,7 @@ public class ProductReviewServiceImpl implements ProductReviewService {
     @Autowired
     private ImageUploadService imageUploadService;
     @Override
-    public ProductReview saveProductReview(Long productId, ProductReviewDto productReviewDto) {
+    public ProductReview saveProductReview(Long productId, ProductReviewDto productReviewDto, List<MultipartFile> images) {
         String email = JwtFilter.CURRENT_USER;
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException("You must log in before!"));
@@ -48,18 +48,18 @@ public class ProductReviewServiceImpl implements ProductReviewService {
         productReview.setStar(productReviewDto.getStar());
         productReview.setStatus(1);
         productReview.setCreatedBy("User");
-        List<MultipartFile> images = productReviewDto.getImages();
-        List<Image> reviewImages = new ArrayList<>();
-        for (MultipartFile file : images) {
-            String imageUrl = imageUploadService.uploadImage(file);
-            if (imageUrl != null) {
-                Image reviewImage = new Image();
-                reviewImage.setImageUrl(imageUrl);
-                reviewImage.setProductReview(productReview);
-                reviewImages.add(reviewImage);
+        for (int i = 0; i < images.size(); i++) {
+            MultipartFile file = images.get(i);
+            if (!file.isEmpty() && images.size() <= 4) {
+                String imageUrl = imageUploadService.uploadImage(file);
+                if (imageUrl != null) {
+                    Image reviewImage = new Image();
+                    reviewImage.setImageUrl(imageUrl);
+                    reviewImage.setProductReview(productReview);
+                    productReview.getImages().add(reviewImage);
+                }
             }
         }
-        productReview.setImages(reviewImages);
         return productReviewRepository.save(productReview);
     }
 

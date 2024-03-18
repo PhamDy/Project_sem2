@@ -11,5 +11,4 @@ import java.util.List;
 public class ProductReviewDto {
     private String comment;
     private Integer star;
-    private List<MultipartFile> images;
 }
