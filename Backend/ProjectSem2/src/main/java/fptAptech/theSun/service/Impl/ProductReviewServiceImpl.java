@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,9 +28,6 @@ public class ProductReviewServiceImpl implements ProductReviewService {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private ProductServiceImpl productServiceImpl;
 
     @Autowired
     private ProductRepository productRepository;
@@ -50,25 +48,18 @@ public class ProductReviewServiceImpl implements ProductReviewService {
         productReview.setStar(productReviewDto.getStar());
         productReview.setStatus(1);
         productReview.setCreatedBy("User");
-        // Tải ảnh lên
         List<MultipartFile> images = productReviewDto.getImages();
-        for (int i = 0; i < images.size(); i++) {
-            MultipartFile file = images.get(i);
-            if (!file.isEmpty() && images.size() <= 4) {
-                String imageUrl = imageUploadService.uploadImage(file);
-                if (imageUrl != null) {
-                    // Lưu URL
-                    Image reviewImage = new Image();
-                    reviewImage.setImageUrl(imageUrl);
-
-                    // Lưu review hiện tại vào reviewImage
-                    reviewImage.setReview(productReview);
-
-                    // Thêm reviewImage hiện tại vào danh sách Images
-                    productReview.getImages().add(reviewImage);
-                }
+        List<Image> reviewImages = new ArrayList<>();
+        for (MultipartFile file : images) {
+            String imageUrl = imageUploadService.uploadImage(file);
+            if (imageUrl != null) {
+                Image reviewImage = new Image();
+                reviewImage.setImageUrl(imageUrl);
+                reviewImage.setProductReview(productReview);
+                reviewImages.add(reviewImage);
             }
         }
+        productReview.setImages(reviewImages);
         return productReviewRepository.save(productReview);
     }
 

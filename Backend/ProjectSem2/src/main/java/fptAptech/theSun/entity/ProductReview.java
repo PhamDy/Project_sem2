@@ -36,7 +36,7 @@ public class ProductReview extends BaseEntity{
     @JoinColumn(name = "product_id")
     private Products products;
 
-    @OneToMany(mappedBy = "review")
+    @OneToMany(mappedBy = "productReview", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> images;
 
 }

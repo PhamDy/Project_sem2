@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 @Entity
 @Data
-@Table(name = "images")
+@Table(name = "image")
 public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,7 +13,7 @@ public class Image {
 
     @ManyToOne
     @JoinColumn(name = "product_review_id")
-    private ProductReview review;
+    private ProductReview productReview;
 
     @Column(name = "image_url")
     private String imageUrl;
