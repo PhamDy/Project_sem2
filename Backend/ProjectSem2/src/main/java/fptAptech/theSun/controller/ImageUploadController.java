@@ -13,9 +13,9 @@ public class ImageUploadController {
     @Autowired
     private ImageUploadService imageUploadService;
 
-    @PostMapping("/image")
-    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
-        String filePath = imageUploadService.uploadImage(file);
+    @PostMapping("/image/{id}")
+    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file, @RequestParam("id") Long id) {
+        String filePath = imageUploadService.uploadImage(file, id);
         if (filePath != null) {
             return ResponseEntity.ok(filePath);
         } else {

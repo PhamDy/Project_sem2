@@ -1,6 +1,5 @@
 package fptAptech.theSun.respository;
 
-import fptAptech.theSun.dto.ProductReviewDto;
 import fptAptech.theSun.entity.ProductReview;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

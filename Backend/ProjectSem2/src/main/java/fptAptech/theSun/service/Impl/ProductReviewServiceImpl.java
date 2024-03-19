@@ -1,6 +1,5 @@
 package fptAptech.theSun.service.Impl;
 
-import fptAptech.theSun.dto.ProductReviewDto;
 import fptAptech.theSun.entity.Image;
 import fptAptech.theSun.entity.ProductReview;
 import fptAptech.theSun.entity.Products;
@@ -18,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ProductReviewServiceImpl implements ProductReviewService {
@@ -35,7 +33,7 @@ public class ProductReviewServiceImpl implements ProductReviewService {
     @Autowired
     private ImageUploadService imageUploadService;
     @Override
-    public ProductReview saveProductReview(Long productId, ProductReviewDto productReviewDto, List<MultipartFile> images) {
+    public void saveProductReview(Long productId, String comment, int star, List<MultipartFile> images) {
         String email = JwtFilter.CURRENT_USER;
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException("You must log in before!"));
@@ -44,14 +42,14 @@ public class ProductReviewServiceImpl implements ProductReviewService {
         ProductReview productReview = new ProductReview();
         productReview.setUser(user);
         productReview.setProducts(products);
-        productReview.setComment(productReviewDto.getComment());
-        productReview.setStar(productReviewDto.getStar());
+        productReview.setComment(comment);
+        productReview.setStar(star);
         productReview.setStatus(1);
         productReview.setCreatedBy("User");
-        for (int i = 0; i < images.size(); i++) {
-            MultipartFile file = images.get(i);
+        productReview = productReviewRepository.save(productReview);
+        for (MultipartFile file : images) {
             if (!file.isEmpty() && images.size() <= 4) {
-                String imageUrl = imageUploadService.uploadImage(file);
+                String imageUrl = imageUploadService.uploadImage(file, productReview.getId());
                 if (imageUrl != null) {
                     Image reviewImage = new Image();
                     reviewImage.setImageUrl(imageUrl);
@@ -60,7 +58,7 @@ public class ProductReviewServiceImpl implements ProductReviewService {
                 }
             }
         }
-        return productReviewRepository.save(productReview);
+        productReviewRepository.save(productReview);
     }
 
     @Override

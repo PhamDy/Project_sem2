@@ -1,10 +1,10 @@
 package fptAptech.theSun.controller;
 
-import fptAptech.theSun.dto.ProductReviewDto;
 import fptAptech.theSun.entity.ProductReview;
 import fptAptech.theSun.service.ProductReviewService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,11 +22,16 @@ public class ProductReviewController {
     @Operation(summary = "Khách hàng tạo đánh giá sản phẩm", description = "Khách hàng nhâp comment và star vào đánh giá")
     public ResponseEntity<ProductReview> createProductReview(
             @PathVariable("productId") Long productId,
-            @ModelAttribute ProductReviewDto productReviewDto,
+            @RequestParam("comment") String comment,
+            @RequestParam("star") Integer star,
             @RequestParam("images") List<MultipartFile> images
     ) {
-        ProductReview savedReview = productReviewService.saveProductReview(productId, productReviewDto, images);
-        return ResponseEntity.ok(savedReview);
+        try {
+            productReviewService.saveProductReview(productId, comment, star , images);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
     @PutMapping("/update/{reviewId}")
     @Operation(summary = "Khách hàng sửa đánh giá sản phẩm", description = "Khách hàng nhập comment và star mới")

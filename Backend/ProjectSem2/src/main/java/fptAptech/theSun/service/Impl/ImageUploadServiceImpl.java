@@ -1,5 +1,9 @@
 package fptAptech.theSun.service.Impl;
 
+import fptAptech.theSun.entity.Image;
+import fptAptech.theSun.entity.ProductReview;
+import fptAptech.theSun.respository.ImageRepository;
+import fptAptech.theSun.respository.ProductReviewRepository;
 import fptAptech.theSun.service.ImageUploadService;
 import io.jsonwebtoken.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +21,14 @@ public class ImageUploadServiceImpl implements ImageUploadService {
     @Value("${upload.directory}")
     private String uploadDirectory;
 
+    @Autowired
+    private ProductReviewRepository productReviewRepository;
+
+    @Autowired
+    private ImageRepository imageRepository;
+
     @Override
-    public String uploadImage(MultipartFile file) {
+    public String uploadImage(MultipartFile file, Long productReviewId) {
         try {
             // Kiểm tra xem có file được upload không
             if (file.isEmpty()) {
@@ -43,6 +53,15 @@ public class ImageUploadServiceImpl implements ImageUploadService {
             // Lưu file lên server
             String filePath = uploadDirectory + File.separator + uniqueFilename;
             file.transferTo(new File(filePath));
+
+            // Associate the image with the product review
+            ProductReview productsReview = productReviewRepository.findById(productReviewId)
+                    .orElseThrow(() -> new IllegalArgumentException("Product review not found."));
+            Image image = new Image();
+            image.setProductReview(productsReview);
+            image.setImageUrl(filePath);
+
+            imageRepository.save(image);
 
             return filePath;
         } catch (IOException | java.io.IOException e) {
