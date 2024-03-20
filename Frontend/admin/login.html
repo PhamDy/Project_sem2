@@ -41,15 +41,15 @@
                                     <div class="text-center">
                                         <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
                                     </div>
-                                    <form class="user">
+                                    <form id="loginForm" class="user">
                                         <div class="form-group">
                                             <input type="email" class="form-control form-control-user"
-                                                id="exampleInputEmail" aria-describedby="emailHelp"
+                                                id="InputEmail" aria-describedby="emailHelp"
                                                 placeholder="Enter Email Address...">
                                         </div>
                                         <div class="form-group">
                                             <input type="password" class="form-control form-control-user"
-                                                id="exampleInputPassword" placeholder="Password">
+                                                id="InputPassword" placeholder="Password">
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
@@ -58,9 +58,12 @@
                                                     Me</label>
                                             </div>
                                         </div>
-                                        <a href="index.html" class="btn btn-primary btn-user btn-block">
+                                        <div id="errorMessage" class="text-center mt-2 mb-4">
+                                            <small ></small>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-user btn-block">
                                             Login
-                                        </a>
+                                        </button>
                                         <hr>
                                         <a href="index.html" class="btn btn-google btn-user btn-block">
                                             <i class="fab fa-google fa-fw"></i> Login with Google
@@ -92,11 +95,40 @@
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Core plugin JavaScript-->
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+    <!-- Axios library -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
-    <!-- Custom scripts for all pages-->
-    <script src="js/sb-admin-2.min.js"></script>
+    <script>
+        function saveTokenToLocalStorage(token) {
+            // Lưu token vào localStorage với key là "authToken"
+            localStorage.setItem('authToken', token);
+            console.log('Token saved to localStorage:', token);
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const email = document.getElementById('InputEmail').value;
+            const password = document.getElementById('InputPassword').value;
+
+            const data = {
+                usernameOrEmail: email,
+                password: password
+            };
+
+            axios.post('http://localhost:8080/api/users/admin/login', data)
+                .then(function(response) {
+                    const token = response.data.token;
+                    saveTokenToLocalStorage('authToken', token);
+                    // Chuyển hướng đến trang Dashboard hoặc trang khác
+                    window.location.href = 'index.html';
+                })
+                .catch(function(error) {
+                    console.error('Error:', error);
+                    document.getElementById('errorMessage').innerHTML = '<small style="color: red;">Email or Password is wrong. Please try again</small>';
+                });
+        });
+    </script>
 
 </body>
 
