@@ -11273,3 +11273,16 @@ body.sidebar-toggled footer.sticky-footer {
   max-width: 100%;
   height: auto;
 }
+.btn-actions{
+  width: 80px;
+}
+.btn-actions button{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  text-align: center;
+  margin-bottom: 5px;
+}
+.discount{
+  width: 50px;
+}

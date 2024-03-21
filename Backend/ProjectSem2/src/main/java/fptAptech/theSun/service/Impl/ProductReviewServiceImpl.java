@@ -1,6 +1,7 @@
 package fptAptech.theSun.service.Impl;
 
 import fptAptech.theSun.dto.ProductReviewDto;
+import fptAptech.theSun.entity.Image;
 import fptAptech.theSun.entity.ProductReview;
 import fptAptech.theSun.entity.Products;
 import fptAptech.theSun.entity.User;
@@ -9,9 +10,11 @@ import fptAptech.theSun.respository.ProductRepository;
 import fptAptech.theSun.respository.ProductReviewRepository;
 import fptAptech.theSun.respository.UserRepository;
 import fptAptech.theSun.security.jwt.JwtFilter;
+import fptAptech.theSun.service.ImageUploadService;
 import fptAptech.theSun.service.ProductReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +34,8 @@ public class ProductReviewServiceImpl implements ProductReviewService {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private ImageUploadService imageUploadService;
     @Override
     public ProductReview saveProductReview(Long productId, ProductReviewDto productReviewDto) {
         String email = JwtFilter.CURRENT_USER;
@@ -45,7 +50,25 @@ public class ProductReviewServiceImpl implements ProductReviewService {
         productReview.setStar(productReviewDto.getStar());
         productReview.setStatus(1);
         productReview.setCreatedBy("User");
+        // Tải ảnh lên
+        List<MultipartFile> images = productReviewDto.getImages();
+        for (int i = 0; i < images.size(); i++) {
+            MultipartFile file = images.get(i);
+            if (!file.isEmpty() && images.size() <= 4) {
+                String imageUrl = imageUploadService.uploadImage(file);
+                if (imageUrl != null) {
+                    // Lưu URL
+                    Image reviewImage = new Image();
+                    reviewImage.setImageUrl(imageUrl);
 
+                    // Lưu review hiện tại vào reviewImage
+                    reviewImage.setReview(productReview);
+
+                    // Thêm reviewImage hiện tại vào danh sách Images
+                    productReview.getImages().add(reviewImage);
+                }
+            }
+        }
         return productReviewRepository.save(productReview);
     }
 
