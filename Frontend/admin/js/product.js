@@ -42,33 +42,97 @@ function openEditModal(productId) {
             document.getElementById('editProductBrand').value = product.brand;
             document.getElementById('editProductPrice').value = product.price;
             document.getElementById('editProductDiscount').value = product.discount;
-            document.getElementById('editProductSize').value = product.size;
-            document.getElementById('editProductColor').value = product.color;
-            const modal = new bootstrap.Modal(document.getElementById('editProductModal'));
-            modal.show();
+
+            if (product && product.color) {
+                const colors = product.color;
+                const sizes = product.size;
+
+                // Hiển thị size dưới dạng select
+                const sizeSelect = document.getElementById('editProductSize');
+                sizes.forEach(size => {
+                    const option = document.createElement('option');
+                    option.text = size;
+                    option.value = size;
+                    sizeSelect.add(option);
+                });
+
+                // Hiển thị color dưới dạng select
+                const colorSelect = document.getElementById('editProductColor');
+                colors.forEach(color => {
+                    const option = document.createElement('option');
+                    option.text = color;
+                    option.value = color;
+                    colorSelect.add(option);
+                });
+
+                sizeSelect.addEventListener('change', updateQuantity);
+                colorSelect.addEventListener('change', updateQuantity);
+
+                // Hàm cập nhật quantity
+                function updateQuantity() {
+                    const selectedSize = sizeSelect.value;
+                    const selectedColor = colorSelect.value;
+
+                    // Gửi yêu cầu API để lấy quantity
+                    axios.get(`http://localhost:8080/api/warehouse/quantityProduct/${productId}?color=${selectedColor}&size=${selectedSize}`)
+                        .then(response => {
+                            const quantity = response.data;
+                            document.getElementById('editProductQuantity').value = quantity;
+                        })
+                        .catch(error => {
+                            console.error('Error fetching quantity data:', error);
+                        });
+                }
+
+                // Gọi hàm cập nhật quantity ban đầu
+                updateQuantity();
+
+                const modal = new bootstrap.Modal(document.getElementById('editProductModal'));
+                modal.show();
+            } else {
+                console.error('Product colors are undefined');
+            }
         })
         .catch(error => {
             console.error('Error fetching product data:', error);
         });
 }
 
-// Function to handle form submission for editing product
-document.getElementById('editProductForm').addEventListener('submit', function(event) {
-    event.preventDefault(); 
-    const formData = new FormData(this);
-    const jsonData = {};
-    formData.forEach((value, key) => {
-        jsonData[key] = value;
+
+
+
+// Hàm cập nhật quantity
+function updateQuantityProduct(productId, color, size, quantity) {
+
+    // Gửi yêu cầu API để cập nhật quantity
+    axios.post(`http://localhost:8080/api/warehouse/${productId}?color=${color}&size=${size}&quantity=${quantity}`)
+    .then(response => {
+        console.log('Quantity updated successfully:', response.data);
+        const modal = new bootstrap.Modal(document.getElementById('editProductModal'));
+        modal.hide();
+    })
+    .catch(error => {
+        console.error('Error updating quantity:', error);
     });
-    
-    axios.patch(`http://localhost:8080/api/products/${jsonData.id}`, jsonData)
-        .then(response => {
-            console.log('Product updated successfully:', response.data);
-            const modal = bootstrap.Modal.getInstance(document.getElementById('editProductModal'));
-            modal.hide();
-            getProducts(); // Refresh the table after updating
-        })
-        .catch(error => {
-            console.error('Error updating product:', error);
-        });
+}
+
+// Function to handle form submission for updating product
+document.getElementById('editProductForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent default form submission behavior
+
+    const productId = document.getElementById('editProductId').value;
+    const name = document.getElementById('editProductName').value; // This variable seems unused
+    const categoryName = document.getElementById('editProductCategory').value; // This variable seems unused
+    const brand = document.getElementById('editProductBrand').value; // This variable seems unused
+    const price = document.getElementById('editProductPrice').value; // This variable seems unused
+    const discount = document.getElementById('editProductDiscount').value; // This variable seems unused
+    const size = document.getElementById('editProductSize').value;
+    const color = document.getElementById('editProductColor').value;
+    const quantity = document.getElementById('editProductQuantity').value;
+
+    // Call the updateQuantityProduct function to update quantity
+    updateQuantityProduct(productId, color, size, quantity);
+
+
 });
+

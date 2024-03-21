@@ -395,7 +395,7 @@
                                                     <td class="img_product"><img src="${item.img}" alt="Product Image"></td>
                                                     <td>${item.name}</td>
                                                     <td>${item.categoryName}</td> 
-                                                    <td>${item.brand}</td>
+                                                    <td>${item.brand}</td>      
                                                     <td>${item.price}</td>
                                                     <td>${item.discount}</td>
                                                     <td class="btn-actions">
@@ -415,6 +415,7 @@
                                     getProducts();
                                 </script>
                                 
+                                
                             </div>
                         </div>
                     </div>
@@ -422,7 +423,7 @@
                 </div>
                 <!-- /.container-fluid -->
                 <!-- Modal for displaying product details -->
-          <div class="modal fade" id="productDetailsModal" tabindex="-1" aria-labelledby="productDetailsModalLabel" aria-hidden="true">
+                <div class="modal fade" id="productDetailsModal" tabindex="-1" aria-labelledby="productDetailsModalLabel" aria-hidden="true">
           <div class="modal-dialog modal-lg">
             <div class="modal-content">
               <div class="modal-header">
@@ -471,60 +472,70 @@
               </div>
             </div>
           </div>
-        </div>
+                </div>
 
-        <!-- Modal for editing product details -->
-        <div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
+                <!-- Modal for editing product details -->
+<div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="editProductModalLabel">
-                Update Product
-              </h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title" id="editProductModalLabel">
+                    Update Product
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <form id="editProductForm">
-                <div class="mb-3">
-                  <label for="editProductId" class="form-label">ID</label>
-                  <input type="text" class="form-control" id="editProductId" name="id" readonly/>
-                </div>
-                <div class="mb-3">
-                  <label for="editProductName" class="form-label">Product Name</label>
-                  <input type="text" class="form-control" id="editProductName" name="name"/>
-                </div>
-                <div class="mb-3">
-                  <label for="editProductCategory" class="form-label">Category</label>
-                  <input type="text" class="form-control" id="editProductCategory" name="categoryName"/>
-                </div>
-                <div class="mb-3">
-                  <label for="editProductBrand" class="form-label">Brand</label>
-                  <input type="text" class="form-control" id="editProductBrand" name="brand"/>
-                </div>
-                <div class="mb-3">
-                  <label for="editProductPrice" class="form-label">Price</label>
-                  <input type="text" class="form-control" id="editProductPrice" name="price"/>
-                </div>
-                <div class="mb-3">
-                  <label for="editProductDiscount" class="form-label">Discount</label>
-                  <input type="text" class="form-control" id="editProductDiscount" name="discount"/>
-                </div>
-                <div class="mb-3">
-                  <label for="editProductSize" class="form-label">Size</label>
-                  <input type="text" class="form-control" id="editProductSize" name="size"/>
-                </div>
-                <div class="mb-3">
-                  <label for="editProductColor" class="form-label">Color</label>
-                  <input type="text" class="form-control" id="editProductColor" name="color"/>
-                </div>
-                <button type="submit" class="btn btn-primary">
-                  Update
-                </button>
-              </form>
+                <form id="editProductForm">
+                    <div class="mb-3">
+                        <label for="editProductId" class="form-label">ID</label>
+                        <input type="text" class="form-control" id="editProductId" name="id" readonly/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editProductName" class="form-label">Product Name</label>
+                        <input type="text" class="form-control" id="editProductName" name="name"/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editProductCategory" class="form-label">Category</label>
+                        <input type="text" class="form-control" id="editProductCategory" name="categoryName"/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editProductBrand" class="form-label">Brand</label>
+                        <input type="text" class="form-control" id="editProductBrand" name="brand"/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editProductPrice" class="form-label">Price</label>
+                        <input type="text" class="form-control" id="editProductPrice" name="price"/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editProductDiscount" class="form-label">Discount</label>
+                        <input type="text" class="form-control" id="editProductDiscount" name="discount"/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editProductSize" class="form-label">Size</label>
+                        <select class="form-select" id="editProductSize" name="size">
+                            <option value="M">M</option>
+                            <option value="L">L</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editProductColor" class="form-label">Color</label>
+                        <select class="form-select" id="editProductColor" name="color">
+                            <option value="Black">Black</option>
+                            <option value="White">White</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editProductQuantity" class="form-label">Quantity</label>
+                        <input type="text" class="form-control" id="editProductQuantity" name="quantity"/>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        Update
+                    </button>
+                </form>
             </div>
-          </div>
         </div>
-      </div>
+    </div>
+</div>
             </div>
             <!-- End of Main Content -->
         </div>

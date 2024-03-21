@@ -43,8 +43,8 @@
                                     </div>
                                     <form id="loginForm" class="user">
                                         <div class="form-group">
-                                            <input type="email" class="form-control form-control-user"
-                                                id="InputEmail" aria-describedby="emailHelp"
+                                            <input type="text" class="form-control form-control-user"
+                                                id="InputName" aria-describedby="emailHelp"
                                                 placeholder="Enter Email Address...">
                                         </div>
                                         <div class="form-group">
@@ -108,7 +108,7 @@
         document.getElementById('loginForm').addEventListener('submit', function(event) {
             event.preventDefault();
 
-            const email = document.getElementById('InputEmail').value;
+            const email = document.getElementById('InputName').value;
             const password = document.getElementById('InputPassword').value;
 
             const data = {
@@ -120,7 +120,6 @@
                 .then(function(response) {
                     const token = response.data.token;
                     saveTokenToLocalStorage('authToken', token);
-                    // Chuyển hướng đến trang Dashboard hoặc trang khác
                     window.location.href = 'index.html';
                 })
                 .catch(function(error) {

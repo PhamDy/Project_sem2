@@ -391,7 +391,7 @@
                                                     <td>${user.email}</td> 
                                                     <td>${user.role}</td>
                                                     <td class="btn-actions">
-                                                        <button class="btn btn-warning" onclick="updateUser('${user.id}')">Update</button>
+                                                        <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#updateRoleModal" onclick="updateRoleModal('${user.id}')">Update</button>
                                                         <button class="btn btn-danger" onclick="remove('${user._id}')">Delete</button> 
                                                     </td>
                                                 `;
@@ -405,41 +405,81 @@
                                    
                                     getUsers();
                                 </script>
-                                
-                                <!-- Modal for updating order -->
-<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="editModalLabel">Update Order</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form id="editOrderForm">
-            <input type="hidden" id="editOrderId" name="id">
-            <div class="mb-3">
-              <label for="editOrderCode" class="form-label">Order Code</label>
-              <input type="text" class="form-control" id="editOrderCode" name="orderCode" required>
-            </div>
-            <div class="mb-3">
-              <label for="editCreatedAt" class="form-label">Created At</label>
-              <input type="text" class="form-control" id="editCreatedAt" name="createdAt" required>
-            </div>
-            <div class="mb-3">
-              <label for="editCustomerName" class="form-label">Customer Name</label>
-              <input type="text" class="form-control" id="editCustomerName" name="customerName" required>
-            </div>
-            <!-- Add other input fields for other order details here -->
-            <button type="submit" class="btn btn-primary">Update</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
+
 
                             </div>
                         </div>
                     </div>
+
+                    <!-- HTML for the update role modal -->
+                    <div class="modal fade" id="updateRoleModal" tabindex="-1" aria-labelledby="updateRoleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="updateRoleModalLabel">Update User Role</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <input type="hidden" id="userId"> <!-- Hidden input to store user ID -->
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="ROLE_ADMIN" id="adminCheckbox">
+                                        <label class="form-check-label" for="adminCheckbox">Admin</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="ROLE_EMPLOYEE" id="employeeCheckbox">
+                                        <label class="form-check-label" for="employeeCheckbox">Employee</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="ROLE_CUSTOMER" id="customerCheckbox">
+                                        <label class="form-check-label" for="customerCheckbox">Customer</label>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary" onclick="updateRole()">Save changes</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+                        // Function to update user role
+                        async function updateRole() {
+                        const userId = document.getElementById('userId').value;
+                        const adminCheckbox = document.getElementById('adminCheckbox');
+                        const employeeCheckbox = document.getElementById('employeeCheckbox');
+                        const customerCheckbox = document.getElementById('customerCheckbox');
+
+                        const roles = [];
+                        if (adminCheckbox.checked) roles.push({ id: 1, name: 'ROLE_ADMIN' });
+                        if (employeeCheckbox.checked) roles.push({ id: 2, name: 'ROLE_EMPLOYEE' });
+                        if (customerCheckbox.checked) roles.push({ id: 3, name: 'ROLE_CUSTOMER' });
+
+                        try {
+                        const response = await axios.patch(`http://localhost:8080/api/users/${userId}/updateRole`, roles);
+                            console.log(response.data); // Log response from the server
+                        // Close the modal after successful update
+                            $('#updateRoleModal').modal('hide');
+                            // Optionally, you can update the UI here to reflect the changes made
+                        } catch (error) {
+                            console.error('Error updating role:', error);
+                        }
+                        getUsers();
+                    }
+
+
+                    // Function to open the update role modal
+                    function updateRoleModal(userId) {
+                        document.getElementById('userId').value = userId; // Set the user ID in the hidden input field
+                        // Clear previous checkbox selections
+                        document.getElementById('adminCheckbox').checked = false;
+                        document.getElementById('employeeCheckbox').checked = false;
+                        document.getElementById('customerCheckbox').checked = false;
+                        $('#updateRoleModal').modal('show'); // Show the modal
+                    }
+                </script>
+
+
 
                 </div>
                 <!-- /.container-fluid -->
