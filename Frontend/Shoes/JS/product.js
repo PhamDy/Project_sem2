@@ -249,7 +249,7 @@ axios.get(apiUrl)
     
                 const maxQuantity = Math.min(quantity, 10);
                 selectQuantity.setAttribute('max', maxQuantity);
-                
+    
                 for (let optionValue = 1; optionValue <= maxQuantity; optionValue++) {
                     const option = document.createElement('option');
                     option.text = optionValue;
@@ -260,9 +260,12 @@ axios.get(apiUrl)
                     selectQuantity.appendChild(option);
                 }
     
+                updateProgressAndStock(productId, quantity);
+    
                 selectQuantity.addEventListener('change', function() {
                     const selectedQuantity = this.value;
                     updateURL(productId, selectedColor, selectedSize, selectedQuantity);
+                    updateProgressAndStock(productId, quantity);
                 });
             })
             .then(cartResponse => {
@@ -271,10 +274,25 @@ axios.get(apiUrl)
                 throw error;
             });
     }
+    
+    function updateProgressAndStock(productId, quantity) {
+        const progressBar = document.querySelector('.progress-bar');
+        const leftStock = document.getElementById('random_sold_prod');
+    
+        let stockLeftPercentage;
+        if (quantity <= 10) {
+            stockLeftPercentage = quantity * 10;
+        } else {
+            stockLeftPercentage = 100;
+        }
+    
+        progressBar.style.width = `${stockLeftPercentage}%`;
+        leftStock.textContent = quantity;
+    }
 
     document.body.addEventListener('click', function(event) {
         
-        if (event.target.classList.contains('addToCartButton', 'addToCartButtons')) {
+        if (event.target.classList.contains('addToCartButton')) {
             
             const clickedProductId = event.target.dataset.productId;
     
@@ -305,12 +323,12 @@ axios.get(apiUrl)
                     }
                 })
                 .catch(error => {
-                    document.getElementById("LoginBeforeDetailsAddtoCart").innerText = "Order quantity exceeds warehouse quantity"
-                    document.getElementById("LoginBeforeAddToCart").innerText = "Order quantity exceeds warehouse quantity"
+                    document.getElementById("LoginBeforeAddToCart").innerText = "Order quantity exceeds warehouse quantity or haven't select size and color"
                 });
             } else {
                 document.getElementById("LoginBeforeAddToCart").innerText = "Please log in to add items to cart."
             }
+            history.replaceState(null, null, window.location.pathname);
         }
     });
 
