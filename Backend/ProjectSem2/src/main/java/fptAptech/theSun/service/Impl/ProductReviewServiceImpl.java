@@ -1,6 +1,5 @@
 package fptAptech.theSun.service.Impl;
 
-import fptAptech.theSun.entity.Image;
 import fptAptech.theSun.entity.ProductReview;
 import fptAptech.theSun.entity.Products;
 import fptAptech.theSun.entity.User;
@@ -15,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -33,7 +31,7 @@ public class ProductReviewServiceImpl implements ProductReviewService {
     @Autowired
     private ImageUploadService imageUploadService;
     @Override
-    public void saveProductReview(Long productId, String comment, int star, List<MultipartFile> images) {
+    public void saveProductReview(Long productId, String comment, int star, MultipartFile images) {
         String email = JwtFilter.CURRENT_USER;
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException("You must log in before!"));
@@ -46,18 +44,7 @@ public class ProductReviewServiceImpl implements ProductReviewService {
         productReview.setStar(star);
         productReview.setStatus(1);
         productReview.setCreatedBy("User");
-        productReview = productReviewRepository.save(productReview);
-        for (MultipartFile file : images) {
-            if (!file.isEmpty() && images.size() <= 4) {
-                String imageUrl = imageUploadService.uploadImage(file, productReview.getId());
-                if (imageUrl != null) {
-                    Image reviewImage = new Image();
-                    reviewImage.setImageUrl(imageUrl);
-                    reviewImage.setProductReview(productReview);
-                    productReview.getImages().add(reviewImage);
-                }
-            }
-        }
+        productReview.setImage(imageUploadService.uploadImage(images));
         productReviewRepository.save(productReview);
     }
 

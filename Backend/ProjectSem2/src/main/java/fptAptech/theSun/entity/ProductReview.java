@@ -28,6 +28,9 @@ public class ProductReview extends BaseEntity{
     @Column(name = "status")
     private Integer status;
 
+    @Column(name = "image")
+    private String image;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -35,8 +38,5 @@ public class ProductReview extends BaseEntity{
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Products products;
-
-    @OneToMany(mappedBy = "productReview", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Image> images;
 
 }

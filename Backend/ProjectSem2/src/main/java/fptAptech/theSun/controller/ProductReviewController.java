@@ -24,14 +24,10 @@ public class ProductReviewController {
             @PathVariable("productId") Long productId,
             @RequestParam("comment") String comment,
             @RequestParam("star") Integer star,
-            @RequestParam("images") List<MultipartFile> images
+            @RequestParam("images") MultipartFile images
     ) {
-        try {
-            productReviewService.saveProductReview(productId, comment, star , images);
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+        productReviewService.saveProductReview(productId, comment, star , images);
+        return ResponseEntity.ok().build();
     }
     @PutMapping("/update/{reviewId}")
     @Operation(summary = "Khách hàng sửa đánh giá sản phẩm", description = "Khách hàng nhập comment và star mới")
@@ -47,7 +43,7 @@ public class ProductReviewController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/")
+    @GetMapping("/review")
     @Operation(summary = "Lấy ra danh sách đánh giá", description = "Lấy ra danh sách đánh giá của sản phầm được chọn")
     public ResponseEntity<List<ProductReview>> getProductReviewsByProductId(@PathVariable("productId") Long productId) {
         List<ProductReview> reviews = productReviewService.getProductReviewByProductId(productId);
