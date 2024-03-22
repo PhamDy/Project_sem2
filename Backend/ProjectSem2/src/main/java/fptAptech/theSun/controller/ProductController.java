@@ -1,9 +1,12 @@
 package fptAptech.theSun.controller;
 
 import fptAptech.theSun.dto.CreateProductDto;
+import fptAptech.theSun.dto.FilterDto;
 import fptAptech.theSun.dto.ProductViewDto;
 import fptAptech.theSun.dto.mapper.ObjectMapper;
 import fptAptech.theSun.entity.Products;
+import fptAptech.theSun.respository.ProductRepository;
+import fptAptech.theSun.respository.specification.ProductSpecification;
 import fptAptech.theSun.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -22,6 +25,9 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private ProductRepository productRepository;
+
     @GetMapping("/")
     @Operation(summary = "Lấy ra danh sách sản phẩm", description = "Trả về toàn bộ danh sách sản phẩm có trong hệ thống")
     public ResponseEntity<?> getAllProduct() {
@@ -34,29 +40,6 @@ public class ProductController {
         return new ResponseEntity<>(productService.getProduct(id), HttpStatus.OK);
     }
 
-    @GetMapping("/featured")
-    @Operation(summary = "Lấy ra danh sách sản phẩm đặc sắc", description = "Trả về ds sản phẩm có discount nhiều nhất")
-    public ResponseEntity<List<Products>> getProductFeatured() {
-        return ResponseEntity.ok(productService.getProductFeatured());
-    }
-
-    @GetMapping("/newest")
-    @Operation(summary = "Lấy ra danh sách sản phẩm mới nhất", description = "Trả về ds sản phẩm khởi tạo gần nhất")
-    public ResponseEntity<List<Products>> getProductNewest() {
-        return ResponseEntity.ok(productService.getProductNewest());
-    }
-
-    @GetMapping("/price-asc")
-    @Operation(summary = "Lấy ra danh sách sản phẩm theo giá thấp đến cao")
-    public ResponseEntity<List<Products>> getProductPriceAsc() {
-        return ResponseEntity.ok(productService.getProductPriceAsc());
-    }
-
-    @GetMapping("/price-desc")
-    @Operation(summary = "Lấy ra danh sách sản phẩm theo giá cao đến thấp")
-    public ResponseEntity<List<Products>> getProductPriceDesc() {
-        return ResponseEntity.ok(productService.getProductPriceDesc());
-    }
 
     @GetMapping("/getGender")
     @Operation(summary = "Lấy ra danh sách Gender")
@@ -122,13 +105,6 @@ public class ProductController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
-//    @GetMapping("/search")
-//    @Operation(summary = "Tìm kiếm sản phẩm không phân biệt chữ hoa chữ thường")
-//    public ResponseEntity<?> searchProduct(@RequestParam(name = "keyword") String keyword) {
-//        List<Products> products = productService.searchProduct(keyword);
-//        List<ProductViewDto> productViewDtos = objectMapper.mapListProductsToDto(products);
-//        return new ResponseEntity<>(productViewDtos, HttpStatus.OK);
-//    }
 
     @PostMapping("/addProduct")
     @Operation(summary = "Tạo mới sản phẩm, đồn thời tạo mới warehouse")
@@ -136,6 +112,12 @@ public class ProductController {
         productService.createProduct(dto);
         return new ResponseEntity<>("Add product successfully!", HttpStatus.CREATED);
     }
+
+    @GetMapping("/testFilter")
+    public ResponseEntity<?>testfilter(@RequestBody(required = false) FilterDto dto){
+        return new ResponseEntity<>(productRepository.findAll(ProductSpecification.filterProducts(dto)), HttpStatus.OK);
+    }
+
 
 
 }

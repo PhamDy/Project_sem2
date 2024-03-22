@@ -12,14 +12,6 @@ public interface ProductService {
 
     List<ProductViewDto> getAll();
 
-    List<Products> getProductFeatured();
-
-    List<Products> getProductNewest();
-
-    List<Products> getProductPriceAsc();
-
-    List<Products> getProductPriceDesc();
-
     List<String> getGender();
 
     List<String> getBrand();

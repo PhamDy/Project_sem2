@@ -3,24 +3,15 @@ package fptAptech.theSun.respository;
 import fptAptech.theSun.entity.Products;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface ProductRepository extends JpaRepository<Products, Long> {
-
-    @Query(value = "SELECT * FROM Products ORDER BY discount DESC", nativeQuery = true)
-    List<Products> getListByFeatured();
-
-    @Query(value = "SELECT * FROM Products ORDER BY created_at DESC", nativeQuery = true)
-    List<Products> getListByNewest();
-
-    @Query(value = "SELECT * FROM Products ORDER BY price ASC", nativeQuery = true)
-    List<Products> getListByPriceAsc();
-
-    @Query(value = "SELECT * FROM Products ORDER BY price DESC ", nativeQuery = true)
-    List<Products> getListByPriceDesc();
+@Repository
+public interface ProductRepository extends JpaRepository<Products, Long>, JpaSpecificationExecutor {
 
     @Query(value = "SELECT DISTINCT p.gender FROM Products p ")
     List<String> getByGender();
@@ -74,8 +65,8 @@ public interface ProductRepository extends JpaRepository<Products, Long> {
     @Query("SELECT p FROM Products p WHERE LOWER(p.name) LIKE %:keyword%")
     List<Products> searchProduct(String keyword);
 
-
-
+    @Query(value = "SELECT * FROM Products p WHERE (:gender IS NULL OR p.gender IN (:gender))", nativeQuery = true)
+    List<Products> testFilter(@Param("gender") List<String> gender);
 
 
 }
