@@ -48,6 +48,9 @@ public class ObjectMapper {
                 .img(products.getImg())
                 .price(products.getPrice())
                 .discount(products.getDiscount())
+                .brand(products.getBrand())
+                .gender(products.getGender())
+                .createAt(products.getCreatedAt())
                 .build();
     }
 

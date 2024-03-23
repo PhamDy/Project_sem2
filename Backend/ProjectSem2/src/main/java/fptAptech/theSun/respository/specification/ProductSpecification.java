@@ -3,7 +3,6 @@ package fptAptech.theSun.respository.specification;
 import fptAptech.theSun.dto.FilterDto;
 import fptAptech.theSun.entity.Products;
 import fptAptech.theSun.entity.Warehouse;
-import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
@@ -69,7 +68,57 @@ public class ProductSpecification {
                 // Không thêm điều kiện discount
             }
 
+            List<Predicate> pricePredicates = new ArrayList<>();
 
+            if (criteria.getPrice1() != null && criteria.getPrice1() == 1) {
+                pricePredicates.add(criteriaBuilder.lt(root.get("price"), 50.0));
+            }
+
+            if (criteria.getPrice2() != null && criteria.getPrice2() == 1) {
+                pricePredicates.add(criteriaBuilder.or(
+                        criteriaBuilder.equal(root.get("price"), 50.0),
+                        criteriaBuilder.between(root.get("price"), 50.0, 100.0)
+                ));
+            }
+
+            if (criteria.getPrice3() != null && criteria.getPrice3() == 1) {
+                pricePredicates.add(criteriaBuilder.or(
+                        criteriaBuilder.equal(root.get("price"), 100.0),
+                        criteriaBuilder.between(root.get("price"), 100.0, 250.0)
+                ));
+            }
+
+            if (criteria.getPrice4() != null && criteria.getPrice4() == 1) {
+                pricePredicates.add(criteriaBuilder.or(
+                        criteriaBuilder.equal(root.get("price"), 250.0),
+                        criteriaBuilder.gt(root.get("price"), 250.0)
+                ));
+            }
+
+            if (!pricePredicates.isEmpty()) {
+                Predicate priceCombinedPredicate = criteriaBuilder.or(pricePredicates.toArray(new Predicate[0]));
+                predicates.add(priceCombinedPredicate);
+            }
+
+            if (criteria.getSortDirection() != null && !criteria.getSortDirection().isEmpty()){
+                if (criteria.getSortDirection().equalsIgnoreCase("asc")){
+                    query.orderBy(criteriaBuilder.asc(root.get("price")));
+                } else if (criteria.getSortDirection().equalsIgnoreCase("desc")){
+                    query.orderBy(criteriaBuilder.desc(root.get("price")));
+                }
+            }
+
+            if (criteria.getSortFeatured() != null && !criteria.getSortFeatured().isEmpty()){
+                if (criteria.getSortFeatured().equalsIgnoreCase("desc")){
+                    query.orderBy(criteriaBuilder.desc(root.get("discount")));
+                }
+            }
+
+            if (criteria.getSortNewest() != null && !criteria.getSortNewest().isEmpty()){
+                if (criteria.getSortNewest().equalsIgnoreCase("desc")){
+                    query.orderBy(criteriaBuilder.desc(root.get("createdAt")));
+                }
+            }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
