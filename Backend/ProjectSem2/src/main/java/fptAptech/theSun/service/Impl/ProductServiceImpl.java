@@ -1,9 +1,6 @@
 package fptAptech.theSun.service.Impl;
 
-import fptAptech.theSun.dto.CreateProductDto;
-import fptAptech.theSun.dto.FilterDto;
-import fptAptech.theSun.dto.ProductDetailDto;
-import fptAptech.theSun.dto.ProductViewDto;
+import fptAptech.theSun.dto.*;
 import fptAptech.theSun.dto.mapper.ObjectMapper;
 import fptAptech.theSun.entity.Enum.ProductStatus;
 import fptAptech.theSun.entity.Products;
@@ -15,7 +12,6 @@ import fptAptech.theSun.respository.WarehouseRepository;
 import fptAptech.theSun.respository.specification.ProductSpecification;
 import fptAptech.theSun.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
@@ -107,14 +103,44 @@ public class ProductServiceImpl implements ProductService {
         product.setCreatedBy("Admin");
         product = productRepository.save(product);
 
-        var warehouse = new Warehouse();
-        warehouse.setProducts(product);
-        warehouse.setColor(dto.getColor());
-        warehouse.setSize(dto.getSize());
-        warehouse.setQuantity(dto.getQuantity());
-        warehouse.setCreatedBy("Admin");
-        warehouse.setStatus(dto.getQuantity() == 0 ? ProductStatus.OutOfStock : ProductStatus.InStock);
-        warehouseRepository.save(warehouse);
+        String[] colors = dto.getColor();
+        String[] sizes = dto.getSize();
+
+        for (String color: colors
+             ) {
+            for (String size: sizes
+                 ) {
+                var warehouse = new Warehouse();
+                warehouse.setProducts(product);
+                warehouse.setColor(color);
+                warehouse.setSize(size);
+                warehouse.setQuantity(0);
+                warehouse.setStatus(ProductStatus.OutOfStock);
+                warehouse.setCreatedBy("Admin");
+                warehouseRepository.save(warehouse);
+            }
+        }
+    }
+
+    @Override
+    public void editProduct(EditProductDto dto, Long productId) {
+        var product = productRepository.findById(productId).orElseThrow(() -> new CustomException("Product not found!"));
+        var category = categoryRepository.findByName(dto.getCategoryName());
+        if (category==null){
+            throw new CustomException("Category not found!");
+        }
+        product.setName(dto.getName());
+        product.setCategory(category);
+        product.setImg(dto.getImg());
+        product.setImg1(dto.getImg1());
+        product.setImg2(dto.getImg2());
+        product.setImg3(dto.getImg3());
+        product.setDescription(dto.getDescription());
+        product.setGender(dto.getGender());
+        product.setBrand(dto.getBrand());
+        product.setPrice(dto.getPrice());
+        product.setDiscount(dto.getDiscount());
+        productRepository.save(product);
     }
 
     private Products mapToEntity(CreateProductDto dto){

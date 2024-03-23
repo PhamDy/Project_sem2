@@ -1,6 +1,7 @@
 package fptAptech.theSun.controller;
 
 import fptAptech.theSun.dto.CreateProductDto;
+import fptAptech.theSun.dto.EditProductDto;
 import fptAptech.theSun.dto.FilterDto;
 import fptAptech.theSun.dto.ProductViewDto;
 import fptAptech.theSun.dto.mapper.ObjectMapper;
@@ -54,6 +55,13 @@ public class ProductController {
     public ResponseEntity<?>addProduct(@Valid @RequestBody CreateProductDto dto){
         productService.createProduct(dto);
         return new ResponseEntity<>("Add product successfully!", HttpStatus.CREATED);
+    }
+
+    @PatchMapping("/{id}")
+    @Operation(summary = "Sửa thông tin sản phẩm, không bao gồm size color và số lượng")
+    public ResponseEntity<?>editProduct(@Valid @RequestBody EditProductDto dto, @PathVariable Long id){
+        productService.editProduct(dto, id);
+        return new ResponseEntity<>("Edit product successfully!", HttpStatus.OK);
     }
 
     @GetMapping("/filter")
