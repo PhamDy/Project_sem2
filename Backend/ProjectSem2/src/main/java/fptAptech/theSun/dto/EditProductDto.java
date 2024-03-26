@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CreateProductDto {
+public class EditProductDto {
     @NotEmpty
     private String name;
 
@@ -35,15 +35,9 @@ public class CreateProductDto {
     private Double price;
 
     @NotNull
-    private Double discount = 0.00;
+    private Double discount;
 
     @NotEmpty
     private String categoryName;
-
-    @NotEmpty
-    private String[] color;
-
-    @NotEmpty
-    private String[] size;
 
 }
