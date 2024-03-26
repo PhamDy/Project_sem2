@@ -99,34 +99,31 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
     <script>
-        function saveTokenToLocalStorage(token) {
-            // Lưu token vào localStorage với key là "authToken"
-            localStorage.setItem('authToken', token);
-            console.log('Token saved to localStorage:', token);
-        }
-
+    
         document.getElementById('loginForm').addEventListener('submit', function(event) {
-            event.preventDefault();
+        event.preventDefault();
 
-            const email = document.getElementById('InputName').value;
-            const password = document.getElementById('InputPassword').value;
+        const email = document.getElementById('InputName').value;
+        const password = document.getElementById('InputPassword').value;
 
-            const data = {
-                usernameOrEmail: email,
-                password: password
-            };
+        const data = {
+            usernameOrEmail: email,
+            password: password
+        };
 
-            axios.post('http://localhost:8080/api/users/admin/login', data)
-                .then(function(response) {
-                    const token = response.data.token;
-                    saveTokenToLocalStorage('authToken', token);
-                    window.location.href = 'index.html';
-                })
-                .catch(function(error) {
-                    console.error('Error:', error);
-                    document.getElementById('errorMessage').innerHTML = '<small style="color: red;">Email or Password is wrong. Please try again</small>';
-                });
+        axios.post('http://localhost:8080/api/users/admin/login', data)
+            .then(function(response) {
+                // Lưu token vào SessionStorage
+                const token = response.data.accessToken;
+                sessionStorage.setItem('token', token);
+                window.location.href = 'index.html';
+            })
+            .catch(function(error) {
+                console.error('Error:', error);
+                document.getElementById('errorMessage').innerHTML = '<small style="color: red;">Email or Password is wrong. Please try again</small>';
+            });
         });
+
     </script>
 
 </body>

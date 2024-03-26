@@ -11266,10 +11266,10 @@ footer.sticky-footer .copyright {
 body.sidebar-toggled footer.sticky-footer {
   width: 100%;
 }
-.img_product{
-  width: 100px;
+.product-image{
+  width: 150px;
 }
-.img_product img {
+.product-image img {
   max-width: 100%;
   height: auto;
 }
