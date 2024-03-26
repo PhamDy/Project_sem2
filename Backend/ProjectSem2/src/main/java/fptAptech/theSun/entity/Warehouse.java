@@ -1,6 +1,5 @@
 package fptAptech.theSun.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import fptAptech.theSun.entity.Enum.ProductStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -33,7 +32,6 @@ public class Warehouse extends BaseEntity{
     private ProductStatus status;
 
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name = "product_id")
     private Products products;
 

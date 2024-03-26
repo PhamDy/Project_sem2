@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Instant;
 
 @Service
@@ -30,9 +33,9 @@ public class ImageUploadServiceImpl implements ImageUploadService {
             }
 
             // Tạo thư mục chứa nếu chưa tồn tại
-            File directory = new File(uploadDirectory);
-            if (!directory.exists()) {
-                directory.mkdirs();
+            Path directoryPath = Paths.get(uploadDirectory);
+            if (!Files.exists(directoryPath)) {
+                Files.createDirectories(directoryPath);
             }
 
             // Tạo tên riêng cho file
@@ -40,9 +43,9 @@ public class ImageUploadServiceImpl implements ImageUploadService {
             String uniqueFilename = Instant.now().toEpochMilli() + "_" + originalFilename;
 
             // Lưu file lên server
-            String filePath = uploadDirectory + File.separator + uniqueFilename;
-            file.transferTo(new File(filePath));
-            return filePath;
+            Path filePath = Paths.get(uploadDirectory, uniqueFilename);
+            Files.copy(file.getInputStream(), filePath);
+            return filePath.toString();
         } catch (IOException | java.io.IOException e) {
             e.printStackTrace();
             return null;
