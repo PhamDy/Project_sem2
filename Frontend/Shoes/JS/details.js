@@ -1,5 +1,5 @@
-$(document).ready(function() {
-    function initializeSliders() {
+$(window).on('load', function() {
+    const initializeSliders = () => {
         var mainSlider = $('.img-thumb');
         var subSlider = $('.sub-slider');
 
@@ -30,37 +30,23 @@ $(document).ready(function() {
             subSlider.find('.prod-sub-details').removeClass('selected-sub-img');
             subSlider.find('.prod-sub-details[data-index="' + currentSlide + '"]').addClass('selected-sub-img');
         });
-    }
+    };
 
-    initializeSliders();
+    const initializePage = () => {
+        const tabLinks = document.querySelectorAll('.bd-tab a');
 
-    $(window).on('resize', function(){
-        initializeSliders();
-    });
-});
-
-
-$(document).ready(function() {
-    function initializePage() {
-        var tabLinks = document.querySelectorAll('.bd-tab a');
-
-        tabLinks.forEach(function(tabLink) {
-            tabLink.addEventListener('click', function(event) {
+        tabLinks.forEach(tab => {
+            tab.addEventListener('click', function(event) {
                 event.preventDefault();
 
-                tabLinks.forEach(function(link) {
-                    link.classList.remove('active');
-                });
+                tabLinks.forEach(link => link.classList.remove('active'));
                 this.classList.add('active');
 
-                var targetPaneId = this.getAttribute('href');
+                const targetPaneId = this.getAttribute('href');
+                const targetPane = document.querySelector(targetPaneId);
+                const tabPanes = document.querySelectorAll('.tab-pane');
 
-                var tabPanes = document.querySelectorAll('.tab-pane');
-                tabPanes.forEach(function(pane) {
-                    pane.classList.remove('active', 'show');
-                });
-                
-                var targetPane = document.querySelector(targetPaneId);
+                tabPanes.forEach(pane => pane.classList.remove('active', 'show'));
                 if (targetPane) {
                     targetPane.classList.add('active', 'show');
                 }
@@ -70,35 +56,91 @@ $(document).ready(function() {
         const starLinks = document.querySelectorAll('.review-star-select');
         const hiddenInput = document.getElementById('review-rating');
 
-        starLinks.forEach(star => {
-            star.addEventListener('click', function(event) {
+        starLinks.forEach(starLink => {
+            starLink.addEventListener('click', function(event) {
                 event.preventDefault();
 
                 const value = parseInt(this.getAttribute('data-value'));
                 hiddenInput.value = value;
 
-                starLinks.forEach((s, index) => {
+                starLinks.forEach((star, index) => {
                     if (index < value) {
-                        s.innerHTML = '<i class="fa-solid fa-star"></i>';
+                        star.innerHTML = '<i class="fa-solid fa-star"></i>';
                     } else {
-                        s.innerHTML = '<i class="fa-regular fa-star"></i>';
+                        star.innerHTML = '<i class="fa-regular fa-star"></i>';
                     }
                 });
             });
         });
 
-        var reviewLink = document.getElementById('toggleReview');
+        const reviewLink = document.getElementById('toggleReview');
 
         reviewLink.addEventListener('click', function(event) {
             event.preventDefault();
 
-            var reviewForm = document.getElementById('pr-forms');
+            const reviewForm = document.getElementById('pr-forms');
             reviewForm.classList.toggle('openForm');
         });
-    }
+        
+        const prSelectImage = document.querySelector('.pr-select-image');
+        const prFileInput = document.getElementById('pr-file');
+        const prImgArea = document.querySelector('.pr-img-area');
+        const prImageSrcInput = document.getElementById('pr-image-src');
+        
+        prSelectImage.addEventListener('click', function(event) {
+            event.preventDefault();
+            prFileInput.click();
+        });
+        
+        prFileInput.addEventListener('change', function () {
+            const prImage = this.files[0];
+            const prImgUrl = URL.createObjectURL(prImage);
+            prImg = document.createElement('img');
+            prImg.className = "review-image-pr";
+            prImg.src = prImgUrl; 
+            prImgArea.appendChild(prImg);
+            prImgArea.classList.add('active');
+            prImgArea.dataset.img = prImage.name;
+            prImageSrcInput.value = prImgUrl;
+        });
+    };
 
+    document.getElementById('submit-pr-forms').addEventListener('click', function(event) {
+        event.preventDefault();
+    
+        const rating = document.getElementById('review-rating').value;
+        const productId = document.querySelector('input[name="productId"]').value;
+        const reviewBody = document.getElementById('review-body').value;
+        const imageFile = document.getElementById('pr-file').files[0];
+    
+        const formData = new FormData();
+        formData.append('comment', reviewBody);
+        formData.append('star', rating);
+        formData.append('images', imageFile);
+    
+        axios.post(`http://localhost:8080/api/products/${productId}/create`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+        .then(response => {
+            window.location.reload();
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });          
+    });
+    
+
+    initializeSliders();
     initializePage();
+
+    $(window).on('resize', function(){
+        initializeSliders();
+    });
 });
+
+
 
 function getProductIDFromURL() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -114,22 +156,30 @@ if (productId) {
 }
 
 function callProductInDetail(productId) {
-  axios.get("http://localhost:8080/api/products/" + productId)
-      .then(response => {
-          const product = response.data;
-          createProductBoxes(product);
-          createProductDetails(product);
-          console.log("product", product); 
-      })
-      .catch(error => {
-          console.error('Error fetching product details:', error);
-      });
-}
+    Promise.all([
+      axios.get(`http://localhost:8080/api/products/${productId}`),
+      axios.get(`http://localhost:8080/api/products/${productId}/review`)
+    ])
+    .then(responses => {
+      const productResponse = responses[0];
+      const reviewResponse = responses[1];
+  
+      const product = productResponse.data;
+      const review = reviewResponse.data;
+  
+      createProductBoxes(product);
+      createProductDetails(product, review);
+    })
+    .catch(error => {
+      console.error('Error fetching product details:', error);
+    });
+  }
+
+
 
 document.body.addEventListener('click', function(event) {
-        
     if (event.target.classList.contains('addToCartButton')) {
-        
+        event.preventDefault();
         const clickedProductId = event.target.dataset.productId;
 
         const urlParams = new URLSearchParams(window.location.search);
@@ -168,6 +218,7 @@ document.body.addEventListener('click', function(event) {
         history.replaceState(null, null, window.location.pathname + `?id=${productIdFromUrls}`);
     }
 });
+
 
 
 
@@ -447,204 +498,221 @@ function createProductBoxes(product) {
     productContainer.appendChild(productBox);
   }
 
-function createProductDetails(product) {
-  const productContainerDetails = document.getElementById('tab-pd-details');
-
-  const { id, name, img1, img2, img3, price, desc ,avatar, brand, color, size, categoryName} = product;
-
-  const productBoxs = document.createElement('div');
-  productBoxs.classList.add('tab-pd-details-second');
-  productBoxs.id = 'details';
-
-  productBoxs.innerHTML = `
-  <div class="bd-tab">
-      <div class="container container-details-page">
+  function createProductDetails(product, reviews) {
+    const productContainerDetails = document.getElementById('tab-pd-details');
+  
+    // Extracting product details
+    const { id, name, img1, img2, img3, price, desc ,avatar, brand, color, size, categoryName } = product;
+  
+    // Create product details HTML
+    const productBoxs = document.createElement('div');
+    productBoxs.classList.add('tab-pd-details-second');
+    productBoxs.id = 'details';
+  
+    productBoxs.innerHTML = `
+      <div class="bd-tab">
+        <div class="container container-details-page">
           <ul class="tab-prod">
-              <li class="relative" style="list-style: none;">
-                  <a href="#des" class="underline_scale active show">DESCRIPTION</a>
-              </li>
-              <li class="relative" style="list-style: none;">
-                  <a href="#add" class="underline_scale">
-                      ADDITIONAL INFORMATION</a>
-              </li>
-              <li class="relative" style="list-style: none;">
-                  <a href="#rev" class="underline_scale">
-                      REVIEW</a>
-              </li>
+            <li class="relative" style="list-style: none;">
+              <a href="#des" class="underline_scale active show">DESCRIPTION</a>
+            </li>
+            <li class="relative" style="list-style: none;">
+              <a href="#add" class="underline_scale">
+                ADDITIONAL INFORMATION</a>
+            </li>
+            <li class="relative" style="list-style: none;">
+              <a href="#rev" class="underline_scale">
+                REVIEW</a>
+            </li>
           </ul>
+        </div>
       </div>
-  </div>
-  <div class="tab-content container" style="max-width: 1170px!important;">
-
-      <div class="tab-pane fade active show" id="des">
-        <div class="desc product-desc"><div style="all: unset;" class="" id="">
-  <p><span>${desc}</span></p>
-  <p><span>Model:&nbsp;${name} - ${color}<br>Color: ${color}<br>Size:&nbsp;${size}<br>SKU:&nbsp;${id}<br>Category: ${categoryName}<br>Release Date: Unknown<br>Condition: Brand New and 100% Authentic</span><span><br></span></p>
-  </div>
-        </div>      
-      </div>
-      
-      
-      <div class="tab-pane fade tab-addition" id="add">
-        
+      <div class="tab-content container" style="max-width: 1170px!important;">
+        <div class="tab-pane fade active show" id="des">
+          <div class="desc product-desc">
+            <div style="all: unset;" class="" id="">
+              <p><span>${desc}</span></p>
+              <p><span>Model:&nbsp;${name} - ${color}<br>Color: ${color}<br>Size:&nbsp;${size}<br>SKU:&nbsp;${id}<br>Category: ${categoryName}<br>Release Date: Unknown<br>Condition: Brand New and 100% Authentic</span><span><br></span></p>
+            </div>
+          </div>      
+        </div>
+        <div class="tab-pane fade tab-addition" id="add">
         <div class="">
-          <div class="row justify-content-center">
-            <div class="col-lg-8 col-md-6">
-              <div class="title_content">
-                <p class="more_info">More Infomation To You</p>
-                <h3 class="">Things you need to know</h3>
+        <div class="row justify-content-center">
+          <div class="col-lg-8 col-md-6">
+            <div class="title_content">
+              <p class="more_info">More Infomation To You</p>
+              <h3 class="">Things you need to know</h3>
+            </div>
+            <div class="row">
+              <div class="col-lg-6 content1">
+                <p class="info_1">We use industry standard SSL encryption to protect your details. Potentially sensitive information such as your name, address and card details are encoded so they can only be read on the secure server.</p>
+                <ul class="px-0 list-unstyled">
+                  <li>Safe Payments</li>
+                  <li>Accept Credit Cart</li>
+                  <li>Different Payment Method</li>
+                  <li>Price Include VAT</li>
+                  <li>Easy To Order</li>
+                </ul>
               </div>
-              <div class="row">
-                <div class="col-lg-6 content1">
-                  <p class="info_1">We use industry standard SSL encryption to protect your details. Potentially sensitive information such as your name, address and card details are encoded so they can only be read on the secure server.</p>
+              <div class="col-lg-6 content2">
+                <div class="info2">
+                  <h3>Express Delivery</h3>
                   <ul class="px-0 list-unstyled">
-                    <li>Safe Payments</li>
-                    <li>Accept Credit Cart</li>
-                    <li>Different Payment Method</li>
-                    <li>Price Include VAT</li>
-                    <li>Easy To Order</li>
+                    <li>Europe &amp; USA within 2-4 days</li>
+                    <li>Rest of the world within 3-7 days</li>
+                    <li>Selected locations</li>
                   </ul>
                 </div>
-                <div class="col-lg-6 content2">
-                  <div class="info2">
-                    <h3>Express Delivery</h3>
-                    <ul class="px-0 list-unstyled">
-                      <li>Europe &amp; USA within 2-4 days</li>
-                      <li>Rest of the world within 3-7 days</li>
-                      <li>Selected locations</li>
-                    </ul>
-                  </div>
-                  <div class="info2">
-                    <h3>Need more information</h3>
-                    <ul class="px-0 list-unstyled">
-                      <li><a href="">Orders &amp; Shipping</a></li>
-                      <li><a href="">Returns &amp; Refunds</a></li>
-                      <li><a href="">Payments</a></li>
-                      <li><a href="">Your Orders</a></li>
-                    </ul>
-                  </div>
+                <div class="info2">
+                  <h3>Need more information</h3>
+                  <ul class="px-0 list-unstyled">
+                    <li><a href="">Orders &amp; Shipping</a></li>
+                    <li><a href="">Returns &amp; Refunds</a></li>
+                    <li><a href="">Payments</a></li>
+                    <li><a href="">Your Orders</a></li>
+                  </ul>
                 </div>
               </div>
             </div>
-            <div class="col-lg-4 col-md-6">
-              <img class=" ls-is-cached lazyloaded" alt="" src="${avatar}" style="max-width: 360px; max-height: 360px;">
-            </div>
+          </div>
+          <div class="col-lg-4 col-md-6">
+            <img class=" ls-is-cached lazyloaded" alt="" src="${avatar}" style="max-width: 360px; max-height: 360px;">
           </div>
         </div>
-        
       </div>
-  
-      <div class="tab-pane" id="rev">
-          <div id="product-review">
-              <div class="pr-container">
-                  <div class="pr-header">
-                      <h2 class="pr-header-title">Customer Reviews</h2>
-                      <div class="pr-summary">
-                          <span class="pr-starrating">
-                              <i class="fa-solid fa-star"></i>
-                              <i class="fa-solid fa-star"></i>
-                              <i class="fa-solid fa-star"></i>
-                              <i class="fa-solid fa-star"></i>
-                              <i class="fa-regular fa-star"></i>
-                          </span>
-                          <span class="pr-summary-caption">
-                              <span>Based on 1 review</span>
-                          </span>
-                          <span class="pr-summary-actions">
-                          <a href="#" id="toggleReview">Write a review</a>
-                        </span>
-                      </div>
-                  </div>
-                  <div class="pr-content">
-                      <div class="pr-form" id="pr-forms">
-                          <form action="">
-                              <input type="hidden" name="review[rating]" id="review-rating" value="">
-                              <input type="hidden" name="product-id" value="${id}">
-
-                              <fieldset class="pr-form-contact">
-                                  <div class="pr-form-contact-name">
-                                      <label class="pr-form-label" for="">Name</label>
-                                      <input class="pr-form-input-name" type="text" name="user-name" value="" placeholder="Enter your name">
-                                  </div>
-                                  <div class="pr-form-contact-email">
-                                      <label class="pr-form-label" for="">Email</label>
-                                      <input class="pr-form-input-email" type="text" name="user-email" value="" id="" placeholder="alex.ferguson@example.com">
-                                  </div>
-                              </fieldset>
-                              <fieldset class="pr-form-review">
-                                  <div class="pr-form-review-rating">
-                                      <label class="pr-form-label" for="">Rating</label>
-                                      <div class="pr-form-input-star">
-                                          <a href="#" class="review-star-select" data-value="1" aria-label="1 of 5 stars"><i class="fa-regular fa-star"></i></a>
-                                          <a href="#" class="review-star-select" data-value="2" aria-label="2 of 5 stars"><i class="fa-regular fa-star"></i></a>
-                                          <a href="#" class="review-star-select" data-value="3" aria-label="3 of 5 stars"><i class="fa-regular fa-star"></i></a>
-                                          <a href="#" class="review-star-select" data-value="4" aria-label="4 of 5 stars"><i class="fa-regular fa-star"></i></a>
-                                          <a href="#" class="review-star-select" data-value="5" aria-label="5 of 5 stars"><i class="fa-regular fa-star"></i></a>
-                                      </div>
-                                  </div>
-                                  <div class="pr-form-review-title">
-                                      <label class="pr-form-label" for="">Review Title</label>
-                                      <input class="pr-form-input-title" type="text" name="user-title" placeholder="Give your review a title">
-                                  </div>
-                                  <div class="pr-form-review-body">
-                                      <label class="pr-form-label" for="">Body of Review
-                                          <span class="character-remaining">(1500)</span>
-                                      </label>
-                                      <div class="pr-form-input">
-                                          <textarea class="pr-form-input-body" id="" name="review[body]" rows="10" placeholder="Write your comments here" style="height: 256px;"></textarea>
-                                        </div>
-                                  </div>
-                              </fieldset>
-                              <fieldset class="pr-form-actions">
-                                  <input class="pr-button" type="submit" value="Submit Review">
-                              </fieldset>
-                          </form>
-                      </div>
-                      <div class="pr-reviews">
-                          <div class="pr-review">
-                              <div class="pr-review-header">
-                                  <span class="pr-starrating">
-                                      <i class="fa-solid fa-star"></i>
-                                      <i class="fa-solid fa-star"></i>
-                                      <i class="fa-solid fa-star"></i>
-                                      <i class="fa-solid fa-star"></i>
-                                      <i class="fa-regular fa-star"></i>
-                                  </span>
-                                  <h3 class="pr-review-header-title">Demo</h3>
-                                  <span class="pr-review-header-created">
-                                      <strong>markus</strong> on <strong>Jan 12, 2024</strong>
-                                  </span>
-                              </div>
-                              <div class="pr-review-content">
-                                  <p class="pr-review-content-body">In the bustling streets of the city, amidst the hurried footsteps and cacophony of life, there exists a silent plight often overlooked—the tale of the bad shoe. A pair of shoes can be a vessel of comfort, a shield against the harshness of the pavement, but when they fail, they become a burden, a source of agony that taints every step taken.
-
-Imagine, if you will, a pair of shoes with soles worn thin, like the pages of an over-read book, each step a painful reminder of their impending demise. These shoes, once sturdy and reliable, now betray their wearer with every misstep, every sharp stone that penetrates their feeble defenses. The leather, once supple and supportive, now creased and cracked, no longer providing the necessary structure to keep the foot secure.
-
-Such shoes tell a story—a story of neglect, perhaps, or of circumstances beyond control. They speak of long days spent on unforgiving terrain, of miles walked in search of sustenance or shelter. They bear the scars of their journey, the marks of a life lived hard and fast.
-
-But the story of bad shoes is not just one of physical discomfort; it is also a tale of consequences, both immediate and long-term. With every step taken in ill-fitting footwear, the body suffers—muscles strain, tendons stretch, and joints ache. Over time, these seemingly minor discomforts can lead to more serious issues, such as chronic pain, joint damage, and even deformities.
-
-Moreover, the mental toll of wearing bad shoes should not be underestimated. Imagine the frustration of knowing that something as simple as footwear is holding you back, preventing you from fully enjoying life's adventures. Imagine the self-consciousness that comes with wearing shoes so worn and tattered that they draw stares and whispers wherever you go.
-
-And yet, for many, the prospect of replacing these shoes is not as simple as it may seem. Financial constraints, lack of access to suitable alternatives, or simply a sense of resignation to one's fate can all conspire to keep a person trapped in the cycle of bad footwear.
-
-But there is hope amidst the despair, for the tale of bad shoes is not without its lessons. It teaches us the importance of investing in quality footwear, of taking care of the tools that carry us through life's journey. It reminds us to listen to our bodies, to heed the warning signs of discomfort before they escalate into something more serious. And perhaps most importantly, it encourages us to extend a hand—or a sole—to those who find themselves walking the same rocky path, offering support and solidarity in their time of need.
-
-So let us not turn a blind eye to the plight of the bad shoe, but rather let us learn from its story and strive to do better—for ourselves, for each other, and for the countless soles that tread the pavement each day in search of a better tomorrow.</p>
-                              </div>
-                              <div class="pr-review-footer">
-                                  <a class="pr-report-button" href="">Report as inappropriate</a>
-                              </div>
-                          </div>
-                      </div>
+        </div>
+        <div class="tab-pane" id="rev">
+          <div id="product-review" class="pr-reviews">
+          <div class="pr-header">
+          <h2 class="pr-header-title">Customer Reviews</h2>
+          <div class="pr-summary">
+              <span class="pr-starrating">
+                  <i class="fa-solid fa-star"></i>
+                  <i class="fa-solid fa-star"></i>
+                  <i class="fa-solid fa-star"></i>
+                  <i class="fa-solid fa-star"></i>
+                  <i class="fa-regular fa-star"></i>
+              </span>
+              <span class="pr-summary-caption">
+                  <span>Based on 1 review</span>
+              </span>
+              <span class="pr-summary-actions">
+              <a href="#" id="toggleReview">Write a review</a>
+            </span>
+          </div>
+      </div>
+      <div class="pr-form" id="pr-forms">
+      <form id="review-form" enctype="multipart/form-data">
+      <input type="hidden" name="review[rating]" id="review-rating" value="">
+          <input type="hidden" name="productId" value="${id}">
+          <input type="hidden" name="pr-image-src" id="pr-image-src" value="">
+          
+          
+          <fieldset class="pr-form-review">
+              <div class="pr-form-review-rating">
+                  <label class="pr-form-label">Rating</label>
+                  <div class="pr-form-input-star" id="star-rating">
+                          <a href="#" class="review-star-select" data-value="1" aria-label="1 of 5 stars"><i class="fa-regular fa-star"></i></a>
+                          <a href="#" class="review-star-select" data-value="2" aria-label="2 of 5 stars"><i class="fa-regular fa-star"></i></a>
+                          <a href="#" class="review-star-select" data-value="3" aria-label="3 of 5 stars"><i class="fa-regular fa-star"></i></a>
+                          <a href="#" class="review-star-select" data-value="4" aria-label="4 of 5 stars"><i class="fa-regular fa-star"></i></a>
+                          <a href="#" class="review-star-select" data-value="5" aria-label="5 of 5 stars"><i class="fa-regular fa-star"></i></a>
                   </div>
               </div>
+              <div class="pr-form-review-body">
+                  <label class="pr-form-label" for="review-body">Body of Review</label>
+                  <textarea class="pr-form-input-body" id="review-body" name="reviewBody" rows="10" placeholder="Write your comments here" style="height: 256px;"></textarea>
+              </div>
+          </fieldset>
+          
+          <fieldset class="pr-form-image">
+              <input type="file" id="pr-file" accept="image/" hidden>
+              <div class="pr-img-area active" data-img="">
+                  <i class='bx bxs-cloud-upload'></i>
+                  <h3>Upload Image</h3>
+                  <p>Image Size</p>
+              </div>
+              <button class="pr-select-image" id="submit-pr-form">Select Image</button>
+          </fieldset>
+          
+          <fieldset class="pr-form-actions">
+          <button class="pr-button" id="submit-pr-forms">Submit Review</button>
+      </fieldset>
+      </form>
+      </div>
           </div>
-  </div>
-    </div>
-    
-    
+        </div>
+      </div>
+    `;
+  
+    productContainerDetails.appendChild(productBoxs);
+  
+    const prReviews = productBoxs.querySelector('.pr-reviews');
+    reviews.forEach(review => {
+      const { comment, star, status, image, user, createdAt } = review;
+      const { userName } = user;
 
-`;
-productContainerDetails.appendChild(productBoxs);
-}
+      console.log(review)
+  
+      const starRatingContainer = document.createElement('span');
+      const starRemainingContainer = document.createElement('span');
+      starRatingContainer.classList.add('pr-starrating');
+      starRemainingContainer.classList.add('pr-starrating');
+  
+      const totalStars = 5;
+      const solidStars = Math.min(Math.floor(star), 5);
+      const remainder = Math.max(totalStars - solidStars, 0);
+      
+      console.log('Solid Stars:', solidStars);
+      console.log('Remainder:', remainder);
+      
+      for (let i = 0; i < solidStars; i++) {
+          const solidStarIcon = document.createElement('i');
+          solidStarIcon.classList.add('fa-solid', 'fa-star');
+          starRatingContainer.appendChild(solidStarIcon);
+      }
+      
+      for (let i = 0; i < remainder; i++) {
+          const regularStarIcon = document.createElement('i');
+          regularStarIcon.classList.add('fa-regular', 'fa-star');
+          starRemainingContainer.appendChild(regularStarIcon);
+      }
+      
+  
+      const reviewContainer = document.createElement('div');
+      reviewContainer.classList.add('pr-review');
+  
+      reviewContainer.innerHTML = `
+      <div class="container">
+      <div class="row">
+        <div class="col-md-9">
+      <div class="pr-review-header">
+        <span class="pr-starrating">
+          ${starRatingContainer.outerHTML}
+          ${starRemainingContainer.outerHTML}
+        </span>
+        <h3 class="pr-review-header-title"></h3>
+        <span class="pr-review-header-created">
+          <strong>${userName}</strong> on <strong>${createdAt}</strong>
+        </span>
+      </div>
+      <div class="pr-review-content">
+        <p class="pr-review-content-body">${comment}</p>
+      </div>
+      </div>
+      <div class="col-md-3">
+        <div class="pr-image-container">
+          <img src="${image}" alt="">
+        </div>
+        <div class="pr-review-footer">
+        <a class="pr-report-button" href="">Report as inappropriate</a>
+      </div>
+      </div>
+      </div>
+      </div>
+      `;
+  
+      prReviews.appendChild(reviewContainer);
+    });
+  }
