@@ -1,5 +1,6 @@
 package fptAptech.theSun.dto;
 
+import fptAptech.theSun.entity.Enum.ProductStatus;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -34,6 +35,8 @@ public class CreateProductDto {
     @NotNull
     private Double price;
 
+    private ProductStatus status;
+
     @NotNull
     private Double discount = 0.00;
 
@@ -41,9 +44,13 @@ public class CreateProductDto {
     private String categoryName;
 
     @NotEmpty
-    private String[] color;
+    private String color;
 
     @NotEmpty
-    private String[] size;
+    private String size;
+
+    @NotNull
+    private Integer quantity;
+
 
 }

@@ -4,8 +4,6 @@ import fptAptech.theSun.entity.Enum.ProductStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
-
 
 @Getter
 @Setter
@@ -58,8 +56,5 @@ public class Products extends BaseEntity{
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
-
-    @OneToMany(mappedBy = "products", fetch = FetchType.EAGER)
-    private List<Warehouse> warehouses;
 
 }

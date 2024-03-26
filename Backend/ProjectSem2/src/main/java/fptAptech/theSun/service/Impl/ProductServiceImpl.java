@@ -1,6 +1,8 @@
 package fptAptech.theSun.service.Impl;
 
-import fptAptech.theSun.dto.*;
+import fptAptech.theSun.dto.CreateProductDto;
+import fptAptech.theSun.dto.ProductDetailDto;
+import fptAptech.theSun.dto.ProductViewDto;
 import fptAptech.theSun.dto.mapper.ObjectMapper;
 import fptAptech.theSun.entity.Enum.ProductStatus;
 import fptAptech.theSun.entity.Products;
@@ -9,9 +11,9 @@ import fptAptech.theSun.exception.CustomException;
 import fptAptech.theSun.respository.CategoryRepository;
 import fptAptech.theSun.respository.ProductRepository;
 import fptAptech.theSun.respository.WarehouseRepository;
-import fptAptech.theSun.respository.specification.ProductSpecification;
 import fptAptech.theSun.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
@@ -72,24 +74,76 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductViewDto> filterProducts(FilterDto dto) {
-        List<Products> products = productRepository.findAll(ProductSpecification.filterProducts(dto));
-        List<ProductViewDto> productView = new ArrayList<>();
-        for (Products item: products
-             ) {
-            ProductViewDto productViewDto = new ProductViewDto();
-            productViewDto.setId(item.getId());
-            productViewDto.setName(item.getName());
-            productViewDto.setCategoryName(item.getCategory().getName());
-            productViewDto.setBrand(item.getBrand());
-            productViewDto.setDiscount(item.getDiscount());
-            productViewDto.setPrice(item.getPrice());
-            productViewDto.setImg(item.getImg());
-            productViewDto.setGender(item.getGender());
-            productViewDto.setCreateAt(item.getCreatedAt());
-            productView.add(productViewDto);
+    public List<Products> getProductFeatured() {
+        return productRepository.getListByFeatured();
+    }
+
+    @Override
+    public List<Products> getProductNewest() {
+        return productRepository.getListByNewest();
+    }
+
+    @Override
+    public List<Products> getProductPriceAsc() {
+        return productRepository.getListByPriceAsc();
+    }
+
+    @Override
+    public List<Products> getProductPriceDesc() {
+        return productRepository.getListByPriceDesc();
+    }
+
+    @Override
+    public List<Products> getProductsByFilters(String gender1, String gender2, String gender3,
+                                              String brand1, String brand2, String brand3, String brand4, String brand5,
+                                              String category1, String category2, String category3,
+                                              String color1, String color2, String color3, String color4, String color5, String color6, String color7,
+                                              Boolean discount, Boolean under50, Boolean between50And100, Boolean between100And250, Boolean over250,
+                                              String sortDirection, String sortBy) {
+        Sort sort;
+        if ("discount".equals(sortBy)) {
+            sort = Sort.by(sortDirection.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, "discount");
+        } else if ("createdAt".equals(sortBy)) {
+            sort = Sort.by(sortDirection.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, "createdAt");
+        } else {
+            sort = Sort.by(sortDirection.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, "price");
         }
-        return productView;
+        return productRepository.productsByFilterAll(gender1, gender2, gender3,
+                brand1, brand2, brand3, brand4, brand5,
+                category1, category2, category3,
+                color1, color2, color3, color4, color5, color6, color7,
+                discount, under50, between50And100, between100And250, over250,
+                sort);
+    }
+
+//    public List<Products> getProductsByFilters(List<String> gender,
+//                                               String brand1, String brand2, String brand3, String brand4, String brand5,
+//                                               String category1, String category2, String category3,
+//                                               String color1, String color2, String color3, String color4, String color5, String color6, String color7,
+//                                               Boolean discount, Boolean under50, Boolean between50And100, Boolean between100And250, Boolean over250,
+//                                               String sortDirection, String sortBy) {
+//        Sort sort;
+//        if ("discount".equals(sortBy)) {
+//            sort = Sort.by(sortDirection.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, "discount");
+//        } else if ("createdAt".equals(sortBy)) {
+//            sort = Sort.by(sortDirection.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, "createdAt");
+//        } else {
+//            sort = Sort.by(sortDirection.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC, "price");
+//        }
+//
+//        return productRepository.productsByFilterAll(gender,
+//                brand1, brand2, brand3, brand4, brand5,
+//                category1, category2, category3,
+//                color1, color2, color3, color4, color5, color6, color7,
+//                discount, under50, between50And100, between100And250, over250,
+//                sort);
+//    }
+
+
+    @Override
+    public List<Products> searchProduct(String keyword) {
+        List<Products> result = productRepository.searchProduct(keyword);
+        return result;
     }
 
     @Override
@@ -103,44 +157,14 @@ public class ProductServiceImpl implements ProductService {
         product.setCreatedBy("Admin");
         product = productRepository.save(product);
 
-        String[] colors = dto.getColor();
-        String[] sizes = dto.getSize();
-
-        for (String color: colors
-             ) {
-            for (String size: sizes
-                 ) {
-                var warehouse = new Warehouse();
-                warehouse.setProducts(product);
-                warehouse.setColor(color);
-                warehouse.setSize(size);
-                warehouse.setQuantity(0);
-                warehouse.setStatus(ProductStatus.OutOfStock);
-                warehouse.setCreatedBy("Admin");
-                warehouseRepository.save(warehouse);
-            }
-        }
-    }
-
-    @Override
-    public void editProduct(EditProductDto dto, Long productId) {
-        var product = productRepository.findById(productId).orElseThrow(() -> new CustomException("Product not found!"));
-        var category = categoryRepository.findByName(dto.getCategoryName());
-        if (category==null){
-            throw new CustomException("Category not found!");
-        }
-        product.setName(dto.getName());
-        product.setCategory(category);
-        product.setImg(dto.getImg());
-        product.setImg1(dto.getImg1());
-        product.setImg2(dto.getImg2());
-        product.setImg3(dto.getImg3());
-        product.setDescription(dto.getDescription());
-        product.setGender(dto.getGender());
-        product.setBrand(dto.getBrand());
-        product.setPrice(dto.getPrice());
-        product.setDiscount(dto.getDiscount());
-        productRepository.save(product);
+        var warehouse = new Warehouse();
+        warehouse.setProducts(product);
+        warehouse.setColor(dto.getColor());
+        warehouse.setSize(dto.getSize());
+        warehouse.setQuantity(dto.getQuantity());
+        warehouse.setCreatedBy("Admin");
+        warehouse.setStatus(dto.getQuantity() == 0 ? ProductStatus.OutOfStock : ProductStatus.InStock);
+        warehouseRepository.save(warehouse);
     }
 
     private Products mapToEntity(CreateProductDto dto){
