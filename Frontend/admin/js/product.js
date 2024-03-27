@@ -1,43 +1,43 @@
-const dataTable = $('#dataTable').DataTable({
-    createdRow: function (row, data, dataIndex) {
-        $(row).find('td:last').addClass('btn-actions');
-    }
-});
+// const dataTable = $('#dataTable').DataTable({
+//     createdRow: function (row, data, dataIndex) {
+//         $(row).find('td:last').addClass('btn-actions');
+//     }
+// });
 
 
-async function getProducts() {
-    try {
-        const response = await axios.get('http://localhost:8080/api/products/');
-        const data = response.data;
-        const dataTable = $('#dataTable').DataTable(); // Initialize DataTables
+// async function getProducts() {
+//     try {
+//         const response = await axios.get('http://localhost:8080/api/products/');
+//         const data = response.data;
+//         const dataTable = $('#dataTable').DataTable(); // Initialize DataTables
         
-        // Clear existing rows in the table
-        dataTable.clear().draw();
+//         // Clear existing rows in the table
+//         dataTable.clear().draw();
         
-        // Add new data rows
-        data.forEach(item => {
-            dataTable.row.add([
-                item.id,
-                `<img src="${item.img}" alt="Product Image" class="product-image">`,
-                item.name,
-                item.categoryName,
-                item.brand,
-                item.price,
-                item.discount,
-                `<td class="btn-actions">
-                    <button class="btn btn-primary" onclick="openDetailsModal('${item.id}')">Details</button>
-                    <button class="btn btn-warning" onclick="openEditProductPopup('${item.id}')">Edit</button>
-                    <button class="btn btn-warning" onclick="openUpdateModal('${item.id}')">Update</button>
-                    <button class="btn btn-danger" onclick="remove('${item._id}')">Delete</button>
-                </td>`
-            ]).draw(false);
-        });
-    } catch (error) {
-        console.error('Error fetching data:', error);
-    }
-}
+//         // Add new data rows
+//         data.forEach(item => {
+//             dataTable.row.add([
+//                 item.id,
+//                 `<img src="${item.img}" alt="Product Image" class="product-image">`,
+//                 item.name,
+//                 item.categoryName,
+//                 item.brand,
+//                 item.price,
+//                 item.discount,
+//                 `<td>
+//                     <button class="btn btn-primary" onclick="openDetailsModal('${item.id}')">Details</button>
+//                     <button class="btn btn-warning" onclick="openEditProductPopup('${item.id}')">Edit</button>
+//                     <button class="btn btn-warning" onclick="openUpdateModal('${item.id}')">Update</button>
+//                     <button class="btn btn-danger" onclick="remove('${item._id}')">Delete</button>
+//                 </td>`
+//             ]).draw(false);
+//         });
+//     } catch (error) {
+//         console.error('Error fetching data:', error);
+//     }
+// }
 
-getProducts();
+// getProducts();
 
 // Function to open details modal and populate details
 function openDetailsModal(productId) {
