@@ -23,9 +23,4 @@ public class ImageUploadController {
         }
     }
 
-    @DeleteMapping("/{filename}")
-    public ResponseEntity<String> deleteImage(@PathVariable String filename) {
-        return imageUploadService.deleteImage(filename);
-    }
-
 }
