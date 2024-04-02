@@ -1,5 +1,6 @@
 package fptAptech.theSun.service.Impl;
 
+import fptAptech.theSun.dto.ProductReviewDto;
 import fptAptech.theSun.entity.ProductReview;
 import fptAptech.theSun.entity.Products;
 import fptAptech.theSun.entity.User;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -49,7 +51,7 @@ public class ProductReviewServiceImpl implements ProductReviewService {
     }
 
     @Override
-    public void updateReview(Long reviewId, String comment, int star) {
+    public void updateReview(Long reviewId, ProductReviewDto productReviewDto) {
         ProductReview existingReview = productReviewRepository.findById(reviewId)
                 .orElseThrow(() -> new CustomException("Review not found!"));
 
@@ -61,8 +63,10 @@ public class ProductReviewServiceImpl implements ProductReviewService {
             throw new CustomException("You are not authorized to update this review!");
         }
 
-        existingReview.setComment(comment);
-        existingReview.setStar(star);
+        existingReview.setComment(productReviewDto.getComment());
+        existingReview.setStar(productReviewDto.getStar());
+        existingReview.setUpdatedAt(LocalDateTime.now());
+        existingReview.setUpdatedBy("User");
 
         productReviewRepository.save(existingReview);
     }
