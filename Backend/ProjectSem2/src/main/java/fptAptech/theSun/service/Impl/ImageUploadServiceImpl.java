@@ -66,7 +66,7 @@ public class ImageUploadServiceImpl implements ImageUploadService {
                 // Handle IOException when closing httpClient
             }
         }
-        return null; // Return null if image upload fails
+        return ""; // Return null if image upload fails
     }
 
     private String extractImageUrl(String responseJson) {
