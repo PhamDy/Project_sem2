@@ -78,26 +78,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Products> getProductFeatured() {
-        return productRepository.getListByFeatured();
-    }
-
-    @Override
-    public List<Products> getProductNewest() {
-        return productRepository.getListByNewest();
-    }
-
-    @Override
-    public List<Products> getProductPriceAsc() {
-        return productRepository.getListByPriceAsc();
-    }
-
-    @Override
-    public List<Products> getProductPriceDesc() {
-        return productRepository.getListByPriceDesc();
-    }
-
-    @Override
     public List<Products> getProductsByFilters(String gender1, String gender2, String gender3,
                                               String brand1, String brand2, String brand3, String brand4, String brand5,
                                               String category1, String category2, String category3,

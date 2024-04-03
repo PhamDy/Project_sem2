@@ -35,30 +35,6 @@ public class ProductController {
         return new ResponseEntity<>(productService.getProduct(id), HttpStatus.OK);
     }
 
-    @GetMapping("/featured")
-    @Operation(summary = "Lấy ra danh sách sản phẩm đặc sắc", description = "Trả về ds sản phẩm có discount nhiều nhất")
-    public ResponseEntity<List<Products>> getProductFeatured() {
-        return ResponseEntity.ok(productService.getProductFeatured());
-    }
-
-    @GetMapping("/newest")
-    @Operation(summary = "Lấy ra danh sách sản phẩm mới nhất", description = "Trả về ds sản phẩm khởi tạo gần nhất")
-    public ResponseEntity<List<Products>> getProductNewest() {
-        return ResponseEntity.ok(productService.getProductNewest());
-    }
-
-    @GetMapping("/price-asc")
-    @Operation(summary = "Lấy ra danh sách sản phẩm theo giá thấp đến cao")
-    public ResponseEntity<List<Products>> getProductPriceAsc() {
-        return ResponseEntity.ok(productService.getProductPriceAsc());
-    }
-
-    @GetMapping("/price-desc")
-    @Operation(summary = "Lấy ra danh sách sản phẩm theo giá cao đến thấp")
-    public ResponseEntity<List<Products>> getProductPriceDesc() {
-        return ResponseEntity.ok(productService.getProductPriceDesc());
-    }
-
     @GetMapping("/getGender")
     @Operation(summary = "Lấy ra danh sách Gender")
     public ResponseEntity<?> getGender() {
@@ -112,24 +88,8 @@ public class ProductController {
                 discount, under50, between50And100, between100And250, over250,
                 sortDirection, sortBy);
 
-//        List<Products> products = productService.getProductsByFilters(gender,
-//                brand1, brand2, brand3, brand4, brand5,
-//                category1, category2, category3,
-//                color1, color2, color3, color4, color5, color6, color7,
-//                discount, under50, between50And100, between100And250, over250,
-//                sortDirection, sortBy);
-
-
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
-
-//    @GetMapping("/search")
-//    @Operation(summary = "Tìm kiếm sản phẩm không phân biệt chữ hoa chữ thường")
-//    public ResponseEntity<?> searchProduct(@RequestParam(name = "keyword") String keyword) {
-//        List<Products> products = productService.searchProduct(keyword);
-//        List<ProductViewDto> productViewDtos = objectMapper.mapListProductsToDto(products);
-//        return new ResponseEntity<>(productViewDtos, HttpStatus.OK);
-//    }
 
     @PostMapping("/addProduct")
     @Operation(summary = "Tạo mới sản phẩm, đồn thời tạo mới warehouse")
@@ -141,6 +101,7 @@ public class ProductController {
         productService.createProduct(dto, image, image1, image2, image3);
         return new ResponseEntity<>("Add product successfully!", HttpStatus.CREATED);
     }
+
 
 
 }

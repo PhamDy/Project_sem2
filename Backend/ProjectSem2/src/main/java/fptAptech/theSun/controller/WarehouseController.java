@@ -24,6 +24,12 @@ public class WarehouseController {
         return new ResponseEntity<>(quantity, HttpStatus.OK);
     }
 
+    @GetMapping("/color")
+    @Operation(summary = "Lấy ra danh sách color")
+    public ResponseEntity<?> getAllColor() {
+        return new ResponseEntity<>(warehouseService.getAllColor(), HttpStatus.OK);
+    }
+
     @GetMapping("/color/{productId}")
     @Operation(summary = "Lấy ra danh sách color mà productId có")
     public ResponseEntity<?> getColorProduct(@PathVariable Long productId) {

@@ -10,6 +10,9 @@ public interface WarehouseRepository extends JpaRepository<Warehouse, Long> {
 
     Warehouse findByProducts_IdAndColorAndSize(Long productId, String color, String size);
 
+    @Query(value = "SELECT DISTINCT w.color FROM Warehouse w")
+    List<String> getAllColor();
+
     @Query(value = "SELECT DISTINCT w.color FROM Warehouse w WHERE w.products.id = ?1")
     List<String> getByColor(Long productId);
 

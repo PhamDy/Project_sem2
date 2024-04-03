@@ -227,6 +227,7 @@ CREATE TABLE IF NOT EXISTS `product_review` (
    `comment` TEXT NOT NULL,
    `star` INT NOT NULL,
    `status` INT NOT NULL,
+    `image` VARCHAR(255) NOT NULL,
     FOREIGN KEY (`product_id`) REFERENCES products(product_id),
     FOREIGN KEY (`user_id`) REFERENCES users(user_id),
     `updated_at` TIMESTAMP NOT NULL,

@@ -10,18 +10,6 @@ import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Products, Long> {
 
-    @Query(value = "SELECT * FROM Products ORDER BY discount DESC", nativeQuery = true)
-    List<Products> getListByFeatured();
-
-    @Query(value = "SELECT * FROM Products ORDER BY created_at DESC", nativeQuery = true)
-    List<Products> getListByNewest();
-
-    @Query(value = "SELECT * FROM Products ORDER BY price ASC", nativeQuery = true)
-    List<Products> getListByPriceAsc();
-
-    @Query(value = "SELECT * FROM Products ORDER BY price DESC ", nativeQuery = true)
-    List<Products> getListByPriceDesc();
-
     @Query(value = "SELECT DISTINCT p.gender FROM Products p ")
     List<String> getByGender();
 
