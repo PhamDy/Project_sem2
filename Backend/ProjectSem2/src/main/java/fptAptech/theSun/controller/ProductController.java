@@ -93,7 +93,7 @@ public class ProductController {
 
     @PostMapping("/addProduct")
     @Operation(summary = "Tạo mới sản phẩm, đồn thời tạo mới warehouse")
-    public ResponseEntity<?>addProduct(@Valid @RequestBody CreateProductDto dto,
+    public ResponseEntity<?>addProduct(@Valid @ModelAttribute CreateProductDto dto,
                                        @RequestParam("image") MultipartFile image,
                                        @RequestParam("image1") MultipartFile image1,
                                        @RequestParam("image2") MultipartFile image2,
