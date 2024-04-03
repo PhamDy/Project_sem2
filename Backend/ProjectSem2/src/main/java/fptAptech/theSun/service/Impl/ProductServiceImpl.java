@@ -15,6 +15,7 @@ import fptAptech.theSun.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.webjars.NotFoundException;
 
 import java.util.*;
@@ -33,6 +34,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private ImageUploadServiceImpl imageUploadService;
 
     @Override
     public List<ProductViewDto> getAll() {
@@ -147,11 +151,15 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void createProduct(CreateProductDto dto) {
+    public void createProduct(CreateProductDto dto, MultipartFile image, MultipartFile image1, MultipartFile image2, MultipartFile image3) {
         var category = categoryRepository.findByName(dto.getCategoryName());
         if (category==null){
             throw new CustomException("Not found category!");
         }
+        dto.setImg(imageUploadService.uploadImage(image));
+        dto.setImg1(imageUploadService.uploadImage(image1));
+        dto.setImg2(imageUploadService.uploadImage(image2));
+        dto.setImg3(imageUploadService.uploadImage(image3));
         var product = mapToEntity(dto);
         product.setCategory(category);
         product.setCreatedBy("Admin");

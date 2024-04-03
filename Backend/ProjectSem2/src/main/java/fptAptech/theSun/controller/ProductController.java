@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -132,8 +133,12 @@ public class ProductController {
 
     @PostMapping("/addProduct")
     @Operation(summary = "Tạo mới sản phẩm, đồn thời tạo mới warehouse")
-    public ResponseEntity<?>addProduct(@Valid @RequestBody CreateProductDto dto){
-        productService.createProduct(dto);
+    public ResponseEntity<?>addProduct(@Valid @RequestBody CreateProductDto dto,
+                                       @RequestParam("image") MultipartFile image,
+                                       @RequestParam("image1") MultipartFile image1,
+                                       @RequestParam("image2") MultipartFile image2,
+                                       @RequestParam("image3") MultipartFile image3){
+        productService.createProduct(dto, image, image1, image2, image3);
         return new ResponseEntity<>("Add product successfully!", HttpStatus.CREATED);
     }
 

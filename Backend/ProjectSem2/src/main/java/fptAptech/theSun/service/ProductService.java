@@ -5,6 +5,7 @@ import fptAptech.theSun.dto.CreateProductDto;
 import fptAptech.theSun.dto.ProductDetailDto;
 import fptAptech.theSun.dto.ProductViewDto;
 import fptAptech.theSun.entity.Products;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -44,6 +45,6 @@ public interface ProductService {
 
     List<Products> searchProduct(String keyword);
 
-    void createProduct(CreateProductDto dto);
+    void createProduct(CreateProductDto dto, MultipartFile image, MultipartFile image1, MultipartFile image2, MultipartFile image3);
 
 }
