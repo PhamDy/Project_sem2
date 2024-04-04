@@ -108,9 +108,9 @@ public class ProductServiceImpl implements ProductService {
         product.setCategory(category);
         product.setCreatedBy("Admin");
         product.setImg(imageUploadService.uploadImage(img));
-        product.setImg1(imageUploadService.uploadImage(img1));
-        product.setImg2(imageUploadService.uploadImage(img2));
-        product.setImg3(imageUploadService.uploadImage(img3));
+        product.setImg1(img1 != null ? imageUploadService.uploadImage(img1) : "");
+        product.setImg2(img2 != null ? imageUploadService.uploadImage(img2) : "");
+        product.setImg3(img3 != null ? imageUploadService.uploadImage(img3) : "");
         product = productRepository.save(product);
 
         String[] colors = dto.getColor();
@@ -136,7 +136,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void editProduct(EditProductDto dto, Long productId) {
+    public void editProduct(EditProductDto dto, Long productId, MultipartFile img, MultipartFile img1, MultipartFile img2, MultipartFile img3) {
         var product = productRepository.findById(productId).orElseThrow(() -> new CustomException("Product not found!"));
         var category = categoryRepository.findByName(dto.getCategoryName());
         if (category==null){
@@ -144,10 +144,18 @@ public class ProductServiceImpl implements ProductService {
         }
         product.setName(dto.getName());
         product.setCategory(category);
-        product.setImg(dto.getImg());
-        product.setImg1(dto.getImg1());
-        product.setImg2(dto.getImg2());
-        product.setImg3(dto.getImg3());
+        if (img != null) {
+            product.setImg(imageUploadService.uploadImage(img));
+        }
+        if (img1 != null) {
+            product.setImg1(imageUploadService.uploadImage(img1));
+        }
+        if (img2 != null) {
+            product.setImg2(imageUploadService.uploadImage(img2));
+        }
+        if (img3 != null) {
+            product.setImg3(imageUploadService.uploadImage(img3));
+        }
         product.setDescription(dto.getDescription());
         product.setGender(dto.getGender());
         product.setBrand(dto.getBrand());

@@ -63,8 +63,12 @@ public class ProductController {
 
     @PatchMapping("/{id}")
     @Operation(summary = "Sửa thông tin sản phẩm, không bao gồm size color và số lượng")
-    public ResponseEntity<?>editProduct(@Valid @RequestBody EditProductDto dto, @PathVariable Long id){
-        productService.editProduct(dto, id);
+    public ResponseEntity<?>editProduct(@Valid @ModelAttribute EditProductDto dto, @PathVariable Long id,
+                                        @RequestParam(value = "img", required = false) MultipartFile img,
+                                        @RequestParam(value = "img1", required = false) MultipartFile img1,
+                                        @RequestParam(value = "img2", required = false) MultipartFile img2,
+                                        @RequestParam(value = "img3", required = false) MultipartFile img3){
+        productService.editProduct(dto, id, img, img1, img2, img3);
         return new ResponseEntity<>("Edit product successfully!", HttpStatus.OK);
     }
 

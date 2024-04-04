@@ -21,5 +21,5 @@ public interface ProductService {
 
     void createProduct(CreateProductDto dto, MultipartFile img, MultipartFile img1, MultipartFile img2, MultipartFile img3);
 
-    void editProduct(EditProductDto dto, Long id);
+    void editProduct(EditProductDto dto, Long id, MultipartFile img, MultipartFile img1, MultipartFile img2, MultipartFile img3);
 }

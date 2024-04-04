@@ -18,12 +18,12 @@ public class EditProductDto implements Serializable {
     @NotEmpty
     private String name;
 
-    @NotEmpty
-    private String img;
-
-    private String img1 ="";
-    private String img2 ="";
-    private String img3 ="";
+//    @NotEmpty
+//    private String img;
+//
+//    private String img1 ="";
+//    private String img2 ="";
+//    private String img3 ="";
 
     @NotEmpty
     private String description;
