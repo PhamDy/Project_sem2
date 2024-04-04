@@ -1,9 +1,6 @@
 package fptAptech.theSun.service.Impl;
 
-import fptAptech.theSun.dto.CreateProductDto;
-import fptAptech.theSun.dto.FilterDto;
-import fptAptech.theSun.dto.ProductDetailDto;
-import fptAptech.theSun.dto.ProductViewDto;
+import fptAptech.theSun.dto.*;
 import fptAptech.theSun.dto.mapper.ObjectMapper;
 import fptAptech.theSun.entity.Enum.ProductStatus;
 import fptAptech.theSun.entity.Products;
@@ -15,7 +12,6 @@ import fptAptech.theSun.respository.WarehouseRepository;
 import fptAptech.theSun.respository.specification.ProductSpecification;
 import fptAptech.theSun.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.webjars.NotFoundException;
@@ -101,37 +97,63 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void createProduct(CreateProductDto dto, MultipartFile image, MultipartFile image1, MultipartFile image2, MultipartFile image3) {
+    public void createProduct(CreateProductDto dto, MultipartFile img, MultipartFile img1, MultipartFile img2, MultipartFile img3) {
         var category = categoryRepository.findByName(dto.getCategoryName());
         if (category==null){
             throw new CustomException("Not found category!");
         }
-        dto.setImg(imageUploadService.uploadImage(image));
-        dto.setImg1(imageUploadService.uploadImage(image1));
-        dto.setImg2(imageUploadService.uploadImage(image2));
-        dto.setImg3(imageUploadService.uploadImage(image3));
         var product = mapToEntity(dto);
         product.setCategory(category);
         product.setCreatedBy("Admin");
+        product.setImg(imageUploadService.uploadImage(img));
+        product.setImg1(imageUploadService.uploadImage(img1));
+        product.setImg2(imageUploadService.uploadImage(img2));
+        product.setImg3(imageUploadService.uploadImage(img3));
         product = productRepository.save(product);
 
-        var warehouse = new Warehouse();
-        warehouse.setProducts(product);
-        warehouse.setColor(dto.getColor());
-        warehouse.setSize(dto.getSize());
-        warehouse.setQuantity(dto.getQuantity());
-        warehouse.setCreatedBy("Admin");
-        warehouse.setStatus(dto.getQuantity() == 0 ? ProductStatus.OutOfStock : ProductStatus.InStock);
-        warehouseRepository.save(warehouse);
+        String[] colors = dto.getColor();
+        String[] sizes = dto.getSize();
+
+        for (String color: colors
+        ) {
+            for (String size: sizes
+            ) {
+                var warehouse = new Warehouse();
+                warehouse.setProducts(product);
+                warehouse.setColor(color);
+                warehouse.setSize(size);
+                warehouse.setQuantity(0);
+                warehouse.setStatus(ProductStatus.OutOfStock);
+                warehouse.setCreatedBy("Admin");
+                warehouseRepository.save(warehouse);
+            }
+        }
+    }
+
+    @Override
+    public void editProduct(EditProductDto dto, Long productId) {
+        var product = productRepository.findById(productId).orElseThrow(() -> new CustomException("Product not found!"));
+        var category = categoryRepository.findByName(dto.getCategoryName());
+        if (category==null){
+            throw new CustomException("Category not found!");
+        }
+        product.setName(dto.getName());
+        product.setCategory(category);
+        product.setImg(dto.getImg());
+        product.setImg1(dto.getImg1());
+        product.setImg2(dto.getImg2());
+        product.setImg3(dto.getImg3());
+        product.setDescription(dto.getDescription());
+        product.setGender(dto.getGender());
+        product.setBrand(dto.getBrand());
+        product.setPrice(dto.getPrice());
+        product.setDiscount(dto.getDiscount());
+        productRepository.save(product);
     }
 
     private Products mapToEntity(CreateProductDto dto){
         return Products.builder()
                 .name(dto.getName())
-                .img(dto.getImg())
-                .img1(dto.getImg1())
-                .img2(dto.getImg2())
-                .img3(dto.getImg3())
                 .description(dto.getDescription())
                 .gender(dto.getGender())
                 .brand(dto.getBrand())

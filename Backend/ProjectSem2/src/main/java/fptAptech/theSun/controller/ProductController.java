@@ -1,10 +1,8 @@
 package fptAptech.theSun.controller;
 
 import fptAptech.theSun.dto.CreateProductDto;
+import fptAptech.theSun.dto.EditProductDto;
 import fptAptech.theSun.dto.FilterDto;
-import fptAptech.theSun.dto.ProductViewDto;
-import fptAptech.theSun.dto.mapper.ObjectMapper;
-import fptAptech.theSun.entity.Products;
 import fptAptech.theSun.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -13,8 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/products")
@@ -50,21 +46,26 @@ public class ProductController {
 
     @GetMapping("/filter")
     @Operation(summary = "Lấy ra danh sách sản phẩm theo các tiêu chí lọc")
-    public ResponseEntity<?> getProductsByFilters(@RequestBody FilterDto dto) {
+    public ResponseEntity<?> getProductsByFilters(@RequestBody(required = false) FilterDto dto) {
         return new ResponseEntity<>(productService.filterProducts(dto), HttpStatus.OK);
     }
 
     @PostMapping("/addProduct")
-    @Operation(summary = "Tạo mới sản phẩm, đồn thời tạo mới warehouse")
+    @Operation(summary = "Tạo mới sản phẩm, đồng thời tạo mới warehouse")
     public ResponseEntity<?>addProduct(@Valid @ModelAttribute CreateProductDto dto,
-                                       @RequestParam("image") MultipartFile image,
-                                       @RequestParam("image1") MultipartFile image1,
-                                       @RequestParam("image2") MultipartFile image2,
-                                       @RequestParam("image3") MultipartFile image3){
-        productService.createProduct(dto, image, image1, image2, image3);
+                                       @RequestParam("img") MultipartFile img,
+                                       @RequestParam("img1") MultipartFile img1,
+                                       @RequestParam("img2") MultipartFile img2,
+                                       @RequestParam("img3") MultipartFile img3){
+        productService.createProduct(dto, img, img1, img2, img3);
         return new ResponseEntity<>("Add product successfully!", HttpStatus.CREATED);
     }
 
-
+    @PatchMapping("/{id}")
+    @Operation(summary = "Sửa thông tin sản phẩm, không bao gồm size color và số lượng")
+    public ResponseEntity<?>editProduct(@Valid @RequestBody EditProductDto dto, @PathVariable Long id){
+        productService.editProduct(dto, id);
+        return new ResponseEntity<>("Edit product successfully!", HttpStatus.OK);
+    }
 
 }

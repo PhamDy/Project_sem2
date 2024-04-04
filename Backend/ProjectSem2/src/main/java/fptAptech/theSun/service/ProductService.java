@@ -1,11 +1,7 @@
 package fptAptech.theSun.service;
 
 
-import fptAptech.theSun.dto.CreateProductDto;
-import fptAptech.theSun.dto.FilterDto;
-import fptAptech.theSun.dto.ProductDetailDto;
-import fptAptech.theSun.dto.ProductViewDto;
-import fptAptech.theSun.entity.Products;
+import fptAptech.theSun.dto.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -23,6 +19,7 @@ public interface ProductService {
 
     ProductDetailDto getProduct(Long id);
 
-    void createProduct(CreateProductDto dto, MultipartFile image, MultipartFile image1, MultipartFile image2, MultipartFile image3);
+    void createProduct(CreateProductDto dto, MultipartFile img, MultipartFile img1, MultipartFile img2, MultipartFile img3);
 
+    void editProduct(EditProductDto dto, Long id);
 }
