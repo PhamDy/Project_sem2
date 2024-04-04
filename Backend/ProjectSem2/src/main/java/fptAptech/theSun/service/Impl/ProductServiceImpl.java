@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.webjars.NotFoundException;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -113,6 +115,9 @@ public class ProductServiceImpl implements ProductService {
 
         String[] colors = dto.getColor();
         String[] sizes = dto.getSize();
+
+        var time = LocalDateTime.now();
+        int month = time.getMonthValue();
 
         for (String color: colors
         ) {

@@ -72,7 +72,9 @@ public class OrderController {
                 .orElseThrow(() -> new CustomException("Delivery not found"));
         var cart = cartService.showCart(CartsStatus.Open);
         Double tax = getTax(cart.getTotalPrice());
-        Double totalOrder = cart.getTotalPrice() + delivery.getPrice() + tax;
+        Double totalOrder1 = cart.getTotalPrice() + delivery.getPrice() + tax;
+
+        Double totalOrder = Math.round(totalOrder1 * 100.0) / 100.0;
 
         try {
             Payment payment = paypalService.createPayment(
@@ -199,6 +201,24 @@ public class OrderController {
         } else {
             return total*0.05;
         }
+    }
+
+    @GetMapping("/toalByMonth")
+    @Operation(summary = "Lấy ra doanh thu theo tháng hiện tại")
+    public ResponseEntity<?> earningsMonthly() {
+        return new ResponseEntity<>(orderService.earningsMonthly(), HttpStatus.OK);
+    }
+
+    @GetMapping("/toalByYear")
+    @Operation(summary = "Lấy ra doanh thu theo năm hiện tại")
+    public ResponseEntity<?> earningsYear() {
+        return new ResponseEntity<>(orderService.earningsYear(), HttpStatus.OK);
+    }
+
+    @GetMapping("/orderPending")
+    @Operation(summary = "Lấy ra số lượng order đang xử lý")
+    public ResponseEntity<?> getOrderPending() {
+        return new ResponseEntity<>(orderService.getOrderPending(), HttpStatus.OK);
     }
 
 }

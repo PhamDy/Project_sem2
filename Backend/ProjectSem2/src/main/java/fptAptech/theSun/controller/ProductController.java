@@ -53,10 +53,10 @@ public class ProductController {
     @PostMapping("/addProduct")
     @Operation(summary = "Tạo mới sản phẩm, đồng thời tạo mới warehouse")
     public ResponseEntity<?>addProduct(@Valid @ModelAttribute CreateProductDto dto,
-                                       @RequestParam("img") MultipartFile img,
-                                       @RequestParam("img1") MultipartFile img1,
-                                       @RequestParam("img2") MultipartFile img2,
-                                       @RequestParam("img3") MultipartFile img3){
+                                       @RequestParam(value = "img") MultipartFile img,
+                                       @RequestParam(value = "img1", required = false) MultipartFile img1,
+                                       @RequestParam(value = "img2", required = false) MultipartFile img2,
+                                       @RequestParam(value = "img3", required = false) MultipartFile img3){
         productService.createProduct(dto, img, img1, img2, img3);
         return new ResponseEntity<>("Add product successfully!", HttpStatus.CREATED);
     }

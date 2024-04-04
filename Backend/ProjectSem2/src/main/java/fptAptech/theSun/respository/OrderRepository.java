@@ -27,4 +27,13 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     Boolean existsByUserAndStatus(User user, OrderStatus status);
 
+    @Query(value = "SELECT SUM(o.total_price) FROM orders o WHERE MONTH(o.created_at) = ?1", nativeQuery = true)
+    Double getTotalByMonth(int month);
+
+    @Query(value = "SELECT SUM(o.total_price) FROM orders o WHERE YEAR(o.created_at) = ?1", nativeQuery = true)
+    Double getTotalByYear(int year);
+
+    @Query(value = "SELECT COUNT(o.order_id) FROM orders o WHERE o.order_status = 'Confirmed'", nativeQuery = true)
+    Integer getOrderPending();
+
 }

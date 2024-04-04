@@ -20,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -192,7 +193,6 @@ public class OrderServiceImpl implements OrderService {
         var cart = cartService.showCart(CartsStatus.Open);
         var order = orderRepository.getOrderByUserIdAndCreatedAtNearest(cart.getUserId());
         orderRepository.deleteById(order.getId());
-//        paymentRepository.deleteById(order.getPayment().getId());
     }
 
     public Order mapToOrder(OrderRequestDto dto) {
@@ -374,6 +374,23 @@ public class OrderServiceImpl implements OrderService {
             throw new CustomException("You can not delete When Order success");
         }
         orderRepository.deleteById(id);
+    }
+
+    @Override
+    public Double earningsMonthly() {
+        int month = LocalDateTime.now().getMonthValue();
+        return orderRepository.getTotalByMonth(month);
+    }
+
+    @Override
+    public Double earningsYear() {
+        int year = LocalDateTime.now().getYear();
+        return orderRepository.getTotalByYear(year);
+    }
+
+    @Override
+    public Integer getOrderPending() {
+        return orderRepository.getOrderPending();
     }
 
     @Override

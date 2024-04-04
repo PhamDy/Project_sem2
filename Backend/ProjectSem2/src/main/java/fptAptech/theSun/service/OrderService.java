@@ -40,4 +40,10 @@ public interface OrderService {
 
     void deleteOrder(Long id);
 
+    Double earningsMonthly();
+
+    Double earningsYear();
+
+    Integer getOrderPending();
+
 }
