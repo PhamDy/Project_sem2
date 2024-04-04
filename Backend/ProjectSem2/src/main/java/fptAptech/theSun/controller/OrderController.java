@@ -221,4 +221,10 @@ public class OrderController {
         return new ResponseEntity<>(orderService.getOrderPending(), HttpStatus.OK);
     }
 
+    @GetMapping("/revenue")
+    @Operation(summary = "Lấy ra doanh thu theo tháng hiện tại")
+    public ResponseEntity<?> getTotalByMonthInCurrentYear() {
+        return new ResponseEntity<>(orderService.getTotalByMonthInCurrentYear(), HttpStatus.OK);
+    }
+
 }

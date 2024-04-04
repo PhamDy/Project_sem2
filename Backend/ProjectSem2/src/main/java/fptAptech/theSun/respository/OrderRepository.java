@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Map;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
@@ -35,5 +36,11 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @Query(value = "SELECT COUNT(o.order_id) FROM orders o WHERE o.order_status = 'Confirmed'", nativeQuery = true)
     Integer getOrderPending();
+
+    @Query(value = "SELECT MONTH(created_at) AS month, SUM(total_price) AS total " +
+            "FROM orders " +
+            "WHERE YEAR(created_at) = YEAR(CURRENT_DATE()) " +
+            "GROUP BY MONTH(created_at)", nativeQuery = true)
+    List<Map<String, Object>> getTotalByMonthInCurrentYear();
 
 }

@@ -21,10 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -391,6 +388,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Integer getOrderPending() {
         return orderRepository.getOrderPending();
+    }
+
+    @Override
+    public List<Map<String, Object>> getTotalByMonthInCurrentYear() {
+        return orderRepository.getTotalByMonthInCurrentYear();
     }
 
     @Override

@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ProductRepository extends JpaRepository<Products, Long>, JpaSpecificationExecutor {
 
