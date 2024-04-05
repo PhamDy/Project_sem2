@@ -358,81 +358,87 @@
                     <!-- Popup for adding product -->
                     <div class="modal" id="addProductModal">
                         <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                            <h5 class="modal-title">Add Product</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Add Product</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="addProductForm">
+                                        <div class="mb-3">
+                                            <label for="productName" class="form-label">Name:</label>
+                                            <input type="text" class="form-control" id="productName" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="productImg" class="form-label">Image (JPG only):</label>
+                                            <input type="file" class="form-control" id="productImg" accept="image/jpeg" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="productImg1" class="form-label">Image 1 (JPG only):</label>
+                                            <input type="file" class="form-control" id="productImg1" accept="image/jpeg">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="productImg2" class="form-label">Image 2 (JPG only):</label>
+                                            <input type="file" class="form-control" id="productImg2" accept="image/jpeg">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="productImg3" class="form-label">Image 3 (JPG only):</label>
+                                            <input type="file" class="form-control" id="productImg3" accept="image/jpeg">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="productDescription" class="form-label">Description:</label>
+                                            <input type="text" class="form-control" id="productDescription" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="productGender" class="form-label">Gender:</label>
+                                            <select class="form-select" id="productGender" required>
+                                                <option value="Male">Male</option>
+                                                <option value="Female">Female</option>
+                                                <option value="Unisex">Unisex</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="productBrand" class="form-label">Brand:</label>
+                                            <input type="text" class="form-control" id="productBrand" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="productPrice" class="form-label">Price:</label>
+                                            <input type="number" class="form-control" id="productPrice" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="productDiscount" class="form-label">Discount:</label>
+                                            <input type="number" class="form-control" id="productDiscount" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="productCategory" class="form-label">Category Name:</label>
+                                            <select class="form-control" name="productCategory" id="productCategory">
+                                                <option value="Shoes">Shoes</option>
+                                                <option value="Clothes">Clothes</option>
+                                                <option value="Hats">Hats</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="productSize" class="form-label">Size:</label>
+                                            <input type="text" class="form-control" id="productSize" required>
+                                            <small class="text-muted">Separate multiple sizes with commas (e.g., M, L, XL)</small>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="productColor" class="form-label">Color:</label>
+                                            <input type="text" class="form-control" id="productColor" required>
+                                            <small class="text-muted">Separate multiple colors with commas (e.g., Red, Black, White)</small>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                        <!-- Loading spinner -->
+                                        <div id="loadingSpinner" class="spinner-border text-primary d-none" role="status">
+                                            <span class="visually-hidden"></span>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
-                            <div class="modal-body">
-                            <form id="addProductForm">
-                                <div class="mb-3">
-                                <label for="productName" class="form-label">Name:</label>
-                                <input type="text" class="form-control" id="productName" required>
-                                </div>
-                                <div class="mb-3">
-                                <label for="productImg" class="form-label">Image:</label>
-                                <input type="text" class="form-control" id="productImg" required>
-                                </div>
-                                <div class="mb-3">
-                                <label for="productImg1" class="form-label">Image 1:</label>
-                                <input type="text" class="form-control" id="productImg1" >
-                                </div>
-                                <div class="mb-3">
-                                <label for="productImg2" class="form-label">Image 2:</label>
-                                <input type="text" class="form-control" id="productImg2" >
-                                </div>
-                                <div class="mb-3">
-                                <label for="productImg3" class="form-label">Image 3:</label>
-                                <input type="text" class="form-control" id="productImg3" >
-                                </div>
-                                <div class="mb-3">
-                                <label for="productDescription" class="form-label">Description:</label>
-                                <input type="text" class="form-control" id="productDescription" required>
-                                </div>
-                                <div class="mb-3">
-                                <label for="productGender" class="form-label">Gender:</label>
-                                <select class="form-select" id="productGender" required>
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
-                                    <option value="Unisex">Unisex</option>
-                                </select>
-                                </div>
-                                <div class="mb-3">
-                                <label for="productBrand" class="form-label">Brand:</label>
-                                <input type="text" class="form-control" id="productBrand" required>
-                                </div>
-                                <div class="mb-3">
-                                <label for="productPrice" class="form-label">Price:</label>
-                                <input type="number" class="form-control" id="productPrice" required>
-                                </div>
-                                <div class="mb-3">
-                                <label for="productDiscount" class="form-label">Discount:</label>
-                                <input type="number" class="form-control" id="productDiscount" required>
-                                </div>
-                                <div class="mb-3">
-                                <label for="productCategory" class="form-label">Category Name:</label>
-                                <select class="form-control" name="productCategory" id="productCategory">
-                                    <option value="Shoes">Shoes</option>
-                                    <option value="Clothes">Clothes</option>
-                                    <option value="Hats">Hats</option>
-                                </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="productSize" class="form-label">Size:</label>
-                                    <input type="text" class="form-control" id="productSize" required>
-                                    <small class="text-muted">Separate multiple sizes with commas (e.g., M, L, XL)</small>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="productColor" class="form-label">Color:</label>
-                                    <input type="text" class="form-control" id="productColor" required>
-                                    <small class="text-muted">Separate multiple colors with commas (e.g., Red, Black, White)</small>
-                                </div>
-                                <button type="submit" class="btn btn-primary">Submit</button>
-                            </form>
-                            </div>
-                        </div>
                         </div>
                     </div>
+
+
                     
                     
                     <!-- DataTales Example -->

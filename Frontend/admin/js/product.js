@@ -187,53 +187,56 @@ function openPopup() {
 // Function to add product
 function addProduct(event) {
     event.preventDefault();
+    // Hiển thị hiệu ứng loading
+    var loadingSpinner = document.getElementById('loadingSpinner');
+    loadingSpinner.classList.remove('d-none');
 
-    // Retrieve form data
-    var name = document.getElementById("productName").value;
-    var img = document.getElementById("productImg").value;
-    var img1 = document.getElementById("productImg1").value;
-    var img2 = document.getElementById("productImg2").value;
-    var img3 = document.getElementById("productImg3").value;
-    var description = document.getElementById("productDescription").value;
-    var gender = document.getElementById("productGender").value;
-    var brand = document.getElementById("productBrand").value;
-    var price = parseFloat(document.getElementById("productPrice").value);
-    var discount = parseFloat(document.getElementById("productDiscount").value);
-    var categoryName = document.getElementById("productCategory").value;
+    // Lấy dữ liệu từ form
+    var formData = new FormData();
+    formData.append('name', document.getElementById("productName").value);
+    formData.append('description', document.getElementById("productDescription").value);
+    formData.append('gender', document.getElementById("productGender").value);
+    formData.append('brand', document.getElementById("productBrand").value);
+    formData.append('price', parseFloat(document.getElementById("productPrice").value));
+    formData.append('discount', parseFloat(document.getElementById("productDiscount").value));
+    formData.append('categoryName', document.getElementById("productCategory").value);
+    
     var size = document.getElementById("productSize").value.split(",").map(item => item.trim());
+    formData.append('size', JSON.stringify(size));
+
     var color = document.getElementById("productColor").value.split(",").map(item => item.trim());
+    formData.append('color', JSON.stringify(color));
 
-    var productData = {
-        "name": name,
-        "img": img,
-        "img1": img1,
-        "img2": img2,
-        "img3": img3,
-        "description": description,
-        "gender": gender,
-        "brand": brand,
-        "price": price,
-        "discount": discount,
-        "categoryName": categoryName,
-        "size": size,
-        "color": color
-    };
+    // Thêm các tệp hình ảnh
+    formData.append('img', document.getElementById("productImg").files[0]);
+    formData.append('img1', document.getElementById("productImg1").files[0]);
+    formData.append('img2', document.getElementById("productImg2").files[0]);
+    formData.append('img3', document.getElementById("productImg3").files[0]);
 
-    // Send POST request to add product
-    axios.post("http://localhost:8080/api/products/addProduct", productData)
-        .then(function(response) {
-            console.log(response.data);
-            alert("Product added successfully!");
-            var modal = new bootstrap.Modal(document.getElementById('addProductModal'));
-            modal.hide();
-        })
-        .catch(function(error) {
-            console.error(error);
-            alert("Failed to add product. Please try again later.");
-        });
+    // Gửi yêu cầu POST để thêm sản phẩm
+    axios.post("http://localhost:8080/api/products/addProduct", formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    })
+    .then(function(response) {
+        console.log(response.data);
+        loadingSpinner.classList.add('d-none');
+        alert("Product added successfully!");
+        $('#addProductModal').modal('hide');
+    })
+    .catch(function(error) {
+        console.error(error);
+        loadingSpinner.classList.add('d-none');
+        alert("Failed to add product. Please try again later.");
+    });
+    
 }
 
+// Lắng nghe sự kiện submit form và gọi hàm addProduct
 document.getElementById("addProductForm").addEventListener("submit", addProduct);
+
+
 
 
 // Function to open edit product popup and populate form fields
