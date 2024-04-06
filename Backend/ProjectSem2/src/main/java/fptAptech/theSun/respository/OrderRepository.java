@@ -42,5 +42,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             "WHERE YEAR(created_at) = YEAR(CURRENT_DATE()) " +
             "GROUP BY MONTH(created_at)", nativeQuery = true)
     List<Map<String, Object>> getTotalByMonthInCurrentYear();
+    @Query(value = "SELECT order_id FROM orders WHERE user_id = ?1 ORDER BY order_id DESC LIMIT 1", nativeQuery = true)
+    Long getOrderIdEarly(Long userId);
 
 }
