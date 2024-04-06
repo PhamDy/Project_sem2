@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/products")
 @CrossOrigin(origins = "*",maxAge = 3600)
@@ -44,10 +46,28 @@ public class ProductController {
         return new ResponseEntity<>(productService.getBrand(), HttpStatus.OK);
     }
 
+//    @GetMapping("/filter")
+//    @Operation(summary = "Lấy ra danh sách sản phẩm theo các tiêu chí lọc")
+//    public ResponseEntity<?> getProductsByFilters(@RequestBody(required = false) FilterDto dto) {
+//        return new ResponseEntity<>(productService.filterProducts(dto), HttpStatus.OK);
+//    }
+
     @GetMapping("/filter")
     @Operation(summary = "Lấy ra danh sách sản phẩm theo các tiêu chí lọc")
-    public ResponseEntity<?> getProductsByFilters(@RequestBody(required = false) FilterDto dto) {
-        return new ResponseEntity<>(productService.filterProducts(dto), HttpStatus.OK);
+    public ResponseEntity<?> getProductsByFilters1(@RequestParam(name = "category", required = false) List<String> category,
+                                                    @RequestParam(name = "brand", required = false) List<String> brand,
+                                                    @RequestParam(name = "color", required = false) List<String> color,
+                                                    @RequestParam(name = "gender", required = false) List<String> gender,
+                                                    @RequestParam(name = "discount", required = false) Double discount,
+                                                   @RequestParam(name = "price1", required = false) Double price1,
+                                                   @RequestParam(name = "price2", required = false) Double price2,
+                                                   @RequestParam(name = "price3", required = false) Double price3,
+                                                   @RequestParam(name = "price4", required = false) Double price4,
+                                                   @RequestParam(name = "sortDirection", required = false) String sortDirection,
+                                                   @RequestParam(name = "sortFeatured", required = false) String sortFeatured,
+                                                   @RequestParam(name = "sortNewest", required = false) String sortNewest){
+        var filter = new FilterDto(category, brand, color, gender, discount, price1, price2, price3, price4, sortDirection, sortFeatured, sortNewest);
+        return new ResponseEntity<>(productService.filterProducts(filter), HttpStatus.OK);
     }
 
     @PostMapping("/addProduct")
