@@ -49,4 +49,6 @@ public interface OrderService {
 
     List<Map<String, Object>> getTotalByMonthInCurrentYear();
 
+    List<OrderDeatilDto> orderSummary();
+
 }

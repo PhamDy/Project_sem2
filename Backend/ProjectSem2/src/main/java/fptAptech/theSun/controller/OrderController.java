@@ -142,6 +142,12 @@ public class OrderController {
         return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
     }
 
+    @GetMapping("/orderSummary")
+    @Operation(summary = "Show ra đơn hàng Summary khách hàng vừa đặt")
+    public ResponseEntity<?> showOrderSummary() {
+        return new ResponseEntity<>(orderService.orderSummary(), HttpStatus.OK);
+    }
+
     @GetMapping("/showDelivery")
     @Operation(summary = "Show danh sách các phương án vận chuyển để Khách hàng có thể lựa chọn")
     public ResponseEntity<?> showDelivery() {

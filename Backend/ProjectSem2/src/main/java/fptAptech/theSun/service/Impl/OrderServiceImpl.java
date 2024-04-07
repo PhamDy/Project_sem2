@@ -28,7 +28,6 @@ import java.util.stream.Collectors;
 public class OrderServiceImpl implements OrderService {
     private static int i = 1;
     private static int nextOrderId = i++;
-    private static final long TIMEOUT_DURATION_MS = 10 * 1000;
 
     @Autowired
     private OrderRepository orderRepository;
@@ -396,6 +395,32 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public List<OrderDeatilDto> orderSummary() {
+        String email = JwtFilter.CURRENT_USER;
+        var user = userRepository.findByEmail(email).orElseThrow(() ->
+                new CustomException("You must log in before")
+        );
+
+        Long orderId = orderRepository.getOrderIdEarly(user.getId());
+        var listoOrderDetails = orderDetailsRepository.getByOrderId(orderId);
+        List<OrderDeatilDto> listDto = new ArrayList<>();
+        for (Order_details item: listoOrderDetails
+             ) {
+            var dto = new OrderDeatilDto();
+            dto.setId(item.getId());
+            dto.setProductName(item.getProducts().getName());
+            dto.setSize(item.getSize());
+            dto.setColor(item.getColor());
+            dto.setQuantity(item.getQuantity());
+            dto.setPrice(item.getPrice());
+            dto.setDiscount(item.getDiscount());
+            dto.setSubtotal(item.getSubtotal());
+            listDto.add(dto);
+        }
+        return listDto;
+    }
+
+    @Override
     public String sendMailOrder(CartDto cart, Order order) {
         StringBuilder productsHtml = new StringBuilder();
 
@@ -404,6 +429,8 @@ public class OrderServiceImpl implements OrderService {
                     "<td style=\"vertical-align: middle;padding: 10px;text-align: left;border-bottom: 1px solid #ddd;\"><img src=\"" + item.getImg() + "\" alt=\"Product\" style=\"max-width: 50px;height: auto;margin-bottom: 10px;vertical-align: middle;\"> " + item.getProductName() + "</td>\n" +
                     "<td style=\"vertical-align: middle;padding: 10px;text-align: left;border-bottom: 1px solid #ddd;\">" + item.getColor() + "/" + item.getSize() + "</td>\n" +
                     "<td style=\"vertical-align: middle;padding: 10px;text-align: left;border-bottom: 1px solid #ddd;\">" + item.getQuantity() + "</td>\n" +
+                    "<td style=\"vertical-align: middle;padding: 10px;text-align: left;border-bottom: 1px solid #ddd;\">" + item.getPrice() + "</td>\n" +
+                    "<td style=\"vertical-align: middle;padding: 10px;text-align: left;border-bottom: 1px solid #ddd;\">" + item.getDiscount() + "</td>\n" +
                     "<td style=\"vertical-align: middle;padding: 10px;text-align: left;border-bottom: 1px solid #ddd;\">" + item.getSubTotal() + "</td>\n" +
                     "</tr>\n";
             productsHtml.append(productHtml);
@@ -435,22 +462,23 @@ public class OrderServiceImpl implements OrderService {
                 "                    <th style=\" background-color: #f2f2f2; padding: 10px;text-align: left;border-bottom: 1px solid #ddd;\">Name</th>\n" +
                 "                    <th style=\" background-color: #f2f2f2; padding: 10px;text-align: left;border-bottom: 1px solid #ddd;\">Color/Size</th>\n" +
                 "                    <th style=\" background-color: #f2f2f2; padding: 10px;text-align: left;border-bottom: 1px solid #ddd;\">Quantity</th>\n" +
+                "                    <th style=\" background-color: #f2f2f2; padding: 10px;text-align: left;border-bottom: 1px solid #ddd;\">Price</th>\n" +
+                "                    <th style=\" background-color: #f2f2f2; padding: 10px;text-align: left;border-bottom: 1px solid #ddd;\">Discount</th>\n" +
                 "                    <th style=\" background-color: #f2f2f2; padding: 10px;text-align: left;border-bottom: 1px solid #ddd;\">Subtotal</th>\n" +
                 "                </tr>\n" +
                 productsHtml.toString() +
                 "            </table>\n" +
                 "        </div>\n" +
                 "        <div class=\"total-wrapper\" style=\"margin-top: 20px; text-align: right;\">\n" +
-                "            <p style=\"margin-bottom: 0;\"><strong>Subtotal:</strong> $" + cart.getTotalPrice() + "</p>\n" +
-                "            <p style=\"margin-bottom: 0;\"><strong>Tax:</strong> $" + order.getTax() + "</p>\n" +
-                "            <p style=\"margin-bottom: 0;\"><strong>Shipping:</strong> $" + order.getDelivery().getPrice() + "</p>\n" +
-                "            <p style=\"display: inline-block; margin-left: 20px; margin-bottom: 0;\"><strong>Total:</strong> $" + order.getTotalPrice() + "</p>\n" +
+                "            <p style=\"margin-bottom: 0;\"><strong>Subtotal:</strong> $" + Math.round(cart.getTotalPrice() * 100.0) / 100.0 + "</p>\n" +
+                "            <p style=\"margin-bottom: 0;\"><strong>Tax:</strong> $" + Math.round(order.getTax() * 100.0) / 100.0 + "</p>\n" +
+                "            <p style=\"margin-bottom: 0;\"><strong>Shipping:</strong> $" + Math.round(order.getDelivery().getPrice() * 100.0) / 100.0 + "</p>\n" +
+                "            <p style=\"display: inline-block; margin-left: 20px; margin-bottom: 0;\"><strong>Total:</strong> $" + Math.round(order.getTotalPrice() * 100.0) / 100.0 + "</p>\n" +
                 "        </div>\n" +
                 "    </div>\n" +
                 "</div>\n" +
                 "\n";
         emailService.sendMail(order.getEmail(), "Orders by " + order.getLast_name() + " " + order.getFirst_name(), htmlContent);
-        return "Send meal successfully";
+        return "Send mail successfully";
     }
-
 }
