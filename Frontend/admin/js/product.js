@@ -201,11 +201,12 @@ function addProduct(event) {
     formData.append('discount', parseFloat(document.getElementById("productDiscount").value));
     formData.append('categoryName', document.getElementById("productCategory").value);
     
+    // Thêm các giá trị của size và color một cách riêng biệt
     var size = document.getElementById("productSize").value.split(",").map(item => item.trim());
-    formData.append('size', JSON.stringify(size));
+    size.forEach(item => formData.append('size[]', item));
 
     var color = document.getElementById("productColor").value.split(",").map(item => item.trim());
-    formData.append('color', JSON.stringify(color));
+    color.forEach(item => formData.append('color[]', item));
 
     // Thêm các tệp hình ảnh
     formData.append('img', document.getElementById("productImg").files[0]);
@@ -230,10 +231,10 @@ function addProduct(event) {
         loadingSpinner.classList.add('d-none');
         alert("Failed to add product. Please try again later.");
     });
-    
 }
 
-// Lắng nghe sự kiện submit form và gọi hàm addProduct
+
+
 document.getElementById("addProductForm").addEventListener("submit", addProduct);
 
 
@@ -247,10 +248,6 @@ function openEditProductPopup(productId) {
 
             document.getElementById('productId').value = product.id;
             document.getElementById('editProductName').value = product.name;
-            document.getElementById('editProductImg').value = product.avatar;
-            document.getElementById('editProductImg1').value = product.img1;
-            document.getElementById('editProductImg2').value = product.img2;
-            document.getElementById('editProductImg3').value = product.img3;
             document.getElementById('editProductDescription').value = product.desc;
             document.getElementById('editProductGender').value = product.gender;
             document.getElementById('editProductBrand').value = product.brand;
@@ -267,17 +264,22 @@ function openEditProductPopup(productId) {
         });
 }
 
+
 // Function to update product
 function editProduct(event) {
     event.preventDefault();
 
+    // Hiển thị hiệu ứng loading
+    var loadingSpinner = document.getElementById('loadingSpinner1');
+    loadingSpinner.classList.remove('d-none');
+    
     // Retrieve form data
     const productId = document.getElementById('productId').value;
     const name = document.getElementById('editProductName').value;
-    const img = document.getElementById('editProductImg').value;
-    const img1 = document.getElementById('editProductImg1').value;
-    const img2 = document.getElementById('editProductImg2').value;
-    const img3 = document.getElementById('editProductImg3').value;
+    const imgFile = document.getElementById('editProductImg').files[0];
+    const img1File = document.getElementById('editProductImg1').files[0];
+    const img2File = document.getElementById('editProductImg2').files[0];
+    const img3File = document.getElementById('editProductImg3').files[0];
     const description = document.getElementById('editProductDescription').value;
     const gender = document.getElementById('editProductGender').value;
     const brand = document.getElementById('editProductBrand').value;
@@ -285,32 +287,43 @@ function editProduct(event) {
     const discount = parseFloat(document.getElementById('editProductDiscount').value);
     const categoryName = document.getElementById('editProductCategoryName').value;
 
-    // Prepare product data
-    const productData = {
-        name: name,
-        img: img,
-        img1: img1,
-        img2: img2,
-        img3: img3,
-        description: description,
-        gender: gender,
-        brand: brand,
-        price: price,
-        discount: discount,
-        categoryName: categoryName
-    };
+    // Prepare form data
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('description', description);
+    formData.append('gender', gender);
+    formData.append('brand', brand);
+    formData.append('price', price);
+    formData.append('discount', discount);
+    formData.append('categoryName', categoryName);
+    if (imgFile) {
+        formData.append('img', imgFile);
+    }
+    if (img1File) {
+        formData.append('img1', img1File);
+    }
+    if (img2File) {
+        formData.append('img2', img2File);
+    }
+    if (img3File) {
+        formData.append('img3', img3File);
+    }
 
-    axios.patch(`http://localhost:8080/api/products/${productId}`, productData)
+    axios.patch(`http://localhost:8080/api/products/${productId}`, formData)
         .then(response => {
             console.log('Product updated successfully:', response.data);
+            loadingSpinner.classList.add('d-none');
             alert("Product updated successfully!");
             $('#editProductModal').modal('hide');
             getProducts();
         })
         .catch(error => {
             console.error('Error updating product:', error);
+            loadingSpinner.classList.add('d-none');
             alert("Failed to update product. Please try again later.");
         });
 }
+
+
 
 document.getElementById("editProductForm").addEventListener("submit", editProduct);
