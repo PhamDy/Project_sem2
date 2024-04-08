@@ -395,6 +395,21 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public Long getCountOrdersByMonth() {
+        return orderRepository.getCountOrderByMonth();
+    }
+
+    @Override
+    public Long getOrderSuccess() {
+        return orderRepository.getOrderSuccess();
+    }
+
+    @Override
+    public Long getOrderCancel() {
+        return orderRepository.getOrderCancel();
+    }
+
+    @Override
     public List<OrderDeatilDto> orderSummary() {
         String email = JwtFilter.CURRENT_USER;
         var user = userRepository.findByEmail(email).orElseThrow(() ->

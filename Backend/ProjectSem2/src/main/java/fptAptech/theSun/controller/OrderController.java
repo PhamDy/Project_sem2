@@ -227,6 +227,24 @@ public class OrderController {
         return new ResponseEntity<>(orderService.getOrderPending(), HttpStatus.OK);
     }
 
+    @GetMapping("/totalOrders")
+    @Operation(summary = "Show ra đơn hàng Summary khách hàng vừa đặt")
+    public ResponseEntity<?> getCountOrdersByMonth() {
+        return new ResponseEntity<>(orderService.getCountOrdersByMonth(), HttpStatus.OK);
+    }
+
+    @GetMapping("/orderSuccess")
+    @Operation(summary = "Lấy ra số lượng order đã thành công")
+    public ResponseEntity<?> getOrderSuccess() {
+        return new ResponseEntity<>(orderService.getOrderSuccess(), HttpStatus.OK);
+    }
+
+    @GetMapping("/orderCancel")
+    @Operation(summary = "Lấy ra số lượng order đang xử lý")
+    public ResponseEntity<?> getOrderCancel() {
+        return new ResponseEntity<>(orderService.getOrderCancel(), HttpStatus.OK);
+    }
+
     @GetMapping("/revenue")
     @Operation(summary = "Lấy ra doanh thu theo tháng hiện tại")
     public ResponseEntity<?> getTotalByMonthInCurrentYear() {

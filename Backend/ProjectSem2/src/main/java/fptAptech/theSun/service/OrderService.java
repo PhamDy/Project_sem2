@@ -51,4 +51,11 @@ public interface OrderService {
 
     List<OrderDeatilDto> orderSummary();
 
+    Long getCountOrdersByMonth();
+
+    Long getOrderSuccess();
+
+    Long getOrderCancel();
+
+
 }
