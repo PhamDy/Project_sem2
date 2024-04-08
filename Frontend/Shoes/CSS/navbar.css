@@ -35,8 +35,8 @@ header {
 
 
 .nav-item-box {
-    list-style: none; 
-    text-transform: uppercase; 
+    list-style: none;
+    text-transform: uppercase;
     display: flex;
    flex-wrap: wrap;
    justify-content: center;
@@ -184,7 +184,7 @@ header {
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.3s ease;
-} 
+}
 
 .header-logos {
     font-family: 'Jost', sans-serif;
@@ -322,7 +322,7 @@ header {
     color: #51adcd;
 }
 
-.product-remove { 
+.product-remove {
     width: 15%;
 }
 
@@ -465,7 +465,7 @@ header {
     line-height: 1.2;
     text-transform: unset;
     margin-bottom: 1em;
-    
+
 }
 
 .search-form {
@@ -546,7 +546,7 @@ header {
 
 .search-result::-webkit-scrollbar-thumb {
     background-color: #888;
-    border-radius: 6px; 
+    border-radius: 6px;
 }
 
 .search-result::-webkit-scrollbar-track {
@@ -859,7 +859,7 @@ header {
     height: 100%;
     object-fit: cover;
   }
-  
+
 @keyframes up-to-fit {
     0% {
         transform: translateY(-100%);
@@ -867,7 +867,7 @@ header {
 
 100% {
     transform: translateY(0);
-    
+
 }
 }
 
@@ -898,7 +898,7 @@ header {
         color: #000;
         text-decoration: none;
     }
-    
+
     .icon-navbar span {
         display: block;
     }
@@ -913,7 +913,7 @@ header {
     .box-title2 h3 {
         font-size: 40px !important;
     }
-    
+
     .box-title3 h3 {
         font-size: 17px !important;
     }
@@ -943,7 +943,7 @@ header {
     .icon-box {
         padding: 0;
     }
-    
+
     .headers-1 {
         max-width: 0px;
     }

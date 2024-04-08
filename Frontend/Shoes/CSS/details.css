@@ -199,7 +199,7 @@
 
 .content-page-details .detail-info .btn-payment .btn-addtocart{
     margin-top: 25px;
-    margin-bottom: 25px; 
+    margin-bottom: 25px;
     transition: all .3s ease;
     width: 306px !important;
     max-width: 100%;
@@ -228,6 +228,9 @@
 
 .product-meta-info li{
     list-style: none;
+}
+.product-meta-info .product-categoryinfo {
+    margin-top: 70px;
 }
 .product-meta-info .product-categoryinfo a{
     color: #000;

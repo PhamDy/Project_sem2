@@ -1,0 +1,52 @@
+.order-success-box {
+    margin-top: 200px!important;
+    margin-bottom: 200px!important;
+}
+
+.order-success-box .order-success-top{
+    text-align: center;
+    justify-content: center;
+}
+
+.order-success-box h1 {
+    text-align: center;
+    margin-top: 20px;
+
+}
+
+.order-success-box p {
+    text-align: center;
+    font-weight: 500;
+    margin-bottom: 0px;
+}
+
+.order-success-box a {
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    display: flex;
+    max-width: 200px;
+    height: 40px;
+    max-height: 40px;
+    font-weight: 600;
+}
+
+.order-success-box a:hover {
+    text-decoration: none;
+}
+
+.order-success-box a button {
+    background-color: #000;
+    color: #fff;
+    width: 270px;
+    max-width: 270px;
+    height: 40px;
+    max-height: 40px;
+    font-weight: 600;
+    border: none;
+    transition: all ease 0.3s;
+}
+
+.order-success-box a button:hover {
+    background-color: #51adcd;
+}

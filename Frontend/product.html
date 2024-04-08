@@ -47,14 +47,14 @@
                     </div>
                     <div class="search-result">
                         <div class="the-result row">
-                            
+
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        
-    
+
+
       </div>
     <header id="header">
         <div class="container container-header">
@@ -75,7 +75,7 @@
                         <li class="nav-item"><a href="aboutus.html" class="underline">about us</a></li>
                         <li class="nav-item"><a href="blog.html" class="underline">Blog</a></li>
                         <li class="nav-item"><a href="contact.html" class="underline">contact us</a></li>
-                    </ul>   
+                    </ul>
                     <div class="header-small-content">
                     <a style="display: none;" class="header-logo-smaller" href="index.html">WALKZ</a>
                 </div>
@@ -85,7 +85,7 @@
                         <li class="nav-icon" id="search-icon"> <i class="fa-solid fa-magnifying-glass" style="font-size: 18px;"></i></li>
                         <li class="nav-icon user-icon"><a href="login.html"> <i class="fa-regular fa-user"></i></a></li>
                         <li class="profile">
-                            <a href="">
+                            <a href="userpage.html">
                           <img src="Shoes/IMAGES/IMAGES/defaultuserimg.jpg" />
                             </a>
                         </li>
@@ -99,7 +99,7 @@
     <div id="backMenu" class="backMenu"></div>
     <div class="side-menu-container">
         <div id="sidemenu" class="sidemenu">
-           
+
             <div class="menu-actions">
                 <a href="" class="button-menu">
                     <div class="icon-menu">
@@ -140,11 +140,11 @@
         </div>
     </div>
 
-   
+
     <div id="backdrop" class="backdrop"></div>
     <div class="side-cart-container">
     <div id="sidecart" class="sidecart">
-            
+
             <div class="cart-header">
                 <span id="close-btn">&times;</span>
                 <h3 class="cart-title">Shopping Cart</h3>
@@ -155,7 +155,7 @@
             <div class="cart-items">
                 <div class="prod"></div>
             </div>
-            
+
             <div class="side-cart-bottom">
             <div class="sub-total">
                 <span class="total-title float-left">Total:</span>
@@ -171,7 +171,7 @@
             </div>
         </div>
     </div>
-    
+
 </div>
 
     <div class="container-fluid" style="margin-bottom: 40px;">
@@ -229,11 +229,11 @@
                         </span>
                     </div>
                 </div>
-                
+
             </div>
         </div>
     </div>
-    
+
     <div id="product-main">
         <div class="container product-main-container">
             <div class="row">
@@ -273,18 +273,7 @@
                                     <i id="caretdown" class="fa-solid fa-caret-down"></i>
                                 </div>
                                 <ul id="CategoryList" style="list-style: none; padding-left: 0px!important; display: block;">
-                                    <li class="clickable">
-                                        <input type="checkbox" id="clothes" class="filter-button" onchange="filterProducts()">
-                                        <label for="clothes" style="display: inline-flex;">Clothes</label>
-                                    </li>
-                                    <li class="clickable">
-                                        <input type="checkbox" id="Pants" class="filter-button" onchange="filterProducts()">
-                                        <label for="Pants" style="display: inline-flex;">Pants</label>
-                                    </li>
-                                    <li class="clickable">
-                                        <input type="checkbox" id="Shoes" class="filter-button" onchange="filterProducts()">
-                                        <label for="Shoes" style="display: inline-flex; margin-bottom: 20px;">Shoes</label>
-                                    </li>
+
                                 </ul>
                             </div>
                         </ul>
@@ -296,23 +285,11 @@
                                     <i id="caretdown" class="fa-solid fa-caret-down"></i>
                                 </div>
                                 <ul id="genderList" style="list-style: none; padding-left: 0px!important; display: block;">
-                                    <li class="clickable">
-                                        <input type="checkbox" id="menCheckbox1" class="filter-button">
-                                        <label for="menCheckbox1" style="display: inline-flex;">Men</label>
-                                    </li>
-                                    <li class="clickable">
-                                        <input type="checkbox" id="womenCheckbox" class="filter-button">
-                                        <label for="womenCheckbox" style="display: inline-flex;">Women</label>
-                                    </li>
-                                    <li class="clickable">
-                                        <input type="checkbox" id="unisexCheckbox" class="filter-button">
-                                        <label for="unisexCheckbox" style="display: inline-flex; margin-bottom: 20px;">Unisex</label>
-                                    </li>
                                 </ul>
                             </div>
                         </ul>
-                        
-                        
+
+
                         <ul style="list-style: none;">
                             <div id="priceContainer" style="border-bottom: 1px solid #E5E5E5;">
                                 <div id="priceButton" style="margin-bottom: 20px; display: inline-flex; justify-content: space-between; width: 98%; cursor: pointer;" onclick="togglePriceList()">
@@ -321,25 +298,25 @@
                                 </div>
                                 <ul id="priceList" style="list-style: none; padding-left: 0px!important; display: block;">
                                     <li class="clickable">
-                                        <input type="checkbox" id="50Checkbox1" class="filter-button">
-                                        <label for="50Checkbox1" style="display: inline-flex;">Under 50$</label>
+                                        <input type="checkbox" id="under50Checkbox" class="filter-button" onchange="filterPrice('price1')">
+                                        <label for="under50Checkbox" style="display: inline-flex;">Under 50$</label>
                                     </li>
                                     <li class="clickable">
-                                        <input type="checkbox" id="50-100Checkbox" class="filter-button">
-                                        <label for="50-100Checkbox" style="display: inline-flex;">50$ - 100$</label>
+                                        <input type="checkbox" id="50to100Checkbox" class="filter-button" onchange="filterPrice('price2')">
+                                        <label for="50to100Checkbox" style="display: inline-flex;">50$ - 100$</label>
                                     </li>
                                     <li class="clickable">
-                                        <input type="checkbox" id="100-250Checkbox" class="filter-button">
-                                        <label for="100-250Checkbox" style="display: inline-flex; margin-bottom: 20px;">100$ - 250$</label>
+                                        <input type="checkbox" id="100to250Checkbox" class="filter-button" onchange="filterPrice('price3')">
+                                        <label for="100to250Checkbox" style="display: inline-flex; margin-bottom: 20px;">100$ - 250$</label>
                                     </li>
                                     <li class="clickable">
-                                        <input type="checkbox" id="over250Checkbox" class="filter-button">
+                                        <input type="checkbox" id="over250Checkbox" class="filter-button" onchange="filterPrice('price4')">
                                         <label for="over250Checkbox" style="display: inline-flex; margin-bottom: 20px;">Over 250$</label>
                                     </li>
                                 </ul>
                             </div>
                         </ul>
-                
+
                         <ul style="list-style: none;">
                             <div id="saleContainer" style="border-bottom: 1px solid #E5E5E5;">
                                 <div id="saleButton" style="margin-bottom: 20px; display: inline-flex; justify-content: space-between; width: 98%; cursor: pointer;" onclick="toggleSaleList()">
@@ -354,7 +331,7 @@
                                 </ul>
                             </div>
                         </ul>
-                
+
                         <ul style="list-style: none;">
                             <div id="colourContainer" style="display: inline-flex; justify-content: space-between; width: 98%; cursor: pointer;" onclick="toggleColorList()">
                                 <span style="cursor: pointer; font-size: 16px; font-weight: 600; letter-spacing: 0.5px; text-align: left;">Colour</span>
@@ -428,7 +405,7 @@
                                 </div>
                             </div>
                         </ul>
-                
+
                         <ul style="list-style: none;">
                             <div id="brandContainer" style="border-bottom: 1px solid #E5E5E5;">
                                 <div id="brandButton" style="margin-bottom: 20px; display: inline-flex; justify-content: space-between; width: 98%; cursor: pointer;" onclick="toggleBrandList()">
@@ -436,100 +413,20 @@
                                     <i id="caretdown" class="fa-solid fa-caret-down"></i>
                                 </div>
                                 <ul id="brandList" style="list-style: none; padding-left: 0px!important; display: block;">
-                                    <li class="clickable">
-                                        <input type="checkbox" id="nikeSportswearCheckbox1" class="filter-button">
-                                        <label for="nikeSportswearCheckbox1" style="display: inline-flex;">Nike Sportswear</label>
-                                    </li>
-                                    <li class="clickable">
-                                        <input type="checkbox" id="jordanCheckbox" class="filter-button">
-                                        <label for="jordanCheckbox" style="display: inline-flex;">Jordan</label>
-                                    </li>
-                                    <li class="clickable">
-                                        <input type="checkbox" id="nikeByYouCheckbox" class="filter-button">
-                                        <label for="nikeByYouCheckbox" style="display: inline-flex; margin-bottom: 20px;">Nike By You</label>
-                                    </li>
-                                    <li class="clickable">
-                                        <input type="checkbox" id="acgCheckbox" class="filter-button">
-                                        <label for="acgCheckbox" style="display: inline-flex; margin-bottom: 20px;">ACG</label>
-                                    </li>
-                                    <li class="clickable">
-                                        <input type="checkbox" id="nikeCheckbox" class="filter-button">
-                                        <label for="nikeCheckbox" style="display: inline-flex; margin-bottom: 20px;">Nike</label>
-                                    </li>
-                                </ul>
-                            </div>
-                        </ul>
-                
-                        <ul style="list-style: none;">
-                            <div id="sportsContainer" style="border-bottom: 1px solid #E5E5E5;">
-                                <div id="sportsButton" style="margin-bottom: 20px; display: inline-flex; justify-content: space-between; width: 98%; cursor: pointer;" onclick="toggleSportsList()">
-                                    <span style="cursor: pointer; font-size: 16px; font-weight: 600; letter-spacing: 0.5px; text-align: left;">Sports</span>
-                                    <i id="caretdown" class="fa-solid fa-caret-down"></i>
-                                </div>
-                                <ul id="sportsList" style="list-style: none; padding-left: 0px!important; display: block;">
-                                    <li class="clickable">
-                                        <input type="checkbox" id="lifestyleCheckbox" class="filter-button">
-                                        <label for="lifestyleCheckbox" style="display: inline-flex;">Lifestyle</label>
-                                    </li>
-                                    <li class="clickable">
-                                        <input type="checkbox" id="runningCheckbox" class="filter-button">
-                                        <label for="runningCheckbox" style="display: inline-flex;">Running</label>
-                                    </li>
-                                    <li class="clickable">
-                                        <input type="checkbox" id="trainingGymCheckbox" class="filter-button">
-                                        <label for="trainingGymCheckbox" style="display: inline-flex;">Training & Gym</label>
-                                    </li>
-                                    <li class="clickable">
-                                        <input type="checkbox" id="basketballCheckbox" class="filter-button">
-                                        <label for="basketballCheckbox" style="display: inline-flex;">Basketball</label>
-                                    </li>
-                                    <li class="clickable">
-                                        <input type="checkbox" id="footballCheckbox" class="filter-button">
-                                        <label for="footballCheckbox" style="display: inline-flex;">Football</label>
-                                    </li>
-                                    <li class="clickable">
-                                        <input type="checkbox" id="golfCheckbox" class="filter-button">
-                                        <label for="golfCheckbox" style="display: inline-flex;">Golf</label>
-                                    </li>
-                                    <li class="clickable">
-                                        <input type="checkbox" id="skateboardingCheckbox" class="filter-button">
-                                        <label for="skateboardingCheckbox" style="display: inline-flex;">Skateboarding</label>
-                                    </li>
-                                    <li class="clickable">
-                                        <input type="checkbox" id="tennisCheckbox" class="filter-button">
-                                        <label for="tennisCheckbox" style="display: inline-flex;">Tennis</label>
-                                    </li>
-                                    <li class="clickable">
-                                        <input type="checkbox" id="athleticsCheckbox" class="filter-button">
-                                        <label for="athleticsCheckbox" style="display: inline-flex;">Athletics</label>
-                                    </li>
-                                    <li class="clickable">
-                                        <input type="checkbox" id="walkingCheckbox" class="filter-button">
-                                        <label for="walkingCheckbox" style="display: inline-flex;">Walking</label>
-                                    </li>
-                                    <li class="clickable">
-                                        <input type="checkbox" id="volleyballCheckbox" class="filter-button">
-                                        <label for="volleyballCheckbox" style="display: inline-flex;">Volleyball</label>
-                                    </li>
-                                    <li class="clickable">
-                                        <input type="checkbox" id="danceCheckbox" class="filter-button">
-                                        <label for="danceCheckbox" style="display: inline-flex;">Dance</label>
-                                    </li>
-                                    <li class="clickable">
-                                        <input type="checkbox" id="cyclingCheckbox" class="filter-button">
-                                        <label for="cyclingCheckbox" style="display: inline-flex;">Cycling</label>
-                                    </li>
                                 </ul>
                             </div>
                         </ul>
                     </section>
                 </div>
-                
+
                 <div class="col-md-12 product-column" id="main-content">
                              <div class="row product-row">
-                    
-                 
-    
+
+
+
+                </div>
+                <div class="product-load-container">
+                    <button class="product-load-button" id="load-more-button" onclick="loadMoreProducts()">Load More</button>
                 </div>
                 </div>
             </div>

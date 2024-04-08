@@ -128,7 +128,7 @@ function updateSortBy(value, button) {
         if (btn.classList.contains('selected')) {
             btn.style.color = '#707072';
         } else {
-            btn.style.color = ''; 
+            btn.style.color = '';
         }
     });
 
@@ -163,65 +163,279 @@ function closeFilters () {
 }
 
 
+function fetchCategories() {
+    Promise.all([
+        axios.get("http://localhost:8080/api/category/"),
+        axios.get("http://localhost:8080/api/products/getGender"),
+        axios.get("http://localhost:8080/api/products/getBrand")
+    ])
+    .then(responses => {
+        const categoriesResponse = responses[0];
+        const genderResponse = responses[1];
+        const brandResponse = responses[2];
 
+        const categories1 = categoriesResponse.data;
+        const gender = genderResponse.data;
+        const brand = brandResponse.data;
 
-const apiUrl = "http://localhost:8080/api/products/";
-
-axios.get(apiUrl)
-    .then(response => {
-        const products = response.data;
-        renderProducts(products);
+        renderCategories(categories1, gender, brand);
     })
     .catch(error => {
-        console.error('Error fetching products:', error);
+        console.error('Error:', error);
+    });
+}
+
+fetchCategories();
+
+function renderCategories(categories, gender, brand) {
+    const categoriesrow1 = document.querySelector("#CategoryList");
+    categories.forEach(category => {
+        const {id, name} = category;
+        const categoriesul = document.createElement('li');
+        categoriesul.classList.add('clickable')
+        categoriesul.innerHTML = `
+            <input type="checkbox" id="${name}" class="filter-button" onchange="filterCategory()">
+            <label for="${name}" style="display: inline-flex;">${name}</label>
+        `
+        categoriesrow1.appendChild(categoriesul);
     });
 
-    function renderProducts(products) {
+    const categoriesgender = document.querySelector("#genderList");
+    gender.forEach(genders => {
+        const genderul = document.createElement('li');
+        genderul.classList.add('clickable')
+        genderul.innerHTML =  `
+        <input type="checkbox" id="${genders}" class="filter-button" onchange="filterGender()">
+        <label for="${genders}" style="display: inline-flex;">${genders}</label>`
+        categoriesgender.appendChild(genderul);
+    });
+
+    const categoriesbrand = document.querySelector("#brandList");
+    brand.forEach(brands => {
+        const brandul = document.createElement('li');
+        brandul.classList.add('clickable')
+        brandul.innerHTML = `
+        <input type="checkbox" id="${brands}" class="filter-button" onchange="filterBrand()">
+        <label for="${brands}" style="display: inline-flex;">${brands}</label>
+        `
+        categoriesbrand.appendChild(brandul)
+    });
+}
+
+function filterCategory() {
+    const selectedCategories = Array.from(document.querySelectorAll('.filter-button:checked')).map(checkbox => checkbox.id);
+    const selectedGender = getSelectedGenderFromURL();
+    const selectedBrand = getSelectedBrandFromURL();
+    showfilterProduct(selectedCategories, selectedGender, selectedBrand);
+}
+
+function filterGender() {
+    const selectedGender = Array.from(document.querySelectorAll('.filter-button:checked')).map(checkbox => checkbox.id);
+    const selectedCategories = getSelectedCategoriesFromURL();
+    const selectedBrand = getSelectedBrandFromURL();
+    showfilterProduct(selectedCategories, selectedGender, selectedBrand);
+}
+
+function filterBrand() {
+    const selectedBrand = Array.from(document.querySelectorAll('.filter-button:checked')).map(checkbox => checkbox.id);
+    const selectedCategories = getSelectedCategoriesFromURL();
+    const selectedGender = getSelectedGenderFromURL();
+    showfilterProduct(selectedCategories, selectedGender, selectedBrand);
+}
+
+
+function getSelectedCategoriesFromURL() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.getAll('category');
+}
+
+function getSelectedGenderFromURL() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.getAll('gender');
+}
+
+function getSelectedBrandFromURL() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.getAll('brand');
+}
+
+function updateURLParams(selectedCategories, selectedGender, selectedBrand) {
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.delete('category');
+    urlParams.delete('gender');
+    urlParams.delete('brand');
+    selectedCategories.forEach(category => urlParams.append('category', category));
+    selectedGender.forEach(gender => urlParams.append('gender', gender));
+    selectedBrand.forEach(brand => urlParams.append('brand', brand));
+    const newURL = window.location.pathname + '?' + urlParams.toString();
+    window.history.pushState({}, '', newURL);
+}
+
+function showfilterProduct(selectedCategories, selectedGender, selectedBrand) {
+    updateURLParams(selectedCategories, selectedGender, selectedBrand);
+    axios.get("http://localhost:8080/api/products/filter", {
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "*/*",
+        },
+        params: {
+            category: selectedCategories.join(','),
+            gender: selectedGender.join(','),
+            brand: selectedBrand.join(',')
+        }
+    })
+    .then(response => {
+        const filterProduct = response.data;
+        console.log(filterProduct)
         const productRow = document.querySelector(".product-row");
-        products.forEach(product => {
-            const { id, name, img, price, discount, description } = product;
-            const productBox = document.createElement('div');
-            productBox.classList.add('product-box');
-            productBox.innerHTML = `
-                <div class="product">
-                    <div class="img-product">
-                        <a href="#" onclick="openProductDetails(${id}); return false;">
-                            <img style="width: 100%;" src="${img}" alt="${name}">
+        productRow.innerHTML = '';
+        if (filterProduct.length > 0) {
+            renderFilterProduct(filterProduct);
+            hideLoadMoreButton();
+        } else {
+            currentPage = 1;
+            fetchProducts(currentPage);
+        }
+    })
+    .catch(error => {
+        console.log('error', error);
+    });
+}
+
+function renderFilterProduct(filterProduct) {
+    const productRowFilter = document.querySelector(".product-row");
+    filterProduct.forEach(filterProduct => {
+        const { id, name, img, price, discount, description } =  filterProduct;
+        const FilterProductBox = document.createElement('div');
+        FilterProductBox.classList.add('product-box');
+        FilterProductBox.innerHTML = `
+        <div class="product">
+            <div class="img-product">
+                <a href="#" onclick="openProductDetails(${id}); return false;">
+                    <img style="width: 100%;" src="${img}" alt="${name}">
+                </a>
+                ${discount > 0 ? `<figure style="background: #e12c43; color: #ffffff;" class="label-sale">
+                    <span>-${discount}%</span>
+                </figure>` : ''}
+                <ul class="product-icon">
+                    <li class="add-cart mr-0">
+                        <a href="#">
+                            <i class="fa-solid fa-bag-shopping icon-1"></i>
                         </a>
-                        ${discount > 0 ? `<figure style="background: #e12c43; color: #ffffff;" class="label-sale">
-                            <span>-${discount}%</span>
-                        </figure>` : ''}
-                        <ul class="product-icon">
-                            <li class="add-cart mr-0">
-                                <a href="#">
-                                    <i class="fa-solid fa-bag-shopping icon-1"></i>
-                                </a>
-                            </li>
-                            <li class="view-product mr-0">
-                                <button onclick="openQuickView(${id})">
-                                    <i class="fa-solid fa-magnifying-glass icon-2"></i>
-                                </button>
-                            </li>
-                            <li class="add-favorite mr-0">
-                                <a href="#">
-                                    <i class="fa-regular fa-heart icon-3"></i>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                    <h4 class="product-title">
-                        <a href="#" onclick="openProductDetails(${id}); return false;">${name}</a>
-                    </h4>
-                    <p class="product-price">
-                        ${discount > 0 ? `<s class="">$${price.toFixed(2)}</s>` : ''}
-                        <span class="">$${(price - (price * discount / 100)).toFixed(2)}</span>
-                    </p>
-                </div>  
-            `;
-            productRow.appendChild(productBox);
+                    </li>
+                    <li class="view-product mr-0">
+                        <button onclick="openQuickView(${id})">
+                            <i class="fa-solid fa-magnifying-glass icon-2"></i>
+                        </button>
+                    </li>
+                    <li class="add-favorite mr-0">
+                        <a href="#">
+                            <i class="fa-regular fa-heart icon-3"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <h4 class="product-title">
+                <a href="#" onclick="openProductDetails(${id}); return false;">${name}</a>
+            </h4>
+            <p class="product-price">
+                ${discount > 0 ? `<s class="">$${price.toFixed(2)}</s>` : ''}
+                <span class="">$${(price - (price * discount / 100)).toFixed(2)}</span>
+            </p>
+        </div>
+    `;
+    productRowFilter.appendChild(FilterProductBox);
+    })
+}
+
+const apiUrl = "http://localhost:8080/api/products/";
+let currentPage = 1;
+const productsPerPage = 21;
+
+function fetchProducts(page) {
+    axios.get(apiUrl)
+        .then(response => {
+            const products = response.data;
+            const startIndex = (page - 1) * productsPerPage;
+            const endIndex = startIndex + productsPerPage;
+            const productsToShow = products.slice(startIndex, endIndex);
+            renderProducts(productsToShow);
+            if (endIndex < products.length) {
+                showLoadMoreButton();
+            } else {
+                hideLoadMoreButton();
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching products:', error);
         });
-    }
-    
+}
+
+function renderProducts(products) {
+    const productRow = document.querySelector(".product-row");
+    products.forEach(product => {
+        const { id, name, img, price, discount, description } = product;
+        const productBox = document.createElement('div');
+        productBox.classList.add('product-box');
+        productBox.innerHTML = `
+            <div class="product">
+                <div class="img-product">
+                    <a href="#" onclick="openProductDetails(${id}); return false;">
+                        <img style="width: 100%;" src="${img}" alt="${name}">
+                    </a>
+                    ${discount > 0 ? `<figure style="background: #e12c43; color: #ffffff;" class="label-sale">
+                        <span>-${discount}%</span>
+                    </figure>` : ''}
+                    <ul class="product-icon">
+                        <li class="add-cart mr-0">
+                            <a href="#">
+                                <i class="fa-solid fa-bag-shopping icon-1"></i>
+                            </a>
+                        </li>
+                        <li class="view-product mr-0">
+                            <button onclick="openQuickView(${id})">
+                                <i class="fa-solid fa-magnifying-glass icon-2"></i>
+                            </button>
+                        </li>
+                        <li class="add-favorite mr-0">
+                            <a href="#">
+                                <i class="fa-regular fa-heart icon-3"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <h4 class="product-title">
+                    <a href="#" onclick="openProductDetails(${id}); return false;">${name}</a>
+                </h4>
+                <p class="product-price">
+                    ${discount > 0 ? `<s class="">$${price.toFixed(2)}</s>` : ''}
+                    <span class="">$${(price - (price * discount / 100)).toFixed(2)}</span>
+                </p>
+            </div>
+        `;
+        productRow.appendChild(productBox);
+    });
+}
+
+
+
+function loadMoreProducts() {
+    currentPage++;
+    fetchProducts(currentPage);
+}
+
+function showLoadMoreButton() {
+    const loadMoreButton = document.getElementById('load-more-button');
+    loadMoreButton.style.display = 'block';
+}
+
+function hideLoadMoreButton() {
+    const loadMoreButton = document.getElementById('load-more-button');
+    loadMoreButton.style.display = 'none';
+}
+
+fetchProducts(currentPage);
+
 
     function openQuickView(productId) {
         axios.get(apiUrl + productId)
@@ -246,10 +460,10 @@ axios.get(apiUrl)
                 const selectQuantity = document.getElementById('quantitySelect');
                 const selectedQuantity = selectQuantity.value;
                 selectQuantity.innerHTML = '';
-    
+
                 const maxQuantity = Math.min(quantity, 10);
                 selectQuantity.setAttribute('max', maxQuantity);
-    
+
                 for (let optionValue = 1; optionValue <= maxQuantity; optionValue++) {
                     const option = document.createElement('option');
                     option.text = optionValue;
@@ -259,9 +473,9 @@ axios.get(apiUrl)
                     }
                     selectQuantity.appendChild(option);
                 }
-    
+
                 updateProgressAndStock(productId, quantity);
-    
+
                 selectQuantity.addEventListener('change', function() {
                     const selectedQuantity = this.value;
                     updateURL(productId, selectedColor, selectedSize, selectedQuantity);
@@ -274,39 +488,39 @@ axios.get(apiUrl)
                 throw error;
             });
     }
-    
+
     function updateProgressAndStock(productId, quantity) {
         const progressBar = document.querySelector('.progress-bar');
         const leftStock = document.getElementById('random_sold_prod');
-    
+
         let stockLeftPercentage;
         if (quantity <= 10) {
             stockLeftPercentage = quantity * 10;
         } else {
             stockLeftPercentage = 100;
         }
-    
+
         progressBar.style.width = `${stockLeftPercentage}%`;
         leftStock.textContent = quantity;
     }
 
     document.body.addEventListener('click', function(event) {
-        
+
         if (event.target.classList.contains('addToCartButton')) {
-            
+
             const clickedProductId = event.target.dataset.productId;
-    
+
             const urlParams = new URLSearchParams(window.location.search);
             const productIdFromUrl = urlParams.get('productId');
             const color = urlParams.get('color');
             const size = urlParams.get('size');
             const quantity = urlParams.get('quantity');
-    
+
             const authToken = getCookie('authToken');
-    
+
             if (authToken) {
                 const url = `http://localhost:8080/api/cart/${clickedProductId}?&color=${color}&size=${size}&quantity=${quantity}`;
-    
+
                 axios.post(url, null, {
                     headers: {
                         Authorization: `Bearer ${authToken}`
@@ -315,7 +529,7 @@ axios.get(apiUrl)
                 .then(response => {
                     if (response.status === 201) {
                         console.log('Item added to cart successfully.');
-    
+
                         updateQuantity(clickedProductId, color, size);
                         window.location.reload();
                     } else {
@@ -389,32 +603,32 @@ axios.get(apiUrl)
                 </div>
             </div>
         `;
-    
+
         document.body.insertAdjacentHTML('beforeend', popupContent);
     }
-    
+
 
     function updateURL(productId) {
         try {
             const selectedSize = document.querySelector('input[name^="option-size"]:checked').value;
             const selectedColor = document.querySelector('input[name^="option-color"]:checked').value;
-    
+
             const selectedQuantity = document.getElementById('quantitySelect').value;
-    
+
             const currentURL = new URL(window.location.href);
             currentURL.searchParams.set('', productId);
             currentURL.searchParams.set('color', selectedColor);
             currentURL.searchParams.set('size', selectedSize);
             currentURL.searchParams.set('quantity', selectedQuantity);
-    
+
             window.history.replaceState({}, '', currentURL);
-    
+
             updateQuantity(productId, selectedColor, selectedSize);
         } catch (error) {
         }
     }
 
-    
+
 
     function togglePopup(popupId) {
         const popupTrigger = document.getElementById(popupId);

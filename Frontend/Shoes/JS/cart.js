@@ -9,7 +9,7 @@ if (authToken) {
     .then(response => {
         const CartProduct = response.data;
         renderShowcart(CartProduct);
-        
+
         const cartCountSpan = document.querySelector('.cart-count span');
         if (cartCountSpan) {
             cartCountSpan.textContent = CartProduct.quantityItem.toString();
@@ -23,7 +23,7 @@ if (authToken) {
         if (cartTotalPrice) {
     cartTotalPrice.textContent = '$' + CartProduct.totalPrice.toString();
         }
-    }) 
+    })
     .catch(error => {
         console.log('Error Fetching ShowCartProduct', error);
     });

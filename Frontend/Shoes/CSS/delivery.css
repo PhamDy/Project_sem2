@@ -11,7 +11,7 @@
 
 .product-container::-webkit-scrollbar-thumb {
     background: #888;
-    border-radius: 5px; 
+    border-radius: 5px;
 }
 
 
@@ -20,8 +20,8 @@
 }
 
 .product-container {
-    height: 400px; 
-    overflow-y: auto; 
+    height: 400px;
+    overflow-y: auto;
 }
 
 .progress-container ul{

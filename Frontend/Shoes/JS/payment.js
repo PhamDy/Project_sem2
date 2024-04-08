@@ -73,12 +73,12 @@ if (authTokensOrders) {
 
         const viewOrderTotalShipping = document.querySelector('.order-summary .summary-content .content-order .price-order-subtotal');
         if (viewOrderTotalShipping) {
-            viewOrderTotalShipping.textContent = '$' + OrderProductShipping.totalPrice.toFixed(2); 
+            viewOrderTotalShipping.textContent = '$' + OrderProductShipping.totalPrice.toFixed(2);
         }
 
         const viewShippingPrice = document.querySelector('.order-summary .summary-content .content-order .price-order-shipping');
         let shipPrice = sessionStorage.getItem('shipPrice');
-        
+
         if (viewShippingPrice && shipPrice) {
             shipPrice = parseFloat(shipPrice.replace(/"/g, ''));
             viewShippingPrice.textContent = '$' + shipPrice.toFixed(2);
@@ -89,7 +89,7 @@ if (authTokensOrders) {
         if (totalPriceElement) {
             totalPriceElement.textContent = '$' + totalPrice.toFixed(2);
         }
-    }) 
+    })
     .catch(error => {
         console.log('Error Fetching ShowOrderProductShipping', error);
     });

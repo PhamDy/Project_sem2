@@ -121,7 +121,7 @@ font-family: 'Jost', sans-serif;
 #aboutus-team .team-box {
     flex: 0 0 auto;
     margin-right: 20px;
-    scroll-snap-align: start; 
+    scroll-snap-align: start;
 }
 .team-box {
     display: flex;
@@ -133,7 +133,7 @@ font-family: 'Jost', sans-serif;
 }
 
 #aboutus-team .team-img img {
-    max-width: 100%; 
+    max-width: 100%;
     height: auto;
     transition: all .5s ease;
 }
@@ -152,13 +152,13 @@ font-family: 'Jost', sans-serif;
     white-space: nowrap;
     width: 100%;
   }
-  
+
 
 #aboutus-team .team-text h2{
     margin-top: 20px;
     text-align: center;
     font-size: 22px;
-    
+
 }
 
 #aboutus-story .container {

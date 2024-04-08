@@ -26,7 +26,7 @@ function validateForm(form) {
         if (input.offsetParent === null) {
             return;
         }
-        
+
         if (!input.value) {
             isValid = false;
             const errorMessage = document.createElement('span');
@@ -133,7 +133,7 @@ if (authTokensOrders) {
 
         const viewShippingPrice = document.querySelector('.order-summary .summary-content .content-order .price-order-shipping');
         let shipPrice = sessionStorage.getItem('shipPrice');
-        
+
         if (viewShippingPrice && shipPrice) {
             shipPrice = parseFloat(shipPrice.replace(/"/g, ''));
             viewShippingPrice.textContent = '$' + shipPrice.toFixed(2);
@@ -144,7 +144,7 @@ if (authTokensOrders) {
         if (totalPriceElement) {
             totalPriceElement.textContent = '$' + totalPrice.toFixed(2);
         }
-    }) 
+    })
     .catch(error => {
         console.log('Error Fetching ShowOrderProductShipping', error);
     });

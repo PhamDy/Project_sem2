@@ -199,7 +199,7 @@ function setCookie(name, value) {
 
 document.getElementById("sign-in-button").addEventListener("click", function(event) {
   event.preventDefault();
-  
+
   const email = document.getElementById("emails").value;
   const password = document.getElementById("passwords").value;
 
