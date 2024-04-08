@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @AllArgsConstructor
@@ -16,12 +17,12 @@ public class CreateProductDto {
     @NotEmpty
     private String name;
 
-    @NotEmpty
-    private String img;
-
-    private String img1 ="";
-    private String img2 ="";
-    private String img3 ="";
+//    @NotEmpty
+//    private MultipartFile img;
+//
+//    private MultipartFile img1;
+//    private MultipartFile img2;
+//    private MultipartFile img3;
 
     @NotEmpty
     private String description;
@@ -35,8 +36,6 @@ public class CreateProductDto {
     @NotNull
     private Double price;
 
-    private ProductStatus status;
-
     @NotNull
     private Double discount = 0.00;
 
@@ -44,13 +43,9 @@ public class CreateProductDto {
     private String categoryName;
 
     @NotEmpty
-    private String color;
+    private String[] color;
 
     @NotEmpty
-    private String size;
-
-    @NotNull
-    private Integer quantity;
-
+    private String[] size;
 
 }

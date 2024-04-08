@@ -24,7 +24,7 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Lấy ra danh sách Category")
+    @Operation(summary = "Lấy ra Category theo id")
     ResponseEntity<?> getById(@PathVariable Long id){
         return new ResponseEntity<>(categoryService.findById(id), HttpStatus.OK);
     }

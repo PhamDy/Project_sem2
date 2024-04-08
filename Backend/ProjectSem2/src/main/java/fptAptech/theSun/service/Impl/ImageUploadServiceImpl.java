@@ -13,72 +13,71 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Instant;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 @Service
 public class ImageUploadServiceImpl implements ImageUploadService {
-    @Value("${upload.directory}")
-    private String uploadDirectory;
 
     @Override
     public String uploadImage(MultipartFile file) {
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPost httpPost = new HttpPost("https://api.imgur.com/3/image");
+
         try {
-            // Kiểm tra xem có file được upload không
-            if (file.isEmpty()) {
-                throw new IllegalArgumentException("Please select a file to upload.");
+            // Set headers
+            httpPost.addHeader("Authorization", "Client-ID 941cc9daaaeec01");
+
+            // Build request body
+            MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+            builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+            builder.addBinaryBody("image", file.getInputStream(), ContentType.MULTIPART_FORM_DATA, file.getOriginalFilename());
+            HttpEntity entity = builder.build();
+            httpPost.setEntity(entity);
+
+            // Execute the request
+            HttpResponse response = httpClient.execute(httpPost);
+            HttpEntity responseEntity = response.getEntity();
+
+            // Handle response
+            if (responseEntity != null) {
+                String responseString = EntityUtils.toString(responseEntity);
+                return extractImageUrl(responseString);
             }
-
-            // Kiểm tra nếu file thuôc dạng hình ảnh
-            if (!isImage(file)) {
-                throw new IllegalArgumentException("Only image files are allowed.");
-            }
-
-            // Tạo thư mục chứa nếu chưa tồn tại
-            Path directoryPath = Paths.get(uploadDirectory);
-            if (!Files.exists(directoryPath)) {
-                Files.createDirectories(directoryPath);
-            }
-
-            // Tạo tên riêng cho file
-            String originalFilename = file.getOriginalFilename();
-            String uniqueFilename = Instant.now().toEpochMilli() + "_" + originalFilename;
-
-            // Lưu file lên server
-            Path filePath = Paths.get(uploadDirectory, uniqueFilename);
-            Files.copy(file.getInputStream(), filePath);
-            return filePath.toString();
         } catch (IOException | java.io.IOException e) {
             e.printStackTrace();
-            return null;
-        }
-    }
-
-    // Kiểm tra file có phải dạng hình ảnh không
-    private boolean isImage(MultipartFile file) {
-        String contentType = file.getContentType();
-        return contentType != null && contentType.startsWith("image/");
-    }
-
-    @Override
-    public ResponseEntity<String> deleteImage(String filename) {
-        try {
-            String filePath = uploadDirectory + "/" + filename;
-            File file = new File(filePath);
-
-            if (file.exists()) {
-                if (file.delete()) {
-                    return ResponseEntity.ok("Image " + filename + " deleted successfully.");
-                } else {
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                            .body("Failed to delete image " + filename + ".");
-                }
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body("Image " + filename + " not found.");
+            // Handle IOException
+        } finally {
+            try {
+                httpClient.close();
+            } catch (IOException | java.io.IOException e) {
+                e.printStackTrace();
+                // Handle IOException when closing httpClient
             }
+        }
+        return ""; // Return null if image upload fails
+    }
+
+    private String extractImageUrl(String responseJson) {
+        // Parse the JSON response to extract the image URL
+        try {
+            JsonObject jsonObject = JsonParser.parseString(responseJson).getAsJsonObject();
+            JsonObject dataObject = jsonObject.getAsJsonObject("data");
+            return dataObject.get("link").getAsString();
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Failed to delete image " + filename + ".");
+            return null;
         }
     }
 }

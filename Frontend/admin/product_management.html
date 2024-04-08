@@ -11,21 +11,18 @@
 
     <title>Product Management</title>
 
+    <script src="js/authen.js"></script>
     <!-- Custom fonts for this template -->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
-
-    <!-- Custom styles-->
-    <link href="css/sb-admin-2.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/sb-admin-2.css">
-
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+        
     <!-- Custom styles for this page -->
     <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
     <!-- import axios -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
+    <!-- Custom styles-->
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/sb-admin-2.css">
 
 </head>
 
@@ -34,101 +31,107 @@
     <!-- Page Wrapper -->
     <div id="wrapper">
 
-        <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+       <!-- Sidebar -->
+       <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
-            <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-                <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-laugh-wink"></i>
-                </div>
-                <div class="sidebar-brand-text mx-3">Walkz Admin</div>
-            </a>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider my-0">
-
-            <!-- Nav Item - Dashboard -->
-            <li class="nav-item">
-                <a class="nav-link" href="index.html">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Dashboard</span></a>
-            </li>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-            <!-- Nav Item - Product Management -->
-            <li class="nav-item active">
-                <a class="nav-link" href="product_management.html">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>Product Management</span></a>
-            </li>
-
-            <!-- Nav item - User Management -->
-            <li class="nav-item active">
-                <a class="nav-link" href="user_management.html">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>User Management</span></a>
-            </li>
-
-            <!-- Nav item - Order Management -->
-            <li class="nav-item active">
-                <a class="nav-link" href="order_management.html">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>Order Management</span></a>
-            </li>
-
-            <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
-                    aria-expanded="true" aria-controls="collapseTwo">
-                    <i class="fas fa-fw fa-cog"></i>
-                    <span>Components</span>
-                </a>
-                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Custom Components:</h6>
-                        <a class="collapse-item" href="cards.html">Cards</a>
-                    </div>
-                </div>
-            </li>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-            <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
-                    aria-expanded="true" aria-controls="collapsePages">
-                    <i class="fas fa-fw fa-folder"></i>
-                    <span>Pages</span>
-                </a>
-                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Login Screens:</h6>
-                        <a class="collapse-item" href="login.html">Login</a>
-                        <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
-                    </div>
-                </div>
-            </li>
-
-            <!-- Nav Item - Charts -->
-            <li class="nav-item">
-                <a class="nav-link" href="charts.html">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <span>Charts</span></a>
-            </li>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider d-none d-md-block">
-
-            <!-- Sidebar Toggler (Sidebar) -->
-            <div class="text-center d-none d-md-inline">
-                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+        <!-- Sidebar - Brand -->
+        <a class="sidebar-brand d-flex align-items-center justify-content-center" href="dashBoard.html">
+            <div class="sidebar-brand-icon rotate-n-15">
+                <img src="img/logo.png" alt="" style="width: 50px;">
             </div>
+            <div class="sidebar-brand-text mx-3">Walkz Admin</div>
+        </a>
 
-        </ul>
+        <!-- Divider -->
+        <hr class="sidebar-divider my-0">
+
+        <!-- Nav Item - Dashboard -->
+        <li class="nav-item">
+            <a class="nav-link" href="dashBoard.html">
+                <i class="fas fa-fw fa-tachometer-alt"></i>
+                <span>Dashboard</span></a>
+        </li>
+
+        <!-- Divider -->
+        <hr class="sidebar-divider">
+
+        <!-- Nav Item - Product Management -->
+        <li class="nav-item active">
+            <a class="nav-link" href="product_management.html">
+                <i class="fas fa-fw fa-table"></i>
+                <span>Product Management</span></a>
+        </li>
+
+        <!-- Nav item - User Management -->
+        <li class="nav-item active">
+            <a class="nav-link" href="user_management.html">
+                <i class="fas fa-fw fa-table"></i>
+                <span>User Management</span></a>
+        </li>
+
+        <!-- Nav item - Order Management -->
+        <li class="nav-item active">
+            <a class="nav-link" href="order_management.html">
+                <i class="fas fa-fw fa-table"></i>
+                <span>Order Management</span></a>
+        </li>
+        <!-- Nav item - Category Management -->
+        <li class="nav-item active">
+            <a class="nav-link" href="category_management.html">
+                <i class="fas fa-fw fa-table"></i>
+                <span>Category Management</span></a>
+        </li>
+
+        <!-- Nav Item - Pages Collapse Menu -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
+                aria-expanded="true" aria-controls="collapseTwo">
+                <i class="fas fa-fw fa-cog"></i>
+                <span>Components</span>
+            </a>
+            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Custom Components:</h6>
+                    <a class="collapse-item" href="cards.html">Cards</a>
+                </div>
+            </div>
+        </li>
+
+        <!-- Divider -->
+        <hr class="sidebar-divider">
+
+        <!-- Nav Item - Pages Collapse Menu -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+                aria-expanded="true" aria-controls="collapsePages">
+                <i class="fas fa-fw fa-folder"></i>
+                <span>Pages</span>
+            </a>
+            <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Login Screens:</h6>
+                    <a class="collapse-item" href="login.html">Login</a>
+                    <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
+                </div>
+            </div>
+        </li>
+
+        <!-- Nav Item - Charts -->
+        <li class="nav-item">
+            <a class="nav-link" href="charts.html">
+                <i class="fas fa-fw fa-chart-area"></i>
+                <span>Charts</span></a>
+        </li>
+
+        <!-- Divider -->
+        <hr class="sidebar-divider d-none d-md-block">
+
+        <!-- Sidebar Toggler (Sidebar) -->
+        <div class="text-center d-none d-md-inline">
+            <button class="rounded-circle border-0" id="sidebarToggle"></button>
+        </div>
+
+       </ul>
         <!-- End of Sidebar -->
 
         <!-- Content Wrapper -->
@@ -311,7 +314,7 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">ADMIN</span>
                                 <img class="img-profile rounded-circle"
                                     src="img/undraw_profile.svg">
                             </a>
@@ -349,10 +352,95 @@
                     <!-- Page Heading -->
                     <div class="card-header py-3 d-flex justify-content-between">
                         <h1 class="h3 mb-2 text-gray-800 mr-3">Product Management</h1>
-                        <a href="#" class="btn btn-success">Add Product</a>
+                        <button class="btn btn-primary" onclick="openPopup()">Add Product</button>
                     </div>
                    
+                    <!-- Popup for adding product -->
+                    <div class="modal" id="addProductModal">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Add Product</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="addProductForm">
+                                        <div class="mb-3">
+                                            <label for="productName" class="form-label">Name:</label>
+                                            <input type="text" class="form-control" id="productName" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="productImg" class="form-label">Image (JPG only):</label>
+                                            <input type="file" class="form-control" id="productImg" accept="image/jpeg" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="productImg1" class="form-label">Image 1 (JPG only):</label>
+                                            <input type="file" class="form-control" id="productImg1" accept="image/jpeg">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="productImg2" class="form-label">Image 2 (JPG only):</label>
+                                            <input type="file" class="form-control" id="productImg2" accept="image/jpeg">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="productImg3" class="form-label">Image 3 (JPG only):</label>
+                                            <input type="file" class="form-control" id="productImg3" accept="image/jpeg">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="productDescription" class="form-label">Description:</label>
+                                            <input type="text" class="form-control" id="productDescription" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="productGender" class="form-label">Gender:</label>
+                                            <select class="form-select" id="productGender" required>
+                                                <option value="Male">Male</option>
+                                                <option value="Female">Female</option>
+                                                <option value="Unisex">Unisex</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="productBrand" class="form-label">Brand:</label>
+                                            <input type="text" class="form-control" id="productBrand" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="productPrice" class="form-label">Price:</label>
+                                            <input type="number" class="form-control" id="productPrice" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="productDiscount" class="form-label">Discount:</label>
+                                            <input type="number" class="form-control" id="productDiscount" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="productCategory" class="form-label">Category Name:</label>
+                                            <select class="form-control" name="productCategory" id="productCategory">
+                                                <option value="Shoes">Shoes</option>
+                                                <option value="Clothes">Clothes</option>
+                                                <option value="Hats">Hats</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="productSize" class="form-label">Size:</label>
+                                            <input type="text" class="form-control" id="productSize" required>
+                                            <small class="text-muted">Separate multiple sizes with commas (e.g., M, L, XL)</small>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="productColor" class="form-label">Color:</label>
+                                            <input type="text" class="form-control" id="productColor" required>
+                                            <small class="text-muted">Separate multiple colors with commas (e.g., Red, Black, White)</small>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                        <!-- Loading spinner -->
+                                        <div id="loadingSpinner" class="spinner-border text-primary d-none" role="status">
+                                            <span class="visually-hidden"></span>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
+
+                    
+                    
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-body">
@@ -376,7 +464,6 @@
                                 </table>
                                 
                                 <script>
-                                    // Function to fetch data from API and populate the table
                                     async function getProducts() {
                                         try {
                                             const response = await axios.get('http://localhost:8080/api/products/');
@@ -384,15 +471,13 @@
                                 
                                             const tableBody = document.getElementById('tableBody');
                                 
-                                            // Clear existing table rows
                                             tableBody.innerHTML = '';
                                 
-                                            // Iterate through the data and populate the table
                                             data.forEach(item => {
                                                 const row = document.createElement('tr');
                                                 row.innerHTML = `
                                                     <td>${item.id}</td>
-                                                    <td class="img_product"><img src="${item.img}" alt="Product Image"></td>
+                                                    <td class="product-image"><img src="${item.img}" alt="Product Image"></td>
                                                     <td>${item.name}</td>
                                                     <td>${item.categoryName}</td> 
                                                     <td>${item.brand}</td>      
@@ -400,7 +485,8 @@
                                                     <td>${item.discount}</td>
                                                     <td class="btn-actions">
                                                         <button class="btn btn-primary" onclick="openDetailsModal('${item.id}')">Details</button>
-                                                        <button class="btn btn-warning" onclick="openEditModal('${item.id}')">Update</button>
+                                                        <button class="btn btn-warning" onclick="openEditProductPopup('${item.id}')">Edit</button>
+                                                        <button class="btn btn-warning" onclick="openUpdateModal('${item.id}')">Update</button>
                                                         <button class="btn btn-danger" onclick="remove('${item._id}')">Delete</button> 
                                                     </td>
                                                 `;
@@ -411,7 +497,6 @@
                                         }
                                     }
                                 
-                                   
                                     getProducts();
                                 </script>
                                 
@@ -422,120 +507,178 @@
 
                 </div>
                 <!-- /.container-fluid -->
-                <!-- Modal for displaying product details -->
-                <div class="modal fade" id="productDetailsModal" tabindex="-1" aria-labelledby="productDetailsModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="productDetailsModalLabel">Product Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <div class="row">
-                  <div class="col-md-6">
-                    <strong>ID:</strong> <span id="productDetailsId"></span>
-                    <br />
-                    <strong>Name:</strong>
-                    <span id="productDetailsName"></span>
-                    <br />
-                    <strong>Category:</strong>
-                    <span id="productDetailsCategory"></span>
-                    <br />
-                    <strong>Description:</strong>
-                    <span id="productDetailsDesc"></span>
-                    <br />
-                    <strong>Avatar:</strong>
-                    <img id="productDetailsAvatar" src="" alt="Avatar" />
-                    <br />
-                    <strong>Image 1:</strong>
-                    <img id="productDetailsImg1" src="" alt="Image 1" /><br />
-                    <strong>Image 2:</strong>
-                    <img id="productDetailsImg2" src="" alt="Image 2" /><br />
-                    <strong>Image 3:</strong>
-                    <img id="productDetailsImg3" src="" alt="Image 3" /><br />
-                  </div>
-                  <div class="col-md-6">
-                    <strong>Gender:</strong>
-                    <span id="productDetailsGender"></span><br />
-                    <strong>Brand:</strong>
-                    <span id="productDetailsBrand"></span><br />
-                    <strong>Price:</strong>
-                    <span id="productDetailsPrice"></span><br />
-                    <strong>Discount:</strong>
-                    <span id="productDetailsDiscount"></span><br />
-                    <strong>Size:</strong>
-                    <span id="productDetailsSize"></span><br />
-                    <strong>Color:</strong>
-                    <span id="productDetailsColor"></span><br />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+
+                <!-- Edit Product Modal -->
+                <div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editProductModalLabel">Edit Product</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="editProductForm">
+                                    <input type="hidden" id="productId" readonly>
+
+                                    <div class="mb-3">
+                                        <label for="editProductName" class="form-label">Name:</label>
+                                        <input type="text" class="form-control" id="editProductName" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="editProductImg" class="form-label">Image:</label>
+                                        <input type="file" class="form-control" id="editProductImg" accept="image/jpeg" >
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="editProductImg1" class="form-label">Image 1:</label>
+                                        <input type="file" class="form-control" id="editProductImg1" accept="image/jpeg" >
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="editProductImg2" class="form-label">Image 2:</label>
+                                        <input type="file" class="form-control" id="editProductImg2" accept="image/jpeg" >
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="editProductImg3" class="form-label">Image 3:</label>
+                                        <input type="file" class="form-control" id="editProductImg3" accept="image/jpeg" >
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="editProductDescription" class="form-label">Description:</label>
+                                        <input type="text" class="form-control" id="editProductDescription" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="editProductGender" class="form-label">Gender:</label>
+                                        <select class="form-select" id="editProductGender" required>
+                                            <option value="Male">Male</option>
+                                            <option value="Female">Female</option>
+                                            <option value="Unisex">Unisex</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="editProductBrand" class="form-label">Brand:</label>
+                                        <input type="text" class="form-control" id="editProductBrand" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="editProductPrice" class="form-label">Price:</label>
+                                        <input type="number" class="form-control" id="editProductPrice" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="editProductDiscount" class="form-label">Discount:</label>
+                                        <input type="number" class="form-control" id="editProductDiscount" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="editProductCategoryName" class="form-label">Category Name:</label>
+                                        <input type="text" class="form-control" id="editProductCategoryName" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Update</button>
+                                    <!-- Loading spinner -->
+                                    <div id="loadingSpinner1" class="spinner-border text-primary d-none" role="status">
+                                        <span class="visually-hidden"></span>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Modal for editing product details -->
-<div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editProductModalLabel">
-                    Update Product
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="editProductForm">
-                    <div class="mb-3">
-                        <label for="editProductId" class="form-label">ID</label>
-                        <input type="text" class="form-control" id="editProductId" name="id" readonly/>
+
+
+
+                <!-- Modal for displaying product details -->
+                <div class="modal fade" id="productDetailsModal" tabindex="-1" aria-labelledby="productDetailsModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="productDetailsModalLabel">Product Details</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                            <div class="col-md-6">
+                                <strong>ID:</strong> <span id="productDetailsId"></span>
+                                <br />
+                                <strong>Name:</strong>
+                                <span id="productDetailsName"></span>
+                                <br />
+                                <strong>Category:</strong>
+                                <span id="productDetailsCategory"></span>
+                                <br />
+                                <strong>Description:</strong>
+                                <span id="productDetailsDesc"></span>
+                                <br />
+                                <br>
+                                <br>
+                                <strong>Avatar:</strong>
+                                <img id="productDetailsAvatar" src="" alt="Avatar" style="width: 500px; height: 500px;"/>
+                                <br />
+                                <strong>Image 1:</strong>
+                                <img id="productDetailsImg1" src="" alt="Image 1" style="width: 500px; height: 500px;"/><br />
+                                <strong>Image 2:</strong>
+                                <img id="productDetailsImg2" src="" alt="Image 2" style="width: 500px; height: 500px;"/><br />
+                                <strong>Image 3:</strong>
+                                <img id="productDetailsImg3" src="" alt="Image 3" style="width: 500px; height: 500px;"/><br />
+                            </div>
+                            <div class="col-md-6">
+                                <strong>Gender:</strong>
+                                <span id="productDetailsGender"></span><br />
+                                <strong>Brand:</strong>
+                                <span id="productDetailsBrand"></span><br />
+                                <strong>Price:</strong>
+                                <span id="productDetailsPrice"></span><br />
+                                <strong>Discount:</strong>
+                                <span id="productDetailsDiscount"></span><br />
+                                <strong>Size:</strong>
+                                <span id="productDetailsSize"></span><br />
+                                <strong>Color:</strong>
+                                <span id="productDetailsColor"></span><br />
+                            </div>
+                            </div>
+                        </div>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="editProductName" class="form-label">Product Name</label>
-                        <input type="text" class="form-control" id="editProductName" name="name"/>
+                </div>
+
+                <!-- Modal for update product -->
+                <div class="modal fade" id="updateProductModal" tabindex="-1" aria-labelledby="updateProductModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="updateProductModalLabel">
+                                    Update Product
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="updateProductForm">
+                                    <div class="mb-3">
+                                        <label for="editProductId" class="form-label">ID</label>
+                                        <input type="text" class="form-control" id="editProductId" name="id" readonly/>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="editProductSize" class="form-label">Size</label>
+                                        <select class="form-select" id="editProductSize" name="size">
+                                            
+                                        </select>
+                                        <input type="text" class="form-control mt-2" id="editProductCustomSize" placeholder="Custom Size">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="editProductColor" class="form-label">Color</label>
+                                        <select class="form-select" id="editProductColor" name="color">
+                                            
+                                        </select>
+                                        <input type="text" class="form-control mt-2" id="editProductCustomColor" placeholder="Custom Color">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="editProductQuantity" class="form-label">Quantity</label>
+                                        <input type="text" class="form-control" id="editProductQuantity" name="quantity"/>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">
+                                        Update
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="editProductCategory" class="form-label">Category</label>
-                        <input type="text" class="form-control" id="editProductCategory" name="categoryName"/>
-                    </div>
-                    <div class="mb-3">
-                        <label for="editProductBrand" class="form-label">Brand</label>
-                        <input type="text" class="form-control" id="editProductBrand" name="brand"/>
-                    </div>
-                    <div class="mb-3">
-                        <label for="editProductPrice" class="form-label">Price</label>
-                        <input type="text" class="form-control" id="editProductPrice" name="price"/>
-                    </div>
-                    <div class="mb-3">
-                        <label for="editProductDiscount" class="form-label">Discount</label>
-                        <input type="text" class="form-control" id="editProductDiscount" name="discount"/>
-                    </div>
-                    <div class="mb-3">
-                        <label for="editProductSize" class="form-label">Size</label>
-                        <select class="form-select" id="editProductSize" name="size">
-                            <option value="M">M</option>
-                            <option value="L">L</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="editProductColor" class="form-label">Color</label>
-                        <select class="form-select" id="editProductColor" name="color">
-                            <option value="Black">Black</option>
-                            <option value="White">White</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="editProductQuantity" class="form-label">Quantity</label>
-                        <input type="text" class="form-control" id="editProductQuantity" name="quantity"/>
-                    </div>
-                    <button type="submit" class="btn btn-primary">
-                        Update
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+                </div>
+
             </div>
             <!-- End of Main Content -->
         </div>
@@ -551,23 +694,30 @@
 
     <!-- Logout Modal-->
     <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
-                </div>
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="#" onclick="logout()">Logout</a>
             </div>
         </div>
     </div>
+    </div>
+
+    <script>
+    function logout() {
+        sessionStorage.removeItem('token');
+        window.location.href = 'login.html'; 
+    }
+    </script>
 
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
@@ -584,8 +734,8 @@
     <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
     <!-- Page level custom scripts -->
-    <script src="js/demo/datatables-demo.js"></script>
     <script src="js/product.js"></script>
+    <script src="js/demo/datatables-demo.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 

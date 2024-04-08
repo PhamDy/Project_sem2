@@ -27,6 +27,11 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     @Override
+    public List<String> getAllColor() {
+        return warehouseRepository.getAllColor();
+    }
+
+    @Override
     public List<String> getByColor(Long id) {
         return warehouseRepository.getByColor(id);
     }

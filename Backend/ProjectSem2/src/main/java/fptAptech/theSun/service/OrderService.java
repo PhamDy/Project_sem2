@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Map;
 
 public interface OrderService {
 
@@ -39,5 +40,22 @@ public interface OrderService {
     void updateOrderStatus(Long orderId, OrderViewAdmin dto);
 
     void deleteOrder(Long id);
+
+    Double earningsMonthly();
+
+    Double earningsYear();
+
+    Integer getOrderPending();
+
+    List<Map<String, Object>> getTotalByMonthInCurrentYear();
+
+    List<OrderDeatilDto> orderSummary();
+
+    Long getCountOrdersByMonth();
+
+    Long getOrderSuccess();
+
+    Long getOrderCancel();
+
 
 }

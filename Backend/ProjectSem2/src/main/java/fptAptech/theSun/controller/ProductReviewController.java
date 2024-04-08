@@ -1,5 +1,6 @@
 package fptAptech.theSun.controller;
 
+import fptAptech.theSun.dto.ProductReviewDto;
 import fptAptech.theSun.entity.ProductReview;
 import fptAptech.theSun.service.ProductReviewService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/products/{productId}")
+@CrossOrigin(origins = "*",maxAge = 3600)
 public class ProductReviewController {
 
     @Autowired
@@ -31,8 +33,8 @@ public class ProductReviewController {
     }
     @PutMapping("/update/{reviewId}")
     @Operation(summary = "Khách hàng sửa đánh giá sản phẩm", description = "Khách hàng nhập comment và star mới")
-    public ResponseEntity<Void> updateReview(@PathVariable Long reviewId, @RequestBody ProductReview updatedReview) {
-        productReviewService.updateReview(reviewId, updatedReview.getComment(), updatedReview.getStar());
+    public ResponseEntity<Void> updateReview(@PathVariable Long reviewId, @RequestBody ProductReviewDto productReviewDto) {
+        productReviewService.updateReview(reviewId, productReviewDto);
         return ResponseEntity.ok().build();
     }
 

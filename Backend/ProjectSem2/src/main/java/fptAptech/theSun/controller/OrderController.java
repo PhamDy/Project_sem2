@@ -72,7 +72,9 @@ public class OrderController {
                 .orElseThrow(() -> new CustomException("Delivery not found"));
         var cart = cartService.showCart(CartsStatus.Open);
         Double tax = getTax(cart.getTotalPrice());
-        Double totalOrder = cart.getTotalPrice() + delivery.getPrice() + tax;
+        Double totalOrder1 = cart.getTotalPrice() + delivery.getPrice() + tax;
+
+        Double totalOrder = Math.round(totalOrder1 * 100.0) / 100.0;
 
         try {
             Payment payment = paypalService.createPayment(
@@ -140,6 +142,12 @@ public class OrderController {
         return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
     }
 
+    @GetMapping("/orderSummary")
+    @Operation(summary = "Show ra đơn hàng Summary khách hàng vừa đặt")
+    public ResponseEntity<?> showOrderSummary() {
+        return new ResponseEntity<>(orderService.orderSummary(), HttpStatus.OK);
+    }
+
     @GetMapping("/showDelivery")
     @Operation(summary = "Show danh sách các phương án vận chuyển để Khách hàng có thể lựa chọn")
     public ResponseEntity<?> showDelivery() {
@@ -199,6 +207,48 @@ public class OrderController {
         } else {
             return total*0.05;
         }
+    }
+
+    @GetMapping("/toalByMonth")
+    @Operation(summary = "Lấy ra doanh thu theo tháng hiện tại")
+    public ResponseEntity<?> earningsMonthly() {
+        return new ResponseEntity<>(orderService.earningsMonthly(), HttpStatus.OK);
+    }
+
+    @GetMapping("/toalByYear")
+    @Operation(summary = "Lấy ra doanh thu theo năm hiện tại")
+    public ResponseEntity<?> earningsYear() {
+        return new ResponseEntity<>(orderService.earningsYear(), HttpStatus.OK);
+    }
+
+    @GetMapping("/orderPending")
+    @Operation(summary = "Lấy ra số lượng order đang xử lý")
+    public ResponseEntity<?> getOrderPending() {
+        return new ResponseEntity<>(orderService.getOrderPending(), HttpStatus.OK);
+    }
+
+    @GetMapping("/totalOrders")
+    @Operation(summary = "Show ra đơn hàng Summary khách hàng vừa đặt")
+    public ResponseEntity<?> getCountOrdersByMonth() {
+        return new ResponseEntity<>(orderService.getCountOrdersByMonth(), HttpStatus.OK);
+    }
+
+    @GetMapping("/orderSuccess")
+    @Operation(summary = "Lấy ra số lượng order đã thành công")
+    public ResponseEntity<?> getOrderSuccess() {
+        return new ResponseEntity<>(orderService.getOrderSuccess(), HttpStatus.OK);
+    }
+
+    @GetMapping("/orderCancel")
+    @Operation(summary = "Lấy ra số lượng order đang xử lý")
+    public ResponseEntity<?> getOrderCancel() {
+        return new ResponseEntity<>(orderService.getOrderCancel(), HttpStatus.OK);
+    }
+
+    @GetMapping("/revenue")
+    @Operation(summary = "Lấy ra doanh thu theo tháng hiện tại")
+    public ResponseEntity<?> getTotalByMonthInCurrentYear() {
+        return new ResponseEntity<>(orderService.getTotalByMonthInCurrentYear(), HttpStatus.OK);
     }
 
 }

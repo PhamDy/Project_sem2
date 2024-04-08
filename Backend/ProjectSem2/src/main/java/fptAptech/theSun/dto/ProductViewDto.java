@@ -1,11 +1,14 @@
 package fptAptech.theSun.dto;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class ProductViewDto implements Serializable {
 
@@ -17,8 +20,14 @@ public class ProductViewDto implements Serializable {
 
     private String img;
 
+    private String brand;
+
+    private String gender;
+
     private Double price;
 
     private Double discount;
+
+    private LocalDateTime createAt;
 
 }
