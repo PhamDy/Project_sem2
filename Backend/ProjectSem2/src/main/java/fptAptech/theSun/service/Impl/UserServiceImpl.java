@@ -18,6 +18,7 @@ import fptAptech.theSun.respository.*;
 import fptAptech.theSun.security.jwt.AccessToken;
 import fptAptech.theSun.security.jwt.JwtFilter;
 import fptAptech.theSun.security.jwt.JwtService;
+import fptAptech.theSun.service.ImageUploadService;
 import fptAptech.theSun.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import org.webjars.NotFoundException;
 
 import javax.management.relation.RoleStatus;
@@ -59,6 +61,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private AddressRepository addressRepository;
+
+    @Autowired
+    private ImageUploadService imageUploadService;
 
     @Autowired
     private OtpUtil otpUtil;
@@ -310,5 +315,14 @@ public class UserServiceImpl implements UserService {
             throw new CustomException("Can not delete Super Admin");
         }
         userRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public void updateAvatar(MultipartFile img) {
+        String email = JwtFilter.CURRENT_USER;
+        var user = userRepository.findByEmail(email).orElseThrow(() -> new CustomException("You must log in before"));
+        user.setAvatar(imageUploadService.uploadImage(img));
+        userRepository.save(user);
     }
 }

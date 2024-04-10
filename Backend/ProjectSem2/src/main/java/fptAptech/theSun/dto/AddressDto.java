@@ -9,6 +9,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -37,6 +39,9 @@ public class AddressDto implements Serializable {
     @NotEmpty
     @Email
     private String email;
+
+    @NotEmpty
+    private String dayOfBirth;
 
     @NotEmpty
     @Size(min = 10, max = 10)

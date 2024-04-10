@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 import java.util.Objects;
@@ -166,6 +167,13 @@ public class UserController {
     public ResponseEntity<?>deleteUserById(@PathVariable Long id) {
         userService.deleteById(id);
         return new ResponseEntity<>("Delete user Successfully!", HttpStatus.OK);
+    }
+
+    @PatchMapping("/uploadImg")
+    @Operation(summary = "User thay đổi Avatar")
+    public ResponseEntity<?>uploadImg(@RequestParam(value = "img")MultipartFile img){
+        userService.updateAvatar(img);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
