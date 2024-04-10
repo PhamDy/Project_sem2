@@ -176,6 +176,12 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @GetMapping("/addressByUser")
+    @Operation(summary = "Lấy ra thông tin Address cho User")
+    public ResponseEntity<?>getAddressByUser(){
+        return new ResponseEntity<>(addressService.getAddressByUser(), HttpStatus.OK);
+    }
+
 
 }
 

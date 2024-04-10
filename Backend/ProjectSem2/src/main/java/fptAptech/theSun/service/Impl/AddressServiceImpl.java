@@ -50,4 +50,25 @@ public class AddressServiceImpl implements AddressService {
         address.setCreatedBy("User");
         addressRepository.save(address);
     }
+
+    @Override
+    public AddressDto getAddressByUser() {
+        String email = JwtFilter.CURRENT_USER;
+        var user = Optional.ofNullable(userRepository.findByEmail(email).orElseThrow(() ->
+                new CustomException("You must log in before!")));
+        var address = addressRepository.findByUser_Id(user.get().getId());
+
+        return AddressDto.builder()
+                .firstName(address.getFirst_name())
+                .lastName(address.getLast_name())
+                .country(address.getCountry())
+                .city(address.getCity())
+                .address(address.getAddress())
+                .optional(address.getOptional())
+                .zipCode(address.getZipCode())
+                .email(address.getEmail())
+                .phone(address.getPhone())
+                .dayOfBirth(String.valueOf(address.getDayOfBirth()))
+                .build();
+    }
 }

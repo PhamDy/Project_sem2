@@ -6,4 +6,6 @@ public interface AddressService {
 
     void saveAddreessOfUser(AddressDto addressDto);
 
+    AddressDto getAddressByUser();
+
 }
