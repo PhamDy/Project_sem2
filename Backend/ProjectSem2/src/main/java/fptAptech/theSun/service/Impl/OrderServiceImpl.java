@@ -340,6 +340,7 @@ public class OrderServiceImpl implements OrderService {
             dto.setQuantity(item.getQuantity());
             dto.setPrice(item.getPrice());
             dto.setSubtotal(item.getSubtotal());
+            dto.setImg(item.getProducts().getImg());
             listDto.add(dto);
         }
         return new PageImpl<>(listDto, list.getPageable(), list.getTotalPages());
@@ -430,6 +431,7 @@ public class OrderServiceImpl implements OrderService {
             dto.setPrice(item.getPrice());
             dto.setDiscount(item.getDiscount());
             dto.setSubtotal(item.getSubtotal());
+            dto.setImg(item.getProducts().getImg());
             listDto.add(dto);
         }
         return listDto;

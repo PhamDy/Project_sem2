@@ -19,4 +19,5 @@ public class OrderDeatilDto implements Serializable {
     private Double price;
     private Double discount;
     private Double subtotal;
+    private String img;
 }

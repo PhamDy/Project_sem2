@@ -136,7 +136,7 @@ public class OrderController {
         orderService.deleteOrderWhenCancelPayment();
         orderService.returnQuantity();
 
-        URI uri = URI.create("http://127.0.0.1:5500/404.html");
+        URI uri = URI.create("http://127.0.0.1:5500/ordersuccess.html");
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(uri);
         return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
