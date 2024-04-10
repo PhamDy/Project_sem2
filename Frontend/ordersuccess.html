@@ -177,20 +177,31 @@
         </div>
 
         <div class="container">
-            <div class="order-success-box" >
-                <div class="order-success-top">
-                    <i style="border: 1px solid #000;border-radius: 100%; width: 100px; height: 100px; padding-top: 30px; font-size: 40px;" class="fa-solid fa-check"></i>
+            <div class="order-success-box">
+                <div class="top-order-container">
+                    <div class="order-success-top">
+                        <i style="border: 1px solid #000;border-radius: 100%; width: 100px; height: 100px; padding-top: 30px; font-size: 40px;" class="fa-solid fa-check"></i>
+                    </div>
+                    <h1>THANKS FOR FOR YOUR PURCHASE</h1>
+                    <p>Your order number is: <strong><span id="orderID"></span></strong></p>
+                    <p>We'll email you an order details and tracking info</p>
+                    <div style="justify-content: center; display: flex; margin-top: 40px; margin-bottom: 40px;">
+                        <a href="product.html">
+                            <button>Continue Shopping</button>
+                        </a>
+                    </div>
                 </div>
-                <h1>THANKS FOR FOR YOUR PURCHASE</h1>
-                <p>Your order number is: <strong>000000012.</strong></p>
-                <p>We'll email you an order details and tracking info</p>
-                <div style="justify-content: center; display: flex; margin-top: 40px; margin-bottom: 40px;">
-                <a href="product.html">
-                    <button>Continue Shopping</button>
-                </a>
-            </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="order-image-container">
+                            <h6 style="margin-bottom: 40px;">ORDER OVERVIEW</h6>
+                            <div class="dashboard-product" style="width: 70%;"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+
 
     <footer>
             <div class="top-footer">
@@ -352,6 +363,8 @@
 
     <script src="Shoes/JS/utils.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="Shoes/JS/navbar.js"></script>
+    <script src="Shoes/JS/ordersuccess.js"></script>
     <script src="Shoes/JS/search.js"></script>
     <script src="Shoes/JS/product.js"></script>
     <script src="Shoes/JS/cart.js"></script>
@@ -367,9 +380,6 @@
     type="text/javascript"
     src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"
   ></script>
-  <script src="Shoes/JS/ordersuccess.js"></script>
-  <script src="Shoes/JS/details.js"></script>
-    <script src="Shoes/JS/navbar.js"></script>
     <script src="Shoes/JS/scroll.js"></script>
     <!-- <script src="test/test.js"></script> -->
     </body>

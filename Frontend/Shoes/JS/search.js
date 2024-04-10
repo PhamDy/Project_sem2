@@ -44,6 +44,7 @@ function displaySearchResults(products, query) {
     updateSearchResultMessage(query, false);
   } else {
     products.forEach(product => {
+      const productId = product.id;
       const productTitle = product.name;
       const productPrice = product.price;
       const productImage = product.img;
@@ -53,9 +54,9 @@ function displaySearchResults(products, query) {
       productElement.innerHTML = `
         <ul class="prod-search">
           <li class="product-info-search">
-            <a href=""><img style="width: 100%;" src="${productImage}" alt="" class="search-prod-img"></a>
+            <a href="#" onclick="openProductDetails(${productId}); return false;"><img style="width: 100%;" src="${productImage}" alt="" class="search-prod-img"></a>
             <h4 class="product-title-search">
-              <a href="">${highlightSearchTerm(productTitle, query)}</a>
+              <a href="#" onclick="openProductDetails(${productId}); return false;">${highlightSearchTerm(productTitle, query)}</a>
             </h4>
             <span>
               <p class="price-product-search mb-0">
@@ -68,6 +69,10 @@ function displaySearchResults(products, query) {
       searchResultContainer.appendChild(productElement);
     });
   }
+}
+
+function openProductDetails(productId) {
+  window.location.href = `details.html?id=${productId}`;
 }
 
 function highlightSearchTerm(text, searchTerm) {

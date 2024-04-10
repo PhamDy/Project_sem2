@@ -347,6 +347,10 @@
     margin-bottom: 0px;
 }
 
+.continue-shopping.updatecart a:hover {
+    background-color: #51adcd!important;
+}
+
 @media screen and (max-width: 767.98px) {
     .page-cart .content-pages {
         padding-top: 20px;

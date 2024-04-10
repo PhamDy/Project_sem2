@@ -167,18 +167,21 @@ function fetchCategories() {
     Promise.all([
         axios.get("http://localhost:8080/api/category/"),
         axios.get("http://localhost:8080/api/products/getGender"),
-        axios.get("http://localhost:8080/api/products/getBrand")
+        axios.get("http://localhost:8080/api/products/getBrand"),
+        axios.get("http://localhost:8080/api/warehouse/color")
     ])
     .then(responses => {
         const categoriesResponse = responses[0];
         const genderResponse = responses[1];
         const brandResponse = responses[2];
+        const colorResponse = responses[3];
 
         const categories1 = categoriesResponse.data;
         const gender = genderResponse.data;
         const brand = brandResponse.data;
+        const color = colorResponse.data;
 
-        renderCategories(categories1, gender, brand);
+        renderCategories(categories1, gender, brand, color);
     })
     .catch(error => {
         console.error('Error:', error);
@@ -187,14 +190,32 @@ function fetchCategories() {
 
 fetchCategories();
 
-function renderCategories(categories, gender, brand) {
+const priceRanges1 = [
+    { id: "1", label: "Under 50$", for: "price1" }
+];
+
+const priceRanges2 = [
+    { id: "1", label: "50$ - 100$",  for: "price2"  }
+
+];
+
+const priceRanges3 = [
+    { id: "1", label: "100$ - 250$",  for: "price3"  }
+
+];
+
+const priceRanges4 = [
+    { id: "1", label: "Over 250$",  for: "price4"  }
+];
+
+function renderCategories(categories, gender, brand, color) {
     const categoriesrow1 = document.querySelector("#CategoryList");
     categories.forEach(category => {
         const {id, name} = category;
         const categoriesul = document.createElement('li');
         categoriesul.classList.add('clickable')
         categoriesul.innerHTML = `
-            <input type="checkbox" id="${name}" class="filter-button" onchange="filterCategory()">
+            <input type="checkbox" id="${name}" class="filter-button category" onchange="filterCategory()">
             <label for="${name}" style="display: inline-flex;">${name}</label>
         `
         categoriesrow1.appendChild(categoriesul);
@@ -205,7 +226,7 @@ function renderCategories(categories, gender, brand) {
         const genderul = document.createElement('li');
         genderul.classList.add('clickable')
         genderul.innerHTML =  `
-        <input type="checkbox" id="${genders}" class="filter-button" onchange="filterGender()">
+        <input type="checkbox" id="${genders}" class="filter-button gender" onchange="filterGender()">
         <label for="${genders}" style="display: inline-flex;">${genders}</label>`
         categoriesgender.appendChild(genderul);
     });
@@ -215,32 +236,261 @@ function renderCategories(categories, gender, brand) {
         const brandul = document.createElement('li');
         brandul.classList.add('clickable')
         brandul.innerHTML = `
-        <input type="checkbox" id="${brands}" class="filter-button" onchange="filterBrand()">
+        <input type="checkbox" id="${brands}" class="filter-button brand" onchange="filterBrand()">
         <label for="${brands}" style="display: inline-flex;">${brands}</label>
         `
         categoriesbrand.appendChild(brandul)
     });
+
+    const priceListContainer1 = document.getElementById("priceList");
+            priceRanges1.forEach(range => {
+                const li = document.createElement("li");
+                li.classList.add("clickable");
+                li.innerHTML = `
+                <input type="checkbox" id="${range.id}" class="filter-button price1" onchange="filterPrice1()">
+                    <label for="${range.for}" style="display: inline-flex;">${range.label}</label>
+                `;
+                priceListContainer1.appendChild(li);
+            });
+            const priceListContainer2 = document.getElementById("priceList");
+            priceRanges2.forEach(range => {
+                const li = document.createElement("li");
+                li.classList.add("clickable");
+                li.innerHTML = `
+                <input type="checkbox" id="${range.id}" class="filter-button price2" onchange="filterPrice2()">
+                    <label for="${range.for}" style="display: inline-flex;">${range.label}</label>
+                `;
+                priceListContainer2.appendChild(li);
+            });
+            const priceListContainer3 = document.getElementById("priceList");
+            priceRanges3.forEach(range => {
+                const li = document.createElement("li");
+                li.classList.add("clickable");
+                li.innerHTML = `
+                <input type="checkbox" id="${range.id}" class="filter-button price3" onchange="filterPrice3()">
+                    <label for="${range.for}" style="display: inline-flex;">${range.label}</label>
+                `;
+                priceListContainer3.appendChild(li);
+            });
+            const priceListContainer4 = document.getElementById("priceList");
+            priceRanges4.forEach(range => {
+                const li = document.createElement("li");
+                li.classList.add("clickable");
+                li.innerHTML = `
+                <input type="checkbox" id="${range.id}" class="filter-button price4" onchange="filterPrice4()">
+                    <label for="${range.for}" style="display: inline-flex;">${range.label}</label>
+                `;
+                priceListContainer4.appendChild(li);
+            });
+
+            const categoriescolor = document.querySelector("#colourList");
+            color.forEach(colors => {
+                const colorbutton = document.createElement('button');
+                colorbutton.id = colors;
+                colorbutton.classList.add("color-button");
+                colorbutton.setAttribute('onclick', 'toggleIcon(this); filtercolor();');
+                colorbutton.id
+                colorbutton.innerHTML = `
+                <div class="color-choose" style="background-color: ${colors}"></div>
+                <span class="color-text">${colors}</span>
+                <i class="fa-solid fa-check fa-beat img-color-product"></i>
+                `
+                categoriescolor.appendChild(colorbutton);
+            });
 }
 
+
 function filterCategory() {
-    const selectedCategories = Array.from(document.querySelectorAll('.filter-button:checked')).map(checkbox => checkbox.id);
+    const selectedCategories = Array.from(document.querySelectorAll('.filter-button.category:checked')).map(checkbox => checkbox.id);
     const selectedGender = getSelectedGenderFromURL();
     const selectedBrand = getSelectedBrandFromURL();
-    showfilterProduct(selectedCategories, selectedGender, selectedBrand);
+    const selectedPrice = getSelectedPriceFromURL();
+    const selectedPrice2 = getSelectedPrice2FromURL();
+    const selectedPrice3 = getSelectedPrice3FromURL();
+    const selectedPrice4 = getSelectedPrice4FromURL();
+    const selectFeatured = getSelectedFeaturedFromURL();
+    const selectNewest = getSelectedNewestFromURL();
+    const selectDirection = getSelectedDirectionFromURL();
+    const SelectSale = getSelectedSaleFromURL();
+    const selectColor = getSelectedColorFromURL();
+    showfilterProduct(selectedCategories, selectedGender, selectedBrand, selectedPrice, selectedPrice2, selectedPrice3, selectedPrice4, selectFeatured, selectNewest, selectDirection, SelectSale, selectColor);
 }
 
 function filterGender() {
-    const selectedGender = Array.from(document.querySelectorAll('.filter-button:checked')).map(checkbox => checkbox.id);
+    const selectedGender = Array.from(document.querySelectorAll('.filter-button.gender:checked')).map(checkbox => checkbox.id);
     const selectedCategories = getSelectedCategoriesFromURL();
     const selectedBrand = getSelectedBrandFromURL();
-    showfilterProduct(selectedCategories, selectedGender, selectedBrand);
+    const selectedPrice = getSelectedPriceFromURL();
+    const selectedPrice2 = getSelectedPrice2FromURL();
+    const selectedPrice3 = getSelectedPrice3FromURL();
+    const selectedPrice4 = getSelectedPrice4FromURL();
+    const selectFeatured = getSelectedFeaturedFromURL();
+    const selectNewest = getSelectedNewestFromURL();
+    const selectDirection = getSelectedDirectionFromURL();
+    const SelectSale = getSelectedSaleFromURL();
+    const selectColor = getSelectedColorFromURL();
+    showfilterProduct(selectedCategories, selectedGender, selectedBrand, selectedPrice, selectedPrice2, selectedPrice3, selectedPrice4, selectFeatured, selectNewest, selectDirection, SelectSale, selectColor);
 }
 
 function filterBrand() {
-    const selectedBrand = Array.from(document.querySelectorAll('.filter-button:checked')).map(checkbox => checkbox.id);
+    const selectedBrand = Array.from(document.querySelectorAll('.filter-button.brand:checked')).map(checkbox => checkbox.id);
     const selectedCategories = getSelectedCategoriesFromURL();
     const selectedGender = getSelectedGenderFromURL();
-    showfilterProduct(selectedCategories, selectedGender, selectedBrand);
+    const selectedPrice = getSelectedPriceFromURL();
+    const selectedPrice2 = getSelectedPrice2FromURL();
+    const selectedPrice3 = getSelectedPrice3FromURL();
+    const selectedPrice4 = getSelectedPrice4FromURL();
+    const selectFeatured = getSelectedFeaturedFromURL();
+    const selectNewest = getSelectedNewestFromURL();
+    const selectDirection = getSelectedDirectionFromURL();
+    const SelectSale = getSelectedSaleFromURL();
+    const selectColor = getSelectedColorFromURL();
+    showfilterProduct(selectedCategories, selectedGender, selectedBrand, selectedPrice, selectedPrice2, selectedPrice3, selectedPrice4, selectFeatured, selectNewest, selectDirection, SelectSale, selectColor);
+}
+
+function filterPrice1() {
+    const selectedPrice = Array.from(document.querySelectorAll('.filter-button.price1:checked')).map(checkbox => checkbox.id);
+    const selectedCategories = getSelectedCategoriesFromURL();
+    const selectedGender = getSelectedGenderFromURL();
+    const selectedBrand = getSelectedBrandFromURL();
+    const selectedPrice2 = getSelectedPrice2FromURL();
+    const selectedPrice3 = getSelectedPrice3FromURL();
+    const selectedPrice4 = getSelectedPrice4FromURL();
+    const selectFeatured = getSelectedFeaturedFromURL();
+    const selectNewest = getSelectedNewestFromURL();
+    const selectDirection = getSelectedDirectionFromURL();
+    const SelectSale = getSelectedSaleFromURL();
+    const selectColor = getSelectedColorFromURL();
+    showfilterProduct(selectedCategories, selectedGender, selectedBrand, selectedPrice, selectedPrice2, selectedPrice3, selectedPrice4, selectFeatured, selectNewest, selectDirection, SelectSale, selectColor);
+}
+
+function filterPrice2() {
+    const selectedPrice2 = Array.from(document.querySelectorAll('.filter-button.price2:checked')).map(checkbox => checkbox.id);
+    const selectedCategories = getSelectedCategoriesFromURL();
+    const selectedGender = getSelectedGenderFromURL();
+    const selectedBrand = getSelectedBrandFromURL();
+    const selectedPrice = getSelectedPriceFromURL();
+    const selectedPrice3 = getSelectedPrice3FromURL();
+    const selectedPrice4 = getSelectedPrice4FromURL();
+    const selectFeatured = getSelectedFeaturedFromURL();
+    const selectNewest = getSelectedNewestFromURL();
+    const selectDirection = getSelectedDirectionFromURL();
+    const SelectSale = getSelectedSaleFromURL();
+    const selectColor = getSelectedColorFromURL();
+    showfilterProduct(selectedCategories, selectedGender, selectedBrand, selectedPrice, selectedPrice2, selectedPrice3, selectedPrice4, selectFeatured, selectNewest, selectDirection, SelectSale, selectColor);
+}
+
+function filterPrice3() {
+    const selectedPrice3 = Array.from(document.querySelectorAll('.filter-button.price3:checked')).map(checkbox => checkbox.id);
+    const selectedCategories = getSelectedCategoriesFromURL();
+    const selectedGender = getSelectedGenderFromURL();
+    const selectedBrand = getSelectedBrandFromURL();
+    const selectedPrice = getSelectedPriceFromURL();
+    const selectedPrice2 = getSelectedPrice2FromURL();
+    const selectedPrice4 = getSelectedPrice4FromURL();
+    const selectFeatured = getSelectedFeaturedFromURL();
+    const selectNewest = getSelectedNewestFromURL();
+    const selectDirection = getSelectedDirectionFromURL();
+    const SelectSale = getSelectedSaleFromURL();
+    const selectColor = getSelectedColorFromURL();
+    showfilterProduct(selectedCategories, selectedGender, selectedBrand, selectedPrice, selectedPrice2, selectedPrice3, selectedPrice4, selectFeatured, selectNewest, selectDirection, SelectSale, selectColor);
+}
+
+function filterPrice4() {
+    const selectedPrice4 = Array.from(document.querySelectorAll('.filter-button.price4:checked')).map(checkbox => checkbox.id);
+    const selectedCategories = getSelectedCategoriesFromURL();
+    const selectedGender = getSelectedGenderFromURL();
+    const selectedBrand = getSelectedBrandFromURL();
+    const selectedPrice = getSelectedPriceFromURL();
+    const selectedPrice2 = getSelectedPrice2FromURL();
+    const selectedPrice3 = getSelectedPrice3FromURL();
+    const selectFeatured = getSelectedFeaturedFromURL();
+    const selectNewest = getSelectedNewestFromURL();
+    const selectDirection = getSelectedDirectionFromURL();
+    const SelectSale = getSelectedSaleFromURL();
+    const selectColor = getSelectedColorFromURL();
+    showfilterProduct(selectedCategories, selectedGender, selectedBrand, selectedPrice, selectedPrice2, selectedPrice3, selectedPrice4, selectFeatured, selectNewest, selectDirection, SelectSale, selectColor);
+}
+
+function SortFeatured() {
+    const selectFeatured = Array.from(document.querySelectorAll('.sortFeatured')).map(button => button.id);
+    const selectedCategories = getSelectedCategoriesFromURL();
+    const selectedGender = getSelectedGenderFromURL();
+    const selectedBrand = getSelectedBrandFromURL();
+    const selectedPrice = getSelectedPriceFromURL();
+    const selectedPrice2 = getSelectedPrice2FromURL();
+    const selectedPrice3 = getSelectedPrice3FromURL();
+    const selectedPrice4 = getSelectedPrice4FromURL();
+    const selectNewest = getSelectedNewestFromURL();
+    const selectDirection = getSelectedDirectionFromURL();
+    const SelectSale = getSelectedSaleFromURL();
+    const selectColor = getSelectedColorFromURL();
+    showfilterProduct(selectedCategories, selectedGender, selectedBrand, selectedPrice, selectedPrice2, selectedPrice3, selectedPrice4, selectFeatured, selectNewest, selectDirection, SelectSale, selectColor);
+}
+
+function SortNewest() {
+    const selectNewest = Array.from(document.querySelectorAll('.sortNewest')).map(button => button.id);
+    const selectedCategories = getSelectedCategoriesFromURL();
+    const selectedGender = getSelectedGenderFromURL();
+    const selectedBrand = getSelectedBrandFromURL();
+    const selectedPrice = getSelectedPriceFromURL();
+    const selectedPrice2 = getSelectedPrice2FromURL();
+    const selectedPrice3 = getSelectedPrice3FromURL();
+    const selectedPrice4 = getSelectedPrice4FromURL();
+    const selectFeatured = getSelectedFeaturedFromURL();
+    const selectDirection = getSelectedDirectionFromURL();
+    const SelectSale = getSelectedSaleFromURL();
+    const selectColor = getSelectedColorFromURL();
+    showfilterProduct(selectedCategories, selectedGender, selectedBrand, selectedPrice, selectedPrice2, selectedPrice3, selectedPrice4, selectFeatured, selectNewest, selectDirection, SelectSale, selectColor);
+}
+
+function SortDirection() {
+    const selectDirection = Array.from(document.querySelectorAll('.sortDirection')).map(button => button.id);
+    const selectedCategories = getSelectedCategoriesFromURL();
+    const selectedGender = getSelectedGenderFromURL();
+    const selectedBrand = getSelectedBrandFromURL();
+    const selectedPrice = getSelectedPriceFromURL();
+    const selectedPrice2 = getSelectedPrice2FromURL();
+    const selectedPrice3 = getSelectedPrice3FromURL();
+    const selectedPrice4 = getSelectedPrice4FromURL();
+    const selectFeatured = getSelectedFeaturedFromURL();
+    const selectNewest = getSelectedNewestFromURL();
+    const SelectSale = getSelectedSaleFromURL();
+    const selectColor = getSelectedColorFromURL();
+    showfilterProduct(selectedCategories, selectedGender, selectedBrand, selectedPrice, selectedPrice2, selectedPrice3, selectedPrice4, selectFeatured, selectNewest, selectDirection, SelectSale, selectColor);
+}
+
+function filterSale() {
+    const selectSale = Array.from(document.querySelectorAll('.filter-button.sale:checked')).map(checkbox => checkbox.id);
+    const selectedCategories = getSelectedCategoriesFromURL();
+    const selectedGender = getSelectedGenderFromURL();
+    const selectedBrand = getSelectedBrandFromURL();
+    const selectedPrice = getSelectedPriceFromURL();
+    const selectedPrice2 = getSelectedPrice2FromURL();
+    const selectedPrice3 = getSelectedPrice3FromURL();
+    const selectedPrice4 = getSelectedPrice4FromURL();
+    const selectFeatured = getSelectedFeaturedFromURL();
+    const selectNewest = getSelectedNewestFromURL();
+    const selectDirection = getSelectedDirectionFromURL();
+    const selectColor = getSelectedColorFromURL();
+    showfilterProduct(selectedCategories, selectedGender, selectedBrand, selectedPrice, selectedPrice2, selectedPrice3, selectedPrice4, selectFeatured, selectNewest, selectDirection, selectSale, selectColor);
+}
+
+function filtercolor() {
+    const selectedColorButtons = Array.from(document.querySelectorAll('.color-button.clicked'));
+    const selectedColors = selectedColorButtons.map(button => button.id);
+    const selectedCategories = getSelectedCategoriesFromURL();
+    const selectedGender = getSelectedGenderFromURL();
+    const selectedBrand = getSelectedBrandFromURL();
+    const selectedPrice = getSelectedPriceFromURL();
+    const selectedPrice2 = getSelectedPrice2FromURL();
+    const selectedPrice3 = getSelectedPrice3FromURL();
+    const selectedPrice4 = getSelectedPrice4FromURL();
+    const selectFeatured = getSelectedFeaturedFromURL();
+    const selectNewest = getSelectedNewestFromURL();
+    const selectDirection = getSelectedDirectionFromURL();
+    const SelectSale = getSelectedSaleFromURL();
+    showfilterProduct(selectedCategories, selectedGender, selectedBrand, selectedPrice, selectedPrice2, selectedPrice3, selectedPrice4, selectFeatured, selectNewest, selectDirection, SelectSale, selectedColors);
 }
 
 
@@ -259,20 +509,98 @@ function getSelectedBrandFromURL() {
     return urlParams.getAll('brand');
 }
 
-function updateURLParams(selectedCategories, selectedGender, selectedBrand) {
+function getSelectedPriceFromURL() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.getAll('price1');
+}
+
+function getSelectedPrice2FromURL() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.getAll('price2');
+}
+
+function getSelectedPrice3FromURL() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.getAll('price3');
+}
+
+function getSelectedPrice4FromURL() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.getAll('price4');
+}
+
+function getSelectedFeaturedFromURL() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.getAll('sortFeatured');
+}
+
+function getSelectedNewestFromURL() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.getAll('sortNewest');
+}
+
+function getSelectedDirectionFromURL() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.getAll('sortDirection');
+}
+
+function getSelectedSaleFromURL() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.getAll('discount');
+}
+
+function getSelectedColorFromURL() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.getAll('color');
+}
+
+function updateURLParams(selectedCategories, selectedGender, selectedBrand, selectedPrice, selectedPrice2, selectedPrice3, selectedPrice4, selectFeatured, selectNewest, selectDirection, selectSale, selectColor) {
     const urlParams = new URLSearchParams(window.location.search);
     urlParams.delete('category');
     urlParams.delete('gender');
     urlParams.delete('brand');
+    urlParams.delete('price1');
+    urlParams.delete('price2');
+    urlParams.delete('price3');
+    urlParams.delete('price4');
+    urlParams.delete('sortFeatured');
+    urlParams.delete('sortNewest');
+    urlParams.delete('sortDirection');
+    urlParams.delete('discount');
+    urlParams.delete('color');
+
     selectedCategories.forEach(category => urlParams.append('category', category));
     selectedGender.forEach(gender => urlParams.append('gender', gender));
     selectedBrand.forEach(brand => urlParams.append('brand', brand));
+    selectedPrice.forEach(price => urlParams.append('price1', price));
+    selectedPrice2.forEach(price => urlParams.append('price2', price));
+    selectedPrice3.forEach(price => urlParams.append('price3', price));
+    selectedPrice4.forEach(price => urlParams.append('price4', price));
+    selectSale.forEach(sale => urlParams.append('discount', sale));
+    selectColor.forEach(colors => urlParams.append('color', colors));
+
+    if (selectFeatured.length > 0) {
+        urlParams.append('sortFeatured', selectFeatured[0]);
+        urlParams.delete('sortNewest');
+        urlParams.delete('sortDirection');
+    }
+    if (selectNewest.length > 0) {
+        urlParams.append('sortNewest', selectNewest[0]);
+        urlParams.delete('sortFeatured');
+        urlParams.delete('sortDirection');
+    }
+    if (selectDirection.length > 0) {
+        urlParams.append('sortDirection', selectDirection[0]);
+        urlParams.delete('sortFeatured');
+        urlParams.delete('sortNewest');
+    }
+
     const newURL = window.location.pathname + '?' + urlParams.toString();
     window.history.pushState({}, '', newURL);
 }
 
-function showfilterProduct(selectedCategories, selectedGender, selectedBrand) {
-    updateURLParams(selectedCategories, selectedGender, selectedBrand);
+function showfilterProduct(selectedCategories, selectedGender, selectedBrand, selectedPrice, selectedPrice2, selectedPrice3, selectedPrice4, selectFeatured, selectNewest, selectDirection, selectSale, selectColor) {
+    updateURLParams(selectedCategories, selectedGender, selectedBrand, selectedPrice, selectedPrice2, selectedPrice3, selectedPrice4, selectFeatured, selectNewest, selectDirection, selectSale, selectColor);
     axios.get("http://localhost:8080/api/products/filter", {
         headers: {
             "Content-Type": "application/json",
@@ -281,7 +609,16 @@ function showfilterProduct(selectedCategories, selectedGender, selectedBrand) {
         params: {
             category: selectedCategories.join(','),
             gender: selectedGender.join(','),
-            brand: selectedBrand.join(',')
+            brand: selectedBrand.join(','),
+            price1: selectedPrice.join(','),
+            price2: selectedPrice2.join(','),
+            price3: selectedPrice3.join(','),
+            price4: selectedPrice4.join(','),
+            sortFeatured: selectFeatured.join(','),
+            sortNewest: selectNewest.join(','),
+            sortDirection: selectDirection.join(','),
+            discount:  selectSale.join(','),
+            color: selectColor.join(',')
         }
     })
     .then(response => {
@@ -319,7 +656,7 @@ function renderFilterProduct(filterProduct) {
                 </figure>` : ''}
                 <ul class="product-icon">
                     <li class="add-cart mr-0">
-                        <a href="#">
+                        <a href="#" onclick="openProductDetails(${id}); return false;">
                             <i class="fa-solid fa-bag-shopping icon-1"></i>
                         </a>
                     </li>
@@ -388,7 +725,7 @@ function renderProducts(products) {
                     </figure>` : ''}
                     <ul class="product-icon">
                         <li class="add-cart mr-0">
-                            <a href="#">
+                            <a href="#" onclick="openProductDetails(${id}); return false;">
                                 <i class="fa-solid fa-bag-shopping icon-1"></i>
                             </a>
                         </li>
@@ -474,12 +811,10 @@ fetchProducts(currentPage);
                     selectQuantity.appendChild(option);
                 }
 
-                updateProgressAndStock(productId, quantity);
 
                 selectQuantity.addEventListener('change', function() {
                     const selectedQuantity = this.value;
                     updateURL(productId, selectedColor, selectedSize, selectedQuantity);
-                    updateProgressAndStock(productId, quantity);
                 });
             })
             .then(cartResponse => {
@@ -489,20 +824,6 @@ fetchProducts(currentPage);
             });
     }
 
-    function updateProgressAndStock(productId, quantity) {
-        const progressBar = document.querySelector('.progress-bar');
-        const leftStock = document.getElementById('random_sold_prod');
-
-        let stockLeftPercentage;
-        if (quantity <= 10) {
-            stockLeftPercentage = quantity * 10;
-        } else {
-            stockLeftPercentage = 100;
-        }
-
-        progressBar.style.width = `${stockLeftPercentage}%`;
-        leftStock.textContent = quantity;
-    }
 
     document.body.addEventListener('click', function(event) {
 
@@ -584,16 +905,16 @@ fetchProducts(currentPage);
                             </div>
                             <div class="product-action">
                             <div class="product-quantity">
-                                <label for="">Quantity</label>
-                                <div class="quantity-option-container">
-                                    <div class="font-quantity-arrow-down">
-                                        <i id="caretdown" class="fa-solid fa-caret-down"></i>
-                                    </div>
-                                    <select name="quantitySelect" id="quantitySelect" class="select-quantity">
-                                    <option value="1">1</option>
-                                    </select>
-                                </div>
-                            </div>
+                    <label for="">Quantity</label>
+                    <div class="quantity-option-container">
+                        <div class="font-quantity-arrow-down">
+                            <i id="caretdown" class="fa-solid fa-caret-down"></i>
+                        </div>
+                        <select name="quantitySelect" id="quantitySelect" class="select-quantity">
+                        <option value="1">1</option>
+                        </select>
+                    </div>
+                </div>
                             <div class="btn-addtocart">
                             <button class="btn-addtocart addToCartButton" data-product-id="${product.id}" type="button">Add To Cart</button>
                             </div>
@@ -633,6 +954,24 @@ fetchProducts(currentPage);
     function togglePopup(popupId) {
         const popupTrigger = document.getElementById(popupId);
         popupTrigger.classList.toggle('active');
+    
+        if (!popupTrigger.classList.contains('active')) {
+            const scrollPosition = window.scrollY;
+
+            removeURLParameters();
+    
+            window.location.reload();
+    
+            window.scrollTo(0, scrollPosition);
+        }
+    }
+    function removeURLParameters() {
+        const currentURL = new URL(window.location.href);
+        currentURL.searchParams.delete('');
+        currentURL.searchParams.delete('color');
+        currentURL.searchParams.delete('size');
+        currentURL.searchParams.delete('quantity');
+        window.history.replaceState({}, '', currentURL);
     }
 
 function stopPropagation(event) {

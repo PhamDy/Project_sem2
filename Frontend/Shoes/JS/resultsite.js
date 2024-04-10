@@ -1,17 +1,14 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Function to parse query parameter from URL
     function getSearchQuery() {
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get('q');
     }
 
-    // Retrieve search query
     const searchQuery = getSearchQuery();
     const searchResultContainer = document.getElementById('resultRow');
     const searchResultMessage = document.getElementById('searchResultMessage');
     const pageTitle = document.getElementById('update-search-title');
 
-    // Function to fetch search results based on query
     async function fetchSearchResults(query) {
         try {
             const response = await axios.get(`http://localhost:8080/api/products/`);
@@ -26,7 +23,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Function to display search results
     function displaySearchResults(products) {
         searchResultContainer.innerHTML = '';
 
@@ -35,6 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
             updatePageTitle(products.length, searchQuery);
             products.forEach(product => {
 
+                const productId = product.id;
                 const productTitle = product.name;
                 const productPrice = product.price;
                 const productImage = product.img;
@@ -44,31 +41,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 productElement.innerHTML = `
                 <div class="product">
                     <div class="img-product">
-                        <a href="">
+                        <a href="#" onclick="openProductDetails(${productId}); return false;">
                             <img style="width: 100%;" src="${productImage}" alt="">
                         </a>
 
                         <figure style="background: #e12c43; color: #ffffff;" class="label-sale">
                             <span>-34%</span>
                         </figure>
-
-                        <ul class="product-icon">
-                            <li class="add-cart mr-0">
-                                <a href="">
-                                    <i class="fa-solid fa-bag-shopping icon-1"></i>
-                                </a>
-                            </li>
-                            <li class="view-product mr-0">
-                                <button onclick="togglePopup()" href="">
-                                    <i class="fa-solid fa-magnifying-glass icon-2"></i>
-                                </button>
-                            </li>
-                            <li class="add-favorite mr-0">
-                                <a href="">
-                                    <i class="fa-regular fa-heart icon-3"></i>
-                                </a>
-                            </li>
-                        </ul>
                     </div>
                     <h4 class="product-title">
                         <a href="">${productTitle}</a>
@@ -87,16 +66,18 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     }
 
-    // Update website title
     function updatePageTitle(count, query) {
         const resultString = count === 1 ? 'result' : 'results';
         pageTitle.textContent = `Search: ${count} ${resultString} found for "${query}"`;
     }
 
-    // Display search result message
     if (searchQuery) {
         fetchSearchResults(searchQuery);
     } else {
         searchResultMessage.textContent = `NO SEARCH QUERY PROVIDED.`;
     }
 });
+
+function openProductDetails(productId) {
+    window.location.href = `details.html?id=${productId}`;
+  }

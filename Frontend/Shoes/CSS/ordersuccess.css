@@ -8,19 +8,19 @@
     justify-content: center;
 }
 
-.order-success-box h1 {
+.order-success-box .top-order-container h1 {
     text-align: center;
     margin-top: 20px;
 
 }
 
-.order-success-box p {
+.order-success-box .top-order-container p {
     text-align: center;
     font-weight: 500;
     margin-bottom: 0px;
 }
 
-.order-success-box a {
+.order-success-box .top-order-container a {
     justify-content: center;
     text-align: center;
     align-items: center;
@@ -31,11 +31,11 @@
     font-weight: 600;
 }
 
-.order-success-box a:hover {
+.order-success-box .top-order-container a:hover {
     text-decoration: none;
 }
 
-.order-success-box a button {
+.order-success-box .top-order-container a button {
     background-color: #000;
     color: #fff;
     width: 270px;
@@ -47,6 +47,83 @@
     transition: all ease 0.3s;
 }
 
-.order-success-box a button:hover {
+.order-success-box .top-order-container a button:hover {
     background-color: #51adcd;
+}
+
+.dashboard-product .dashboard-product {
+    min-width: 0;
+    padding: 16px 0;
+    position: relative;
+}
+
+.dashboard-product .dashboard-product-content {
+    align-items: center;
+    display: flex;
+    position: relative;
+    margin-bottom: 50px;
+}
+
+.dashboard-product .dashboard-product-content a img {
+    height: 94px;
+    padding-right: 16px;
+    width: 100px;
+}
+
+
+.dashboard-product .dashboard-product-content .product-info {
+    width: 100%;
+}
+
+.dashboard-product .dashboard-product-content .product-info .product-info-main {
+    position: relative;
+}
+
+.dashboard-product .dashboard-product-content .product-info .product-info-main .product-info-header {
+    padding-bottom: 8px;
+}
+
+.dashboard-product .dashboard-product-content .product-info .product-info-main .product-info-header span {
+    font-weight: 500;
+}
+
+.dashboard-product .dashboard-product-content .product-info .product-info-main .product-info-specs {
+    width: 60%;
+}
+
+.dashboard-product .dashboard-product-content .product-info .product-info-main .product-info-specs .product-info-block span{
+    color: #757575;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+}
+
+.dashboard-product .dashboard-product-content .product-info .product-info-main .product-info-specs .product-info-block .span-product-info-style-black {
+    color: #111111;
+}
+
+.dashboard-product .dashboard-product-content .product-info .product-info-main .product-info-price {
+    bottom: 0;
+    flex-flow: column;
+    position: absolute;
+    right: 0;
+    display: flex;
+    padding: 16px 0 0;
+    text-align: right;
+}
+
+.dashboard-product .dashboard-product-content .product-info .product-info-main .product-info-price span {
+    font-weight: 500;
+}
+
+.dashboard-product .dashboard-product-content .product-info .product-info-main .product-info-price s {
+    color: #757575;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit
+}
+
+.order-overview-container p {
+    font-size: 15px;
+    color: #4a4a4a;
 }

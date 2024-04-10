@@ -47,7 +47,7 @@ function renderProductss(products) {
                   </figure>` : ''}
                   <ul class="product-icon">
                       <li class="add-cart mr-0">
-                          <a href="#">
+                          <a href="#" onclick="openProductDetails(${id}); return false;">
                               <i class="fa-solid fa-bag-shopping icon-1"></i>
                           </a>
                       </li>
@@ -114,12 +114,10 @@ function updateQuantity(productId, selectedColor, selectedSize) {
               selectQuantity.appendChild(option);
           }
 
-          updateProgressAndStock(productId, quantity);
 
           selectQuantity.addEventListener('change', function() {
               const selectedQuantity = this.value;
               updateURL(productId, selectedColor, selectedSize, selectedQuantity);
-              updateProgressAndStock(productId, quantity);
           });
       })
       .then(cartResponse => {
@@ -129,20 +127,6 @@ function updateQuantity(productId, selectedColor, selectedSize) {
       });
 }
 
-function updateProgressAndStock(productId, quantity) {
-  const progressBar = document.querySelector('.progress-bar');
-  const leftStock = document.getElementById('random_sold_prod');
-
-  let stockLeftPercentage;
-  if (quantity <= 10) {
-      stockLeftPercentage = quantity * 10;
-  } else {
-      stockLeftPercentage = 100;
-  }
-
-  progressBar.style.width = `${stockLeftPercentage}%`;
-  leftStock.textContent = quantity;
-}
 
 document.body.addEventListener('click', function(event) {
 

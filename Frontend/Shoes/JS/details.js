@@ -174,7 +174,20 @@ function callProductInDetail(productId) {
       console.error('Error fetching product details:', error);
     });
   }
+  function updateProgressAndStock(productId, quantity) {
+    const progressBar = document.querySelector('.progress-bar');
+    const leftStock = document.getElementById('random_sold_prod');
 
+    let stockLeftPercentage;
+    if (quantity <= 10) {
+        stockLeftPercentage = quantity * 10;
+    } else {
+        stockLeftPercentage = 100;
+    }
+
+    progressBar.style.width = `${stockLeftPercentage}%`;
+    leftStock.textContent = quantity;
+}
 
 
 document.body.addEventListener('click', function(event) {

@@ -205,10 +205,20 @@
                             </div>
                         </div>
                         <div id="filter-content" class="filter-content">
-                            <span class="hide-show" style="cursor: pointer; font-size: 16px; font-weight: 600; letter-spacing: 0.5px; margin-right: 20px;" onclick="toggleColumns()">Hide Filter
+                            <span class="hide-show" style="cursor: pointer; font-size: 16px; font-weight: 600; letter-spacing: 0.5px; margin-right: 20px;" onclick="toggleColumns()">Filter
                                 <i class='bx bx-filter' style="font-size: 18px;"></i>
                             </span>
                         </div>
+                        <div id="sort-option">
+                            <div class="drop-down-sort">
+                                <button class="dropdown-option sortFeatured" name="sortFeatured" id="desc" onclick="updateSortBy('Featured', this); SortFeatured()">Featured</button>
+                                <button class="dropdown-option sortNewest" name="sortNewest" id="desc" onclick="updateSortBy('Newest', this); SortNewest()">Newest</button>
+                                <button class="dropdown-option sortDirection" name="sortDirection" id="asc" onclick="updateSortBy('Direction', this); SortDirection()">Direction</button>
+                            </div>
+                        </div>
+                        <span id="filter-button-mobile" class="filter-mobile">
+                            <span>Filter</span>
+                        </span>
                         <div class="sort-by">
                             <button id="sort-by-name" style="background-color: white; cursor: pointer;" onclick="toggleSortOption()">
                                 <span id="sort-by-text" style="cursor: pointer; font-size: 16px; font-weight: 600; letter-spacing: 0.5px;"> Sort By
@@ -216,17 +226,6 @@
                                 <i class="fa-solid fa-caret-down" style="margin-left: 10px; cursor: pointer;"></i>
                             </button>
                         </div>
-                        <div id="sort-option">
-                            <div class="drop-down-sort">
-                                <button class="dropdown-option" onclick="updateSortBy('Featured', this)">Featured</button>
-                                <button class="dropdown-option" onclick="updateSortBy('Newest', this)">Newest</button>
-                                <button class="dropdown-option" onclick="updateSortBy('Price: High-Low', this)">Price: High-Low</button>
-                                <button class="dropdown-option" onclick="updateSortBy('Price: Low-High', this)">Price: Low-High</button>
-                            </div>
-                        </div>
-                        <span id="filter-button-mobile" class="filter-mobile">
-                            <span>Filter</span>
-                        </span>
                     </div>
                 </div>
 
@@ -239,32 +238,7 @@
             <div class="row">
                 <div class="col-md-0 sidebar-content" id="sidebar-container">
                     <section id="sidebar" class="sidebar">
-                        <ul class="sort-by-menu" style="list-style: none; ">
-                            <div id="SortByContainer" style="border-bottom: 1px solid #E5E5E5;">
-                                <div id="SortByButton" style="margin-bottom: 20px; display: inline-flex; justify-content: space-between; width: 98%; cursor: pointer;" onclick="toggleSortList()">
-                                    <span style="cursor: pointer; font-size: 16px; font-weight: 600; letter-spacing: 0.5px; text-align: left;">Sort By</span>
-                                    <i id="caretdown" class="fa-solid fa-caret-down"></i>
-                                </div>
-                                <ul id="sortList" style="list-style: none; padding-left: 0px!important; display: block;">
-                                    <li class="clickable">
-                                        <input type="checkbox" id="featured" class="filter-button">
-                                        <label for="featured" style="display: inline-flex;">Featured</label>
-                                    </li>
-                                    <li class="clickable">
-                                        <input type="checkbox" id="newest" class="filter-button">
-                                        <label for="newest" style="display: inline-flex;">Newest</label>
-                                    </li>
-                                    <li class="clickable">
-                                        <input type="checkbox" id="PriceHighLow" class="filter-button">
-                                        <label for="PriceHighLow" style="display: inline-flex; margin-bottom: 20px;">Price: High-Low</label>
-                                    </li>
-                                    <li class="clickable">
-                                        <input type="checkbox" id="PriceLowHigh" class="filter-button">
-                                        <label for="PriceLowHigh" style="display: inline-flex; margin-bottom: 20px;">Price: High-Low</label>
-                                    </li>
-                                </ul>
-                            </div>
-                        </ul>
+            
 
                         <ul style="list-style: none;">
                             <div id="CategoryContainer" style="border-bottom: 1px solid #E5E5E5;">
@@ -297,22 +271,6 @@
                                     <i id="caretdown" class="fa-solid fa-caret-down"></i>
                                 </div>
                                 <ul id="priceList" style="list-style: none; padding-left: 0px!important; display: block;">
-                                    <li class="clickable">
-                                        <input type="checkbox" id="under50Checkbox" class="filter-button" onchange="filterPrice('price1')">
-                                        <label for="under50Checkbox" style="display: inline-flex;">Under 50$</label>
-                                    </li>
-                                    <li class="clickable">
-                                        <input type="checkbox" id="50to100Checkbox" class="filter-button" onchange="filterPrice('price2')">
-                                        <label for="50to100Checkbox" style="display: inline-flex;">50$ - 100$</label>
-                                    </li>
-                                    <li class="clickable">
-                                        <input type="checkbox" id="100to250Checkbox" class="filter-button" onchange="filterPrice('price3')">
-                                        <label for="100to250Checkbox" style="display: inline-flex; margin-bottom: 20px;">100$ - 250$</label>
-                                    </li>
-                                    <li class="clickable">
-                                        <input type="checkbox" id="over250Checkbox" class="filter-button" onchange="filterPrice('price4')">
-                                        <label for="over250Checkbox" style="display: inline-flex; margin-bottom: 20px;">Over 250$</label>
-                                    </li>
                                 </ul>
                             </div>
                         </ul>
@@ -325,7 +283,7 @@
                                 </div>
                                 <ul id="saleList" style="list-style: none; padding-left: 0px!important; display: block;">
                                     <li class="clickable">
-                                        <input type="checkbox" id="saleCheckbox1" class="filter-button">
+                                        <input type="checkbox" id="1" class="filter-button sale" onchange="filterSale()">
                                         <label for="saleCheckbox1" style="display: inline-flex;">Sale</label>
                                     </li>
                                 </ul>
@@ -337,70 +295,9 @@
                                 <span style="cursor: pointer; font-size: 16px; font-weight: 600; letter-spacing: 0.5px; text-align: left;">Colour</span>
                                 <i id="caretdown" class="fa-solid fa-caret-down"></i>
                             </div>
-                            <div id="colourList" style="height: auto; transition: none 0s ease 0s; overflow: hidden; padding-left: 0px!important; display: block;">
-                                <div style="padding: 8px 0 10px;">
-                                    <div style="display: flex; flex-wrap: wrap;">
-                                        <button class="color-button" onclick="toggleIcon(this)">
-                                            <div class="color-choose" style="background-color: #8D429F;"></div>
-                                            <span class="color-text">Purple</span>
-                                            <i class="fa-solid fa-check fa-beat img-color-product"></i>
-                                        </button>
-                                        <button class="color-button" onclick="toggleIcon(this)">
-                                            <div class="color-choose" style="background-color: #000000;"></div>
-                                            <span class="color-text">Black</span>
-                                            <i class="fa-solid fa-check fa-beat img-color-product"></i>
-                                        </button>
-                                        <button class="color-button" onclick="toggleIcon(this)">
-                                            <div class="color-choose" style="background-color: #E7352B;"></div>
-                                            <span class="color-text">Red</span>
-                                            <i class="fa-solid fa-check fa-beat img-color-product"></i>
-                                        </button>
-                                        <button class="color-button" onclick="toggleIcon(this)">
-                                            <div class="color-choose" style="background-color: #F36B26;"></div>
-                                            <span class="color-text">Orange</span>
-                                            <i class="fa-solid fa-check fa-beat img-color-product"></i>
-                                        </button>
-                                        <button class="color-button" onclick="toggleIcon(this)">
-                                            <div class="color-choose" style="background-color: #1790C8;"></div>
-                                            <span class="color-text">Blue</span>
-                                            <i class="fa-solid fa-check fa-beat img-color-product"></i>
-                                        </button>
-                                        <button class="color-button" onclick="toggleIcon(this)">
-                                            <div class="color-choose" style="background-color: #ffffff;"></div>
-                                            <span class="color-text">White</span>
-                                            <i class="fa-solid fa-check fa-beat img-color-product-white"></i>
-                                        </button>
-                                        <button class="color-button" onclick="toggleIcon(this)">
-                                            <div class="color-choose" style="background-color: #825D41;"></div>
-                                            <span class="color-text">Brown</span>
-                                            <i class="fa-solid fa-check fa-beat img-color-product"></i>
-                                        </button>
-                                        <button class="color-button" onclick="toggleIcon(this)">
-                                            <div class="color-choose" style="background-color: #7BBA3C;"></div>
-                                            <span class="color-text">Green</span>
-                                            <i class="fa-solid fa-check fa-beat img-color-product"></i>
-                                        </button>
-                                        <button class="color-button" onclick="toggleIcon(this)">
-                                            <div class="color-choose" style="background-color: #FED533;"></div>
-                                            <span class="color-text">Yellow</span>
-                                            <i  class="fa-solid fa-check fa-beat img-color-product"></i>
-                                        </button>
-                                        <button class="color-button" onclick="toggleIcon(this)">
-                                            <div class="color-choose" style="background: radial-gradient(#FFFFFF 20%,transparent 20%), radial-gradient(#FFFFFF 20%,transparent 20%), #000; background-position: 0 0,8px 8px; background-size: 15px 15px;"></div>
-                                            <span class="color-text">Multi-Colour
-                                            </span>
-                                            <i class="fa-solid fa-check fa-beat img-color-product"></i>
-                                        </button>
-                                        <button class="color-button" onclick="toggleIcon(this)">
-                                            <div class="color-choose" style="background-color: #808080;"></div>
-                                            <span class="color-text">Grey</span>
-                                            <i class="fa-solid fa-check fa-beat img-color-product"></i>
-                                        </button>
-                                        <button class="color-button" onclick="toggleIcon(this)">
-                                            <div class="color-choose" style="background-color: #F0728F;"></div>
-                                            <span class="color-text">Pink</span>
-                                            <i class="fa-solid fa-check fa-beat img-color-product"></i>
-                                        </button>
+                            <div id="colourList-container" style="height: auto; transition: none 0s ease 0s; overflow: hidden; padding-left: 0px!important; display: block;">
+                                <div style="padding: 8px 0 10px; width: 360px;">
+                                    <div id="colourList" style="display: flex; flex-wrap: wrap;">
                                     </div>
                                 </div>
                             </div>
@@ -413,7 +310,10 @@
                                     <i id="caretdown" class="fa-solid fa-caret-down"></i>
                                 </div>
                                 <ul id="brandList" style="list-style: none; padding-left: 0px!important; display: block;">
+
                                 </ul>
+                                <li style="opacity: 0;">12312321</li>
+                                <li style="opacity: 0;">12312321</li>
                             </div>
                         </ul>
                     </section>

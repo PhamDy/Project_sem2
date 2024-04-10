@@ -199,11 +199,10 @@
     visibility: visible;
     padding-bottom: 15px;
     padding-right: 28px;
-    padding-top: 24px;
+    padding-top: 5px;
     transition: transform 300ms ease 0s;
     background: rgb(255, 255, 255);
     z-index: 3;
-    right: -10px;
     pointer-events: auto;
     position: absolute;
     top: 100%;
@@ -327,7 +326,7 @@
 }
 
 @media screen and (max-width: 1200px) {
-    .filter-content, .sort-by {
+    .filter-content {
         display: none;
     }
 
@@ -356,6 +355,7 @@
         transform: translateY(110%);
         display: block;
         transition: all ease 0.5s;
+        margin-bottom: 50px;
     }
 
     #sidebar.showfiltermobile {
