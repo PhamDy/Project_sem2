@@ -15,35 +15,27 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AddressDto implements Serializable {
+public class AddressDto123 implements Serializable {
 
-    @NotEmpty
     private String firstName;
 
-    @NotEmpty
     private String lastName;
 
-    @NotEmpty
     private String country;
 
-    @NotEmpty
     private String city;
 
-    @NotEmpty
+
     private String address;
 
     private String optional;
     private String zipCode;
 
-    @NotEmpty
-    @Email
+
     private String email;
 
-    @NotEmpty
     private String dayOfBirth;
 
-    @NotEmpty
-    @Size(min = 10, max = 10)
     private String phone;
 
 

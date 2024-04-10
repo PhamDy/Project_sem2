@@ -1,6 +1,7 @@
 package fptAptech.theSun.service.Impl;
 
 import fptAptech.theSun.dto.AddressDto;
+import fptAptech.theSun.dto.AddressDto123;
 import fptAptech.theSun.entity.Address;
 import fptAptech.theSun.exception.CustomException;
 import fptAptech.theSun.respository.AddressRepository;
@@ -52,23 +53,24 @@ public class AddressServiceImpl implements AddressService {
     }
 
     @Override
-    public AddressDto getAddressByUser() {
+    public Address getAddressByUser() {
         String email = JwtFilter.CURRENT_USER;
         var user = Optional.ofNullable(userRepository.findByEmail(email).orElseThrow(() ->
                 new CustomException("You must log in before!")));
         var address = addressRepository.findByUser_Id(user.get().getId());
+        return address;
 
-        return AddressDto.builder()
-                .firstName(address.getFirst_name())
-                .lastName(address.getLast_name())
-                .country(address.getCountry())
-                .city(address.getCity())
-                .address(address.getAddress())
-                .optional(address.getOptional())
-                .zipCode(address.getZipCode())
-                .email(address.getEmail())
-                .phone(address.getPhone())
-                .dayOfBirth(String.valueOf(address.getDayOfBirth()))
-                .build();
+//        return AddressDto123.builder()
+//                .firstName(address.getFirst_name())
+//                .lastName(address.getLast_name())
+//                .country(address.getCountry())
+//                .city(address.getCity())
+//                .address(address.getAddress())
+//                .optional(address.getOptional())
+//                .zipCode(address.getZipCode())
+//                .email(address.getEmail())
+//                .phone(address.getPhone())
+//                .dayOfBirth(String.valueOf(address.getDayOfBirth()))
+//                .build();
     }
 }
