@@ -7,6 +7,7 @@ import fptAptech.theSun.entity.Enum.RoleName;
 import fptAptech.theSun.entity.Role;
 import fptAptech.theSun.entity.User;
 import fptAptech.theSun.security.jwt.AccessToken;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.management.relation.RoleStatus;
 import java.util.List;
@@ -44,5 +45,7 @@ public interface UserService {
     void updateUpRoleUser(Long id, Set<Role> roleName);
 
     void deleteById(Long id);
+
+    void updateAvatar(MultipartFile img);
 
 }

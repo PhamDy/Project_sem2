@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.util.Date;
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -45,6 +48,9 @@ public class Address extends BaseEntity{
 
     @Column(name = "phone")
     private String phone;
+
+    @Column(name = "date_of_birth")
+    private LocalDate dayOfBirth;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
