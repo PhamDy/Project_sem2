@@ -3,6 +3,7 @@ package fptAptech.theSun.respository.specification;
 import fptAptech.theSun.dto.FilterDto;
 import fptAptech.theSun.entity.Products;
 import fptAptech.theSun.entity.Warehouse;
+import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
@@ -72,12 +73,19 @@ public class ProductSpecification {
 
             if (criteria.getPrice1() != null && criteria.getPrice1() == 1) {
                 pricePredicates.add(criteriaBuilder.lt(root.get("price"), 50.0));
+//                Expression<Double> discountedPrice = criteriaBuilder.prod(root.get("discount"), root.get("price"));
+//                pricePredicates.add(criteriaBuilder.lt(discountedPrice, 50.0));
             }
 
             if (criteria.getPrice2() != null && criteria.getPrice2() == 1) {
+
+//                Expression<Double> discountedPrice = criteriaBuilder.prod(root.get("price"), criteriaBuilder.diff(1.0, root.get("discount")));
+
                 pricePredicates.add(criteriaBuilder.or(
                         criteriaBuilder.equal(root.get("price"), 50.0),
                         criteriaBuilder.between(root.get("price"), 50.0, 100.0)
+//                        criteriaBuilder.equal(discountedPrice, 50.0),
+//                        criteriaBuilder.between(discountedPrice, 50.0, 100.0)
                 ));
             }
 

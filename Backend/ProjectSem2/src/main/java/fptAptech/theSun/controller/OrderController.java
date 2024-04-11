@@ -118,7 +118,7 @@ public class OrderController {
                 orderService.sendMailOrder(cart, order);
                 cartService.changeStatusCart(cart.getId(), CartsStatus.Close);
 
-                URI uri = URI.create("http://127.0.0.1:5500/index.html");
+                URI uri = URI.create("http://127.0.0.1:5500/ordersuccess.html");
                 HttpHeaders httpHeaders = new HttpHeaders();
                 httpHeaders.setLocation(uri);
                 return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
