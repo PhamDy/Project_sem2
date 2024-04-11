@@ -5,14 +5,12 @@ import fptAptech.theSun.email.EmailService;
 import fptAptech.theSun.entity.*;
 import fptAptech.theSun.entity.Enum.CartsStatus;
 import fptAptech.theSun.entity.Enum.OrderStatus;
-import fptAptech.theSun.entity.Enum.PaymenStatus;
 import fptAptech.theSun.entity.Enum.ProductStatus;
 import fptAptech.theSun.exception.CustomException;
 import fptAptech.theSun.respository.*;
 import fptAptech.theSun.security.jwt.JwtFilter;
 import fptAptech.theSun.service.CartService;
 import fptAptech.theSun.service.OrderService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -298,6 +296,7 @@ public class OrderServiceImpl implements OrderService {
             dto.setCustomerName(item.getFirst_name() + " " + item.getLast_name());
             dto.setTotal(item.getTotalPrice());
             dto.setAddress(item.getAddress() + " " + item.getCity());
+            dto.setPhone(item.getPhone());
             dto.setPaymentMethod(item.getPayment().getPaymentMethod());
             dto.setPaymenStatus(item.getPayment().getStatus());
             dto.setStatus(item.getStatus());
@@ -409,6 +408,21 @@ public class OrderServiceImpl implements OrderService {
     public Long getOrderCancel() {
         return orderRepository.getOrderCancel();
     }
+
+    @Override
+    public List<Order> getOrderByUser() {
+        String email = JwtFilter.CURRENT_USER;
+        var user = userRepository.findByEmail(email).orElseThrow(() ->
+                new CustomException("You must log in before")
+        );
+        return orderRepository.getByUser_Id(user.getId());
+    }
+
+    @Override
+    public List<Order_details> getOrderDetailsByOrderId(Long orderId) {
+        return orderDetailsRepository.getByOrderId(orderId);
+    }
+
 
     @Override
     public List<OrderDeatilDto> orderSummary() {

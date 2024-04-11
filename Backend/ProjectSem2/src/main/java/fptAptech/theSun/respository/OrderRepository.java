@@ -57,5 +57,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query(value = "SELECT COUNT(o.order_id) FROM orders o WHERE o.order_status = 'Cancel'", nativeQuery = true)
     Long getOrderCancel();
 
+//    @Query(value = "SELECT o FROM Order o WHERE o.user.id = ?1")
+    List<Order> getByUser_Id(Long userId);
 
 }
