@@ -209,3 +209,123 @@ async function saveAddress(data) {
 }
 
 //====================================================================================================
+//Order User
+const token = getCookie('authToken');
+
+function fetchDataAndUpdateHTML() {
+  axios.get('http://localhost:8080/api/order/page/user',{
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(response => {
+    const orders = response.data.content;
+
+    // Lặp qua từng đơn hàng từ API và cập nhật dữ liệu vào HTML
+    orders.forEach(order => {
+      const orderHTML = `
+        <div class="my-order-content">
+          <a class="dashboard-header-container" href="#">
+            <div class="dashboard-header">
+              <div class="ordernumber-box dashboard-style-header">
+                <span class="orderId">ORDER ID</span>
+                <div>${order.id}</div>
+              </div>
+              <div class="order-date-box dashboard-style-header">
+                <span class="order-date">DATE</span>
+                <div>${order.creatAt}</div>
+              </div>
+              <div class="order-total-box dashboard-style-header">
+                <span class="order-total">TOTAL</span>
+                <div>${order.total}$</div>
+              </div>
+              <div class="order-method-box dashboard-style-header">
+                <span>PAYMENT METHOD</span>
+                <div>${order.paymentMethod}</div>
+              </div>
+              <div class="order-status-box dashboard-style-header">
+                <span>ORDERSTATUS</span>
+                <div>${order.status}</div>
+              </div>
+            </div>
+          </a>
+          <div class="dasboard-order-info" id="order-info-${order.id}">
+            <!-- Thông tin sản phẩm trong đơn hàng sẽ được thêm vào đây -->
+          </div>
+        </div>
+      `;
+      // Thêm đơn hàng vào HTML
+      const ordersContainer = document.getElementById('orders-container');
+      ordersContainer.insertAdjacentHTML('beforeend', orderHTML);
+
+      // Gọi hàm để lấy thông tin sản phẩm của đơn hàng và cập nhật vào HTML
+      fetchOrderDetailsAndUpdateHTML(order.id);
+    });
+  })
+  .catch(error => {
+    console.error('Đã có lỗi khi gửi yêu cầu:', error);
+  });
+}
+
+function fetchOrderDetailsAndUpdateHTML(orderId) {
+  axios.get(`http://localhost:8080/api/order/page/orderDetails/${orderId}`, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(response => {
+    const orderDetails = response.data.content;
+
+    // Kiểm tra nếu orderDetails là một mảng và không rỗng
+    if (Array.isArray(orderDetails) && orderDetails.length > 0) {
+      // Tạo HTML cho các thông tin chi tiết sản phẩm và cập nhật vào phần dasboard-order-info
+      const orderInfoContainer = document.getElementById(`order-info-${orderId}`);
+      orderDetails.forEach(detail => {
+        const productHTML = `
+          <div class="dashboard-product">
+            <div class="dashboard-product-content">
+              <a href="">
+                <img src="${detail.img}" alt="${detail.productName}">
+              </a>
+              <div class="product-info">
+                <div class="product-info-main">
+                  <div class="product-info-header">
+                    <span>${detail.productName}</span>
+                  </div>
+                  <div class="product-info-specs">
+                    <div class="product-info-block">
+                      <span>Size: </span><span class="span-product-info-style-black">${detail.size}</span>
+                    </div>
+                    <div class="product-info-block">
+                      <span>Color: </span><span class="span-product-info-style-black">${detail.color}</span>
+                    </div>
+                  </div>
+                  <div class="product-info-price">
+                    <span>Price: ${detail.price}$</span>
+                    <s>Discount: ${detail.discount}$</s>
+                    <span>Subtotal: ${detail.subtotal}$</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        // Thêm thông tin sản phẩm vào HTML
+        orderInfoContainer.insertAdjacentHTML('beforeend', productHTML);
+      });
+    } else {
+      console.error('Không có chi tiết đơn hàng nào được trả về từ API.');
+      // Có thể thêm một tin nhắn thông báo cho người dùng nếu cần
+    }
+  })
+  .catch(error => {
+    console.error('Đã có lỗi khi gửi yêu cầu:', error);
+  });
+}
+
+
+
+// Gọi hàm để thực hiện yêu cầu và cập nhật HTML
+fetchDataAndUpdateHTML();

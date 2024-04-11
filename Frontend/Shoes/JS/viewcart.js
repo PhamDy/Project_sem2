@@ -4,7 +4,7 @@ const authTokens = getCookie('authToken');
 if (authTokens) {
     axios.get('http://localhost:8080/api/cart/showCart', {
         headers: {
-            'Authorization': `Bearer ${authToken}`
+            'Authorization': `Bearer ${authTokens}`
         }
     })
     .then(response => {
@@ -48,6 +48,7 @@ function renderViewCartProduct(viewCartProduct) {
                     </a>
                 </td>
                 <td class="product-name-thumb">
+                    <p id="cartItemId">${id}</p>
                     <a href="#">${productName}</a>
                     <small style="display: block; color: #959595;">${size} / ${color}</small>
                 </td>
@@ -100,30 +101,28 @@ function deleteProduct(id) {
 }
 
 function updateCart() {
-    const selectElements = document.querySelectorAll('.select-quantity');
-    selectElements.forEach(selectElement => {
-        const id = selectElement.id.split('_')[1];
-        const cartQuantity = selectElement.value;
-        updateQuantity(id, cartQuantity);
+    const tbody = document.querySelector('.view-cart-body-product');
+    const cartItems = tbody.querySelectorAll('.cart-item');
+    const requestData = [];
+
+    cartItems.forEach(cartItem => {
+        const cartItemId = cartItem.querySelector('.product-name-thumb #cartItemId').textContent;
+        const quantitySelect = cartItem.querySelector('.product-quantity .select-quantity');
+        const cartQuantity = quantitySelect.value;
+
+        requestData.push({
+            cartItemId: cartItemId,
+            quantityItem: cartQuantity
+        });
     });
+
+    axios.patch('http://localhost:8080/api/cart/updateQuantity', requestData)
+        .then(response => {
+            alert('Quantity updated successfully:', response.data);
+            window.location.reload();
+        })
+        .catch(error => {
+            console.error('Error updating quantity:', error);
+        });
 }
 
-
-
-function updateQuantity(id, cartQuantity) {
-    axios.patch('http://localhost:8080/api/cart/updateQuantity', {
-        cartItemId: id,
-        quantityItem: cartQuantity
-    })
-    .then(response => {
-        console.log('Quantity updated successfully:', response.data);
-        const quantitySelect = document.getElementById(`quantitySelect_${id}`);
-        if (quantitySelect) {
-            quantitySelect.value = cartQuantity;
-
-        }
-    })
-    .catch(error => {
-        console.error('Error updating quantity:', error);
-    });
-}
