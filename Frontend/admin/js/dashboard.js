@@ -11,12 +11,23 @@ function updateCardData(endpoint, targetId) {
 }
 
 // Call the function for each card
-updateCardData('toalByMonth', 'monthlyEarnings');
-updateCardData('toalByYear', 'annualEarnings');
+updateCardData('totalOrders', 'totalOrders');
+updateCardData('orderCancel', 'orderCancel');
 updateCardData('orderPending', 'pendingRequests');
+updateCardData('orderSuccess', 'orderSuccess');
 
 //===================================================================================================================================================================
 
-
-
-
+document.addEventListener("DOMContentLoaded", function() {
+    var filterLinks = document.querySelectorAll(".filter-link");
+    filterLinks.forEach(function(link) {
+        link.addEventListener("click", function(event) {
+            event.preventDefault();
+            var status = this.getAttribute("data-status");
+            filterTableByStatus(status);
+        });
+    });
+});
+function filterTableByStatus(status) {
+    window.location.href = "order_management.html?status=" + status + "&fromPage=a";
+}
