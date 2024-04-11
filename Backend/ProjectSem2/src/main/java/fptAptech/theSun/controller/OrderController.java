@@ -118,7 +118,7 @@ public class OrderController {
                 orderService.sendMailOrder(cart, order);
                 cartService.changeStatusCart(cart.getId(), CartsStatus.Close);
 
-                URI uri = URI.create("http://127.0.0.1:5500/index.html");
+                URI uri = URI.create("http://127.0.0.1:5500/ordersuccess.html");
                 HttpHeaders httpHeaders = new HttpHeaders();
                 httpHeaders.setLocation(uri);
                 return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
@@ -169,7 +169,7 @@ public class OrderController {
 
     @GetMapping("/page/user")
     @Operation(summary = "Show danh sách các đơn hàng trong trang Admin của User nào đó ta tìm kiếm và tối đa 5 đơn hàng trong 1 trang")
-    public ResponseEntity<?> getOrderByUser(@PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC)
+    public ResponseEntity<?> getOrderByUser(@PageableDefault(size = 15, sort = "id", direction = Sort.Direction.ASC)
                                                  Pageable pageable) {
         return new ResponseEntity<>(orderService.getOrderByUser(pageable), HttpStatus.OK);
     }
