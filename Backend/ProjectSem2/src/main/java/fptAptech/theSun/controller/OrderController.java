@@ -240,7 +240,7 @@ public class OrderController {
     }
 
     @GetMapping("/orderCancel")
-    @Operation(summary = "Lấy ra số lượng order đang xử lý")
+    @Operation(summary = "Lấy ra số lượng order bị hủy")
     public ResponseEntity<?> getOrderCancel() {
         return new ResponseEntity<>(orderService.getOrderCancel(), HttpStatus.OK);
     }

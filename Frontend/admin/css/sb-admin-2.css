@@ -11286,3 +11286,6 @@ body.sidebar-toggled footer.sticky-footer {
 .discount{
   width: 50px;
 }
+#statusFilter{
+  height: 30px;
+}
