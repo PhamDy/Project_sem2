@@ -388,37 +388,37 @@
                     </div>
                     
                     <script>
-                    axios.get('http://localhost:8080/api/order/')
-                        .then(response => {
-                            const orders = response.data.content;
-                            const tableBody = document.getElementById('orderTableBody');
-                            // Clear existing table rows
-                            tableBody.innerHTML = '';
-                            // Iterate through the orders and populate the table
-                            orders.forEach(order => {
-                                const row = document.createElement('tr');
-                                row.innerHTML = `
-                                    <td>${order.id}</td>
-                                    <td>${order.orderCode}</td>
-                                    <td>${order.creatAt}</td>
-                                    <td>${order.customerName}</td>
-                                    <td>${order.phone}</td>
-                                    <td>${order.address}</td>
-                                    <td>${order.total}</td>
-                                    <td>${order.paymentMethod}</td>
-                                    <td>${order.paymenStatus}</td>
-                                    <td>${order.status}</td>
-                                    <td class="btn-actions">
-                                            <button class="btn btn-primary" onclick="openDetailsModal('${order.id}')">Details</button>
-                                            <button class="btn btn-warning" onclick="openEditModal('${order.id}')">Update</button>
-                                    </td>
-                                `;
-                                tableBody.appendChild(row);
+                        axios.get('http://localhost:8080/api/order/')
+                            .then(response => {
+                                const orders = response.data.content;
+                                const tableBody = document.getElementById('orderTableBody');
+                                // Clear existing table rows
+                                tableBody.innerHTML = '';
+                                // Iterate through the orders and populate the table
+                                orders.forEach(order => {
+                                    const row = document.createElement('tr');
+                                    row.innerHTML = `
+                                        <td>${order.id}</td>
+                                        <td>${order.orderCode}</td>
+                                        <td>${order.creatAt}</td>
+                                        <td>${order.customerName}</td>
+                                        <td>${order.phone}</td>
+                                        <td>${order.address}</td>
+                                        <td>${order.total}</td>
+                                        <td>${order.paymentMethod}</td>
+                                        <td>${order.paymenStatus}</td>
+                                        <td class="${order.status}">${order.status}</td>
+                                        <td class="btn-actions">
+                                                <button class="btn btn-primary" onclick="openDetailsModal('${order.id}')">Details</button>
+                                                <button class="btn btn-warning" onclick="openEditModal('${order.id}')">Update</button>
+                                        </td>
+                                    `;
+                                    tableBody.appendChild(row);
+                                });
+                            })
+                            .catch(error => {
+                                console.error('Error fetching data:', error);
                             });
-                        })
-                        .catch(error => {
-                            console.error('Error fetching data:', error);
-                        });
                     </script>
 
                 </div>
@@ -576,8 +576,7 @@
                                 <td>${order.total}</td>
                                 <td>${order.paymentMethod}</td>
                                 <td>${order.paymenStatus}</td>
-                                <td>${order.status}</td>
-                                <td>${order.username}</td>
+                                <td class="${order.status}">${order.status}</td>
                                 <td class="btn-actions">
                                     <button class="btn btn-primary" onclick="openDetailsModal('${order.id}')">Details</button>
                                     <button class="btn btn-warning" onclick="openEditModal('${order.id}')">Update</button>

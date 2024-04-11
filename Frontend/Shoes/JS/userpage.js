@@ -99,3 +99,113 @@ const toggleChecked = () => {
     const deliveryAddress = document.querySelector('.delivery-address');
     deliveryAddress.classList.toggle('hidden');
 }
+
+//==========================================================================================
+// Function to fetch user data from the API and update HTML elements
+function fetchUserData() {
+  // Lấy token từ cookie có tên là authToken
+  const token = getCookie('authToken');
+
+  // Kiểm tra nếu token tồn tại
+  if (token) {
+      // Tạo header Authorization từ token
+      const headers = {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+      };
+
+      // Tạo các thông tin của yêu cầu
+      const requestOptions = {
+          method: 'GET',
+          headers: headers
+      };
+
+      // Gửi yêu cầu fetch với các thông tin đã được cài đặt
+      fetch('http://localhost:8080/api/users/addressByUser', requestOptions)
+          .then(response => response.json())
+          .then(data => {
+              // Lấy dữ liệu người dùng từ phản hồi JSON
+            const userData = data.user;
+              // Update HTML content with user data
+              document.getElementById('username').textContent = userData.userName;
+              document.getElementById('member-since').textContent = `Walkz Member Since ${userData.createdAt}`;
+              document.getElementById('userEmail').value = userData.email;
+              document.getElementById('dayOfBirth').value = data.dayOfBirth;
+              document.getElementById('phone').value = data.phone;
+              document.getElementById('billing_first_name').value = data.first_name ;
+              document.getElementById('billing_last_name').value = data.last_name;
+              document.getElementById('billing_address').value = data.address;
+              document.getElementById('billing_zip').value = data.zipCode;
+              document.getElementById('billing_city').value = data.city;
+              document.getElementById('billing_country').value = data.country;
+              document.getElementById('Optional').value = data.optional;
+
+          })
+          .catch(error => console.error('Error fetching user data:', error));
+  } else {
+      console.error('Token not found in cookie.');
+  }
+}
+
+// Hàm để lấy giá trị của cookie bằng tên
+function getCookie(name) {
+  const cookieValue = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+  return cookieValue ? cookieValue.pop() : '';
+}
+
+// Gọi hàm fetchUserData khi trang web được tải
+window.onload = fetchUserData;
+
+
+//==========================================================================================
+//format date
+function reformatDateToDDMMYYYY(dateString) {
+  const [year, month, day] = dateString.split('-');
+  return `${day}-${month}-${year}`;
+}
+
+
+
+// lay du lieu tu html
+function prepareAndSaveAddress() {
+  const data = {
+      firstName: document.getElementById('billing_first_name').value,
+      lastName: document.getElementById('billing_last_name').value,
+      country: document.getElementById('billing_country').value,
+      address: document.getElementById('billing_address').value,
+      optional: document.getElementById('Optional').value,
+      zipCode: document.getElementById('billing_zip').value,
+      city: document.getElementById('billing_city').value,
+      email: document.getElementById('userEmail').value,
+      phone: document.getElementById('phone').value,
+      dayOfBirth: reformatDateToDDMMYYYY(document.getElementById('dayOfBirth').value)
+  };
+  saveAddress(data);
+}
+
+//save address
+async function saveAddress(data) {
+  try {
+      const token = getCookie('authToken')
+      // Gửi yêu cầu POST đến API
+      const response = await axios.post("http://localhost:8080/api/users/saveAddress", data,{
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      // Kiểm tra xem yêu cầu có thành công không
+      if (response) {
+          console.log('Address saved successfully');
+          alert('Address saved successfully');
+      } else {
+          console.error('Error saving address');
+      }
+  } catch (error) {
+      // Xử lý lỗi nếu có
+      console.error('Error saving address:', error);
+  }
+}
+
+//====================================================================================================
