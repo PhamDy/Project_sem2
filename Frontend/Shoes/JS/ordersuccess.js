@@ -32,12 +32,12 @@ fetchOrderSuccess();
 function renderOrderSuccess(orderProduct) {
     const OrderContainer = document.querySelector(".dashboard-product")
     orderProduct.forEach(product => {
-        const { id, color, productName, price, discount, subtotal, size, quantity } = product
+        const { id, color, productName, price, discount, subtotal, size, quantity, img } = product
         const OrderDashboard = document.createElement('div');
         OrderDashboard.classList.add('dashboard-product-content')
         OrderDashboard.innerHTML = `
         <a href="">
-        <img src="Shoes/IMAGES/Home_Page_Picture/shoes 3.webp" alt="">
+        <img src="${img}" alt="">
       </a>
       <div class="product-info">
         <div class="product-info-main">
