@@ -442,7 +442,7 @@ public class OrderServiceImpl implements OrderService {
             dto.setSize(item.getSize());
             dto.setColor(item.getColor());
             dto.setQuantity(item.getQuantity());
-            dto.setPrice(item.getPrice());
+            dto.setPrice(item.getProducts().getPrice());
             dto.setDiscount(item.getDiscount());
             dto.setSubtotal(item.getSubtotal());
             dto.setImg(item.getProducts().getImg());
@@ -461,7 +461,6 @@ public class OrderServiceImpl implements OrderService {
                     "<td style=\"vertical-align: middle;padding: 10px;text-align: left;border-bottom: 1px solid #ddd;\">" + item.getColor() + "/" + item.getSize() + "</td>\n" +
                     "<td style=\"vertical-align: middle;padding: 10px;text-align: left;border-bottom: 1px solid #ddd;\">" + item.getQuantity() + "</td>\n" +
                     "<td style=\"vertical-align: middle;padding: 10px;text-align: left;border-bottom: 1px solid #ddd;\">" + item.getPrice() + "</td>\n" +
-                    "<td style=\"vertical-align: middle;padding: 10px;text-align: left;border-bottom: 1px solid #ddd;\">" + item.getDiscount() + "</td>\n" +
                     "<td style=\"vertical-align: middle;padding: 10px;text-align: left;border-bottom: 1px solid #ddd;\">" + item.getSubTotal() + "</td>\n" +
                     "</tr>\n";
             productsHtml.append(productHtml);
@@ -494,7 +493,6 @@ public class OrderServiceImpl implements OrderService {
                 "                    <th style=\" background-color: #f2f2f2; padding: 10px;text-align: left;border-bottom: 1px solid #ddd;\">Color/Size</th>\n" +
                 "                    <th style=\" background-color: #f2f2f2; padding: 10px;text-align: left;border-bottom: 1px solid #ddd;\">Quantity</th>\n" +
                 "                    <th style=\" background-color: #f2f2f2; padding: 10px;text-align: left;border-bottom: 1px solid #ddd;\">Price</th>\n" +
-                "                    <th style=\" background-color: #f2f2f2; padding: 10px;text-align: left;border-bottom: 1px solid #ddd;\">Discount</th>\n" +
                 "                    <th style=\" background-color: #f2f2f2; padding: 10px;text-align: left;border-bottom: 1px solid #ddd;\">Subtotal</th>\n" +
                 "                </tr>\n" +
                 productsHtml.toString() +

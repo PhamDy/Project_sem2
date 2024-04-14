@@ -94,7 +94,7 @@ public class CartServiceImpl implements CartService {
             cartItem.setColor(color);
             cartItem.setSize(size);
             if (product.getDiscount()>0){
-                cartItem.setPrice(product.getPrice()*product.getDiscount());
+                cartItem.setPrice(product.getPrice() - (product.getPrice()*product.getDiscount()/100));
             } else {
                 cartItem.setPrice(product.getPrice());
             }
