@@ -301,10 +301,13 @@ function fetchOrderDetailsAndUpdateHTML(orderId) {
                     <div class="product-info-block">
                       <span>Color: </span><span class="span-product-info-style-black">${detail.color}</span>
                     </div>
+                    <div class="product-info-block">
+                      <span>Color: </span><span class="span-product-info-style-black">${detail.quantity}</span>
+                    </div>
                   </div>
                   <div class="product-info-price">
-                    <span>Price: ${detail.price}$</span>
-                    <s>Discount: ${detail.discount}$</s>
+                    <s>Price: ${detail.price}$</s>
+                    <span>Discount: ${detail.discount}$</span>
                     <span>Subtotal: ${detail.subtotal}$</span>
                   </div>
                 </div>
