@@ -25,15 +25,6 @@ function filterTableByDate() {
     });
 }
 
-$(document).ready(function() {
-    // Trích xuất tham số từ URL
-    var urlParams = new URLSearchParams(window.location.search);
-    var status = urlParams.get('status');
-
-    // Gọi hàm filterTableByStatus với tham số đã trích xuất
-    filterTableByStatus(status);
-});
-
 // Hàm filterTableByStatus
 function filterTableByStatus(status) {
     $('#dataTable tbody tr').hide();

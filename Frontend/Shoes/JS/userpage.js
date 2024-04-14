@@ -199,6 +199,7 @@ async function saveAddress(data) {
       if (response) {
           console.log('Address saved successfully');
           alert('Address saved successfully');
+          window.location.reload();
       } else {
           console.error('Error saving address');
       }
@@ -302,7 +303,7 @@ function fetchOrderDetailsAndUpdateHTML(orderId) {
                       <span>Color: </span><span class="span-product-info-style-black">${detail.color}</span>
                     </div>
                     <div class="product-info-block">
-                      <span>Color: </span><span class="span-product-info-style-black">${detail.quantity}</span>
+                      <span>Quantity: </span><span class="span-product-info-style-black">${detail.quantity}</span>
                     </div>
                   </div>
                   <div class="product-info-price">

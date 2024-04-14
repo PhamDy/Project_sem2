@@ -222,3 +222,33 @@ window.onload = function() {
         document.querySelector('input[name="phone"]').value = deliveryData.phone;
     }
 }
+
+
+//=================================================================================================
+//function lay cookie
+function getCookie(name) {
+    const cookieValue = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+    return cookieValue ? cookieValue.pop() : '';
+}
+
+
+//function dien du lieu vao form
+async function getAddressUser(){
+    axios.get('http://localhost:8080/api/users/addressByUser')
+    .then(function (response) {
+        const userData = response.data;
+        document.getElementById('firstName').value = userData.first_name;
+        document.getElementById('lastName').value = userData.last_name;
+        document.getElementById('email').value = userData.email;
+        document.getElementById('phone').value = userData.phone;
+        document.getElementById('country').value = userData.country;
+        document.getElementById('optional').value = userData.optional;
+        document.getElementById('city').value = userData.city;
+        document.getElementById('address').value = userData.address;
+        document.getElementById('zipCode').value = userData.zipCode;
+    })
+    .catch(function (error) {
+        console.error('Error fetching user address:', error);
+    });
+};
+getAddressUser();

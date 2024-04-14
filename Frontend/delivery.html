@@ -9,6 +9,8 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- import axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <title>Hello, world!</title>
   </head>
   <body>
@@ -71,7 +73,7 @@
                 <form action="shipping.html" id="deliveryForm" onsubmit="return validateForm(this)">
                     <div class="select-country">
                         <label for="">Country/Region</label>
-                        <select name="country" id="" required>
+                        <select name="country" id="country" required>
                             <option value="Afghanistan">Afghanistan</option> 
                             <option value="Albania">Albania</option> 
                             <option value="Algeria">Algeria</option> 
@@ -315,11 +317,11 @@
                         </select>
                     </div>
                     <div class="name-container">
-                        <input autocomplete="off" type="text" name="firstName" placeholder="First Name" style="margin-right: 2%;" required>
-                        <input type="text" name="lastName" placeholder="Last Name" required>
+                        <input autocomplete="off" type="text" id="firstName" name="firstName" placeholder="First Name" style="margin-right: 2%;" required>
+                        <input type="text" name="lastName" id="lastName" placeholder="Last Name" required>
                     </div>
                         <div class="address">
-                        <input type="text" name="address" id="" placeholder="Address" required>
+                        <input type="text" name="address" id="address" placeholder="Address" required>
                     </div>
 
                     <div class="apartment">
@@ -328,24 +330,24 @@
                         </button>
 
                         <div id="apartmentName" class="form-container">
-                            <input type="text" name="optional" placeholder="Apartment, suite, etc. (optional)">
+                            <input type="text" id="optional" name="optional" placeholder="Apartment, suite, etc. (optional)">
                         </div>
                     </div>
 
                     <div class="location">
-                        <input class="input-animation" name="city" style="margin-right: 2%" type="text" placeholder="City" required>
-                        <input class="input-animation" name="zipCode" type="text" placeholder="ZIP Code" required>
+                        <input class="input-animation" id="city" name="city" style="margin-right: 2%" type="text" placeholder="City" required>
+                        <input class="input-animation" id="zipCode" name="zipCode" type="text" placeholder="ZIP Code" required>
                     </div>
 
                 
                     <div class="email">
                         <label for="">Email</label>
-                        <input type="text" name="email" id="" required>
+                        <input type="text" name="email" id="email" required>
                     </div>
 
                     <div class="phone-number">
                         <label for="">Phone Number</label>
-                        <input type="text" name="phone" id="" required>
+                        <input type="text" name="phone" id="phone" required>
                     </div>
                     <div class="continue">
                         <button type="button" onclick="saveDeliveryInformation()">Continue</button>
