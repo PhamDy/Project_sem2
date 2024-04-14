@@ -6,38 +6,39 @@
 
 
 // async function getProducts() {
-//     try {
-//         const response = await axios.get('http://localhost:8080/api/products/');
-//         const data = response.data;
-//         const dataTable = $('#dataTable').DataTable(); // Initialize DataTables
-        
-//         // Clear existing rows in the table
-//         dataTable.clear().draw();
-        
-//         // Add new data rows
-//         data.forEach(item => {
-//             dataTable.row.add([
-//                 item.id,
-//                 `<img src="${item.img}" alt="Product Image" class="product-image">`,
-//                 item.name,
-//                 item.categoryName,
-//                 item.brand,
-//                 item.price,
-//                 item.discount,
-//                 `<td>
-//                     <button class="btn btn-primary" onclick="openDetailsModal('${item.id}')">Details</button>
-//                     <button class="btn btn-warning" onclick="openEditProductPopup('${item.id}')">Edit</button>
-//                     <button class="btn btn-warning" onclick="openUpdateModal('${item.id}')">Update</button>
-//                     <button class="btn btn-danger" onclick="remove('${item._id}')">Delete</button>
-//                 </td>`
-//             ]).draw(false);
-//         });
-//     } catch (error) {
-//         console.error('Error fetching data:', error);
-//     }
-// }
+    // async function getProducts() {
+    //     try {
+    //         const response = await axios.get('http://localhost:8080/api/products/');
+    //         const data = response.data;
 
-// getProducts();
+    //         const tableBody = document.getElementById('tableBody');
+
+    //         tableBody.innerHTML = '';
+
+    //         data.forEach(item => {
+    //             const row = document.createElement('tr');
+    //             row.innerHTML = `
+    //                 <td>${item.id}</td>
+    //                 <td class="product-image"><img src="${item.img}" alt="Product Image"></td>
+    //                 <td>${item.name}</td>
+    //                 <td>${item.categoryName}</td> 
+    //                 <td>${item.brand}</td>      
+    //                 <td>${item.price}</td>
+    //                 <td>${item.discount}</td>
+    //                 <td class="btn-actions">
+    //                     <button class="btn btn-primary" onclick="openDetailsModal('${item.id}')">Details</button>
+    //                     <button class="btn btn-warning" onclick="openEditProductPopup('${item.id}')">Edit</button>
+    //                     <button class="btn btn-warning" onclick="openUpdateModal('${item.id}')">Update</button>
+    //                 </td>
+    //             `;
+    //             tableBody.appendChild(row);
+    //         });
+    //     } catch (error) {
+    //         console.error('Error fetching data:', error);
+    //     }
+    // }
+
+    // getProducts();
 
 // Function to open details modal and populate details
 function openDetailsModal(productId) {
