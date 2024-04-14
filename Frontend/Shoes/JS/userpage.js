@@ -241,6 +241,14 @@ function fetchDataAndUpdateHTML() {
                 <span class="order-total">TOTAL</span>
                 <div>${order.total}$</div>
               </div>
+              <div class="order-status-box dashboard-style-header">
+                <span>Tax</span>
+                <div>${order.tax}</div>
+              </div>
+              <div class="order-status-box dashboard-style-header">
+                <span>shipping cost</span>
+                <div>${order.shipping}</div>
+              </div>
               <div class="order-method-box dashboard-style-header">
                 <span>PAYMENT METHOD</span>
                 <div>${order.paymentMethod}</div>

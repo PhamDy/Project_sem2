@@ -226,6 +226,7 @@ function addProduct(event) {
         loadingSpinner.classList.add('d-none');
         alert("Product added successfully!");
         $('#addProductModal').modal('hide');
+        window.location.reload();
     })
     .catch(function(error) {
         console.error(error);
