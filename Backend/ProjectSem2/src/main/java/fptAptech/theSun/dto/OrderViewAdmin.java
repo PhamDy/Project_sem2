@@ -22,6 +22,8 @@ public class OrderViewAdmin implements Serializable {
     private String phone;
     private String address;
     private Double total;
+    private Double tax;
+    private Double shipping;
     private String paymentMethod;
     private PaymenStatus paymenStatus;
     private OrderStatus status;

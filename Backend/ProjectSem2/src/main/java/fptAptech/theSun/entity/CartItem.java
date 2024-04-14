@@ -40,7 +40,8 @@ public class CartItem extends BaseEntity{
     @Transient
     public double getSubtotal() {
         if (this.products.getDiscount() != 0) {
-            return Math.round((this.products.getPrice() * ((100 - this.products.getDiscount())/100)) * this.quantity);
+            var number = (this.products.getPrice() * ((100 - this.products.getDiscount())/100)) * this.quantity;
+            return Math.round(number*100.00)/100.00;
         } else {
             return this.products.getPrice() * this.quantity;
         }

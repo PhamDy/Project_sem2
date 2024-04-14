@@ -15,7 +15,7 @@ import java.util.List;
 public class CartDto implements Serializable {
     private Long id;
     private Long userId;
-    private Double totalPrice = 0.00;
+    private Double totalPrice;
     private Integer quantityItem = 0;
     private List<CartItemDto> cartItemList;
 }

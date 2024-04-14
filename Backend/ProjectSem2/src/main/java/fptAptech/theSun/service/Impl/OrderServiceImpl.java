@@ -166,7 +166,7 @@ public class OrderServiceImpl implements OrderService {
             orderDetail.setColor(item.getColor());
             orderDetail.setSize(item.getSize());
             orderDetail.setQuantity(item.getQuantity());
-            orderDetail.setPrice(item.getPrice());
+            orderDetail.setPrice(product.get().getPrice());
             orderDetail.setDiscount(item.getDiscount());
             orderDetail.setCreatedBy("User");
             orderDetails.add(orderDetail);
@@ -301,6 +301,8 @@ public class OrderServiceImpl implements OrderService {
             dto.setPaymenStatus(item.getPayment().getStatus());
             dto.setStatus(item.getStatus());
             dto.setUsername(item.getUser().getEmail());
+            dto.setTax(item.getTax());
+            dto.setShipping(item.getDelivery().getPrice());
             listDto.add(dto);
         }
         return new PageImpl<>(listDto, list.getPageable(), list.getTotalPages() );

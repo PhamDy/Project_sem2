@@ -71,7 +71,7 @@ public class OrderController {
         var delivery = deliveryRepository.findById(dto.getDeliveryId())
                 .orElseThrow(() -> new CustomException("Delivery not found"));
         var cart = cartService.showCart(CartsStatus.Open);
-        Double tax = getTax(cart.getTotalPrice());
+        Double tax = Math.round(getTax(cart.getTotalPrice())*100.00)/100.00;
         Double totalOrder1 = cart.getTotalPrice() + delivery.getPrice() + tax;
 
         Double totalOrder = Math.round(totalOrder1 * 100.0) / 100.0;
@@ -156,7 +156,7 @@ public class OrderController {
 
     @GetMapping("/")
     @Operation(summary = "Show danh sách các đơn hàng trong trang Admin và tối đa 5 đơn hàng trong 1 trang")
-    public ResponseEntity<?> getAllOrder(@PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC)
+    public ResponseEntity<?> getAllOrder(@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC)
                                          Pageable pageable) {
         return new ResponseEntity<>(orderService.getAllOrder(pageable), HttpStatus.OK);
     }
