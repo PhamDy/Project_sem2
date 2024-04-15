@@ -5,7 +5,8 @@ Group: The Sun
     + Nguyễn Văn Tùng
     + Phạm Hoàng Gia Hưng
     + Nguyễn Duy Hoàng
-    + Vuong Hoang Son
+    + Vuong Hoang Sơn
+    + Nguyễn Văn Thịnh
 
 
 FPT Aptech T2302M
